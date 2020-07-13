@@ -1,10 +1,6 @@
 ﻿/*
  
-FACTORY METHOD - design pattern
-
-Two types of "DocumentCreator":
-- HtmlCreator
-- MarkdownCreator
+FACTORY METHOD - (own example)
 
  */
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,7 +10,7 @@ using System.Linq;
 namespace DesignPatterns.FactoryMethod
 {
     [TestClass]
-    public class Demo1
+    public class Documents
     {
         static readonly List<string> _log = new List<string>();
 

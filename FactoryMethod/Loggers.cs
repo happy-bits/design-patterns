@@ -1,10 +1,6 @@
 ﻿/*
  
-FACTORY METHOD - design pattern
-
-Two types of products:
-- DetailedLogger
-- SimpleLogger
+FACTORY METHOD - design pattern (own example)
 
  */
 
@@ -14,7 +10,7 @@ using System.Collections.Generic;
 namespace DesignPatterns.FactoryMethod
 {
     [TestClass]
-    public class Demo2
+    public class Loggers
     {
         // Comment: Demo2 looks good. Same feedback on Theory if you wanted but it's fine as-is.
 

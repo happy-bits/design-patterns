@@ -1,10 +1,6 @@
 ﻿/*
  
-FACTORY METHOD - design pattern
-
-Two types of "DocumentCreator":
-- HtmlCreator
-- MarkdownCreator
+FACTORY METHOD - design pattern (own example)
 
  */
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,7 +11,7 @@ using System;
 namespace DesignPatterns.FactoryMethod
 {
     [TestClass]
-    public class Demo3
+    public class Yatzys
     {
         static readonly List<string> _log = new List<string>();
 

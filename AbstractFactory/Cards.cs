@@ -1,5 +1,5 @@
 ﻿/*
- ABSTRACT FACTORY 
+ ABSTRACT FACTORY (own example)
  */
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace DesignPatterns.AbstractFactory
 {
     [TestClass]
-    public class Demo2
+    public class Cards
     {
         static readonly List<string> _log = new List<string>();
 
