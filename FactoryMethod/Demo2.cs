@@ -16,6 +16,8 @@ namespace DesignPatterns.FactoryMethod
     [TestClass]
     public class Demo2
     {
+        // Comment: Demo2 looks good. Same feedback on Theory if you wanted but it's fine as-is.
+
         // (this field has nothing to do with the class Log below)
         static readonly List<string> _log = new List<string>();
 

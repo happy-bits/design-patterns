@@ -18,6 +18,11 @@ namespace DesignPatterns.FactoryMethod
     {
         static readonly List<string> _log = new List<string>();
 
+        /*
+         
+        I would probably use a Theory here and pass in the different kinds of creators (html, markdown) as separate [InlineData] calls.
+        If this is meant to be a demo of Factory Method I worry that the Element types distract from that and could perhaps just be replaced with strings. They seem to work well but they're not needed to demonstrate the factory concept.
+             */
         [TestMethod]
         public void Ex1()
         {

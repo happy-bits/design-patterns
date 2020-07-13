@@ -79,11 +79,11 @@ namespace DesignPatterns.FactoryMethod
             static Random _rnd = new Random();
 
             public override DiceRoll Roll() => new DiceRoll(
-                    _rnd.Next(1, 6),
-                    _rnd.Next(1, 6),
-                    _rnd.Next(1, 6),
-                    _rnd.Next(1, 6),
-                    _rnd.Next(1, 6)
+                    _rnd.Next(1, 7),
+                    _rnd.Next(1, 7),
+                    _rnd.Next(1, 7),
+                    _rnd.Next(1, 7),
+                    _rnd.Next(1, 7)
                     );
         }
 
