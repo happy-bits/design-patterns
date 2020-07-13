@@ -4,12 +4,26 @@ using System.Collections.Generic;
 namespace DesignPatterns.StateDesignPattern
 {
     /*
-     Ett Context har ett (abstrakt) State
-     Ett (konkret) state kan ändra context'ets state (i runtime)
+    Det finns en begränad mängd state som ett program kan vara i
+    Programmet kan byta state från ett till ett annat  (men inte från vilket state till vilket annat)
 
-     Varje State har ett antal metoder med samma signatur (handlers)
-         
-         */
+    Använd detta om programmet har ett flertal states och de ofta ändras
+
+    Exempel:
+    - Ett Document kan vara i olika state: Draft, Moderation, Published
+    - En AudioPlayer kan vara i ReadyState, LockedState, PlayingState
+
+    Ett Context har ett (abstrakt) State
+    Ett (konkret) state kan ändra context'ets state (i runtime)
+
+    Varje State har ett antal metoder med samma signatur (handlers)
+
+    Ett Context har ett (abstrakt) State
+    Ett (konkret) state kan ändra context'ets state (i runtime)
+
+    Varje State har ett antal metoder med samma signatur (handlers)
+
+    */
     [TestClass]
     public class GuruConceptual
     {
