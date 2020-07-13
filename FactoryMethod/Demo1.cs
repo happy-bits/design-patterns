@@ -50,7 +50,7 @@ namespace DesignPatterns.FactoryMethod
                 var elements = Create(header, body);
 
                 if (!Ascending)
-                    elements.Reverse();
+                    elements = elements.Reverse();
 
                 return string.Join(Delimiter, elements.Select(e => e.Render()));
             }
