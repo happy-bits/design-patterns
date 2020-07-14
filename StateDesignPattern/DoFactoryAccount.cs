@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace DesignPatterns.StateDesignPattern
 {
     [TestClass]
-    public class Demo1
+    public class DoFactoryAccount
     {
         [TestMethod]
         public void Ex1()
