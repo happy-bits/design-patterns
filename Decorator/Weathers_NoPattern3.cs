@@ -9,6 +9,7 @@ Problem:
     This will be solved with Decorator pattern
 
  */
+
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
@@ -32,28 +33,11 @@ namespace DesignPatterns.Decorator
             Assert.IsNull(d2);
         }
 
-        class Temperature
-        {
-            public Temperature(int value)
-            {
-                Value = value;
-            }
-            public decimal Value { get; }
-        }
-
-        class Forecast
-        {
-            public Forecast(string message)
-            {
-                Message = message;
-            }
-
-            public string Message { get; }
-        }
         [TestMethod]
         public async Task should_be_11_degrees_in_Göteborg()
         {
             var ws = new WeatherService();
+
             Temperature temperature = await ws.GetCurrentTemperature("Göteborg");
             Assert.AreEqual(11, temperature.Value);
 
@@ -64,25 +48,10 @@ namespace DesignPatterns.Decorator
         }
 
         [TestMethod]
-        public async void should_get_value_from_cache_two_times()
-        {
-            var ws = new WeatherService();
-            Assert.AreEqual(0, ws.GotValueFromCache);
-
-            await ws.GetCurrentTemperature("Göteborg");
-            Assert.AreEqual(1, ws.GotValueFromCache);
-
-            await ws.GetCurrentTemperature("Göteborg");
-            Assert.AreEqual(2, ws.GotValueFromCache);
-
-            await ws.GetCurrentTemperature("XYZ");
-            Assert.AreEqual(2, ws.GotValueFromCache);
-        }
-
-        [TestMethod]
         public async Task should_be_rainy_in_Göteborg()
         {
             var ws = new WeatherService();
+
             Forecast forecast = await ws.GetForcecase("Göteborg");
             Assert.AreEqual("Rain", forecast.Message);
 
@@ -92,17 +61,36 @@ namespace DesignPatterns.Decorator
             }, ws.WeatherLoggerWithoutTime.ToArray());
         }
 
-
         [TestMethod]
-        public async void should_get_value_from_cache_one_time()
+        public async Task should_get_value_from_cache_two_times()
         {
             var ws = new WeatherService();
+
+            Assert.AreEqual(0, ws.GotValueFromCache);
+
+            await ws.GetCurrentTemperature("Göteborg");
+            Assert.AreEqual(0, ws.GotValueFromCache);
+
+            await ws.GetCurrentTemperature("Göteborg");
+            Assert.AreEqual(1, ws.GotValueFromCache);
+
+            await ws.GetCurrentTemperature("XYZ");
+            Assert.AreEqual(1, ws.GotValueFromCache);
+        }
+
+
+
+        [TestMethod]
+        public async Task should_get_value_from_cache_one_time()
+        {
+            var ws = new WeatherService();
+
             Assert.AreEqual(0, ws.GotValueFromCache);
 
             await ws.GetForcecase("Göteborg");
-            Assert.AreEqual(1, ws.GotValueFromCache);
+            Assert.AreEqual(0, ws.GotValueFromCache);
 
-            await ws.GetForcecase("XYZ");
+            await ws.GetForcecase("Göteborg");
             Assert.AreEqual(1, ws.GotValueFromCache);
 
         }
@@ -166,5 +154,7 @@ namespace DesignPatterns.Decorator
 
             }
         }
+
+
     }
 }

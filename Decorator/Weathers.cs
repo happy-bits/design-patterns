@@ -20,12 +20,18 @@ namespace DesignPatterns.Decorator
     public class Weathers
     {
 
+        (WeatherService service, CachingDecorator cache, LoggingDecorator ws) GetWeatherService()
+        {
+            var service = new WeatherService();
+            var cache = new CachingDecorator(service);
+            var ws = new LoggingDecorator(cache);
+            return (service, cache, ws);
+        }
+
         [TestMethod]
         public async Task should_be_11_degrees_in_Göteborg()
         {
-            var weatherService = new WeatherService();
-            var cache = new CachingDecorator(weatherService);
-            var ws = new LoggingDecorator(weatherService);
+            var (_, _, ws) = GetWeatherService();
 
             Temperature temperature = await ws.GetCurrentTemperature("Göteborg");
             Assert.AreEqual(11, temperature.Value);
@@ -40,9 +46,7 @@ namespace DesignPatterns.Decorator
         [TestMethod]
         public async Task should_be_rainy_in_Göteborg()
         {
-            var weatherService = new WeatherService();
-            var cache = new CachingDecorator(weatherService);
-            var ws = new LoggingDecorator(cache);
+            var (_, _, ws) = GetWeatherService();
 
             Forecast forecast = await ws.GetForcecase("Göteborg");
             Assert.AreEqual("Rain", forecast.Message);
@@ -57,9 +61,7 @@ namespace DesignPatterns.Decorator
         [TestMethod]
         public async Task should_get_value_from_cache_two_times()
         {
-            var weatherService = new WeatherService();
-            var cache = new CachingDecorator(weatherService);
-            var ws = new LoggingDecorator(cache);
+            var (_, cache, ws) = GetWeatherService();
 
             Assert.AreEqual(0, cache.GotValueFromCache);
 
@@ -76,9 +78,7 @@ namespace DesignPatterns.Decorator
         [TestMethod]
         public async Task should_get_value_from_cache_one_time()
         {
-            var weatherService = new WeatherService();
-            var cache = new CachingDecorator(weatherService);
-            var ws = new LoggingDecorator(cache);
+            var (_, cache, ws) = GetWeatherService();
 
             Assert.AreEqual(0, cache.GotValueFromCache);
 
@@ -195,25 +195,6 @@ namespace DesignPatterns.Decorator
                 var result = location == "Göteborg" ? new Forecast("Rain") : new Forecast("Sunny");
                 return result;
             }
-        }
-
-        class Temperature
-        {
-            public Temperature(int value)
-            {
-                Value = value;
-            }
-            public decimal Value { get; }
-        }
-
-        class Forecast
-        {
-            public Forecast(string message)
-            {
-                Message = message;
-            }
-
-            public string Message { get; }
         }
     }
 }
