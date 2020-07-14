@@ -74,6 +74,7 @@ namespace DesignPatterns.Decorator
                 _component = component;
             }
 
+            // (denna behövs inte)
             public void SetComponent(Component component)
             {
                 _component = component;
