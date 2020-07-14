@@ -1,6 +1,7 @@
 ﻿/*
-Own example
-*/
+Own example 
+(don't know if it's good example of Decorator)
+ */
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.RegularExpressions;
