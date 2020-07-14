@@ -76,6 +76,7 @@ namespace DesignPatterns.StateDesignPattern
             }, _log);
         }
 
+        // "Context"
         class Document
         {
             private State _state = null;
