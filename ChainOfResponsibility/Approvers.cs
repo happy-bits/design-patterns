@@ -1,7 +1,7 @@
 ﻿/*
  Chain of Responsibility
 
- Variant av något jag hittat på nätet
+ Variant av https://www.dofactory.com/net/chain-of-responsibility-design-pattern
 
  Avoid coupling the sender of a request to its receiver 
  by giving more than one object a chance to handle the request. 
