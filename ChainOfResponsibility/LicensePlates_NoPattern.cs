@@ -1,87 +1,103 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
+/*
+
+    Note: doesn't use chain of responsibility yet
+
+ */
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace DesignPatterns.ChainOfResponsibility
 {
     [TestClass]
     public class LicensePlates_NoPattern
     {
-        static LicenePlateRegistration Registration => new LicenePlateRegistration(new MockLicensePlateRepository());
+        private readonly RegistrationService _service;
+
+        public LicensePlates_NoPattern()
+        {
+            _service = new RegistrationService(new MockLicensePlateRepository());
+        }
 
         [TestMethod]
-        public void abc_123_should_be_registered()
+        public void register_three_valid_license_plates()
         {
-            var r = Registration;
+            _service.AddLicensePlate("ABC 123", CustomerType.Normal);
+            _service.AddLicensePlate("ABC 12A", CustomerType.Normal);
+            _service.AddLicensePlate("XYZ 444", CustomerType.Normal);
+            _service.AddLicensePlate("PDF 543", CustomerType.Advertisment);
 
-            Assert.AreEqual(2, r.NrOfRegistredPlates); // trivial test
-
-            r.TryRegister("ABC 123", Customer.Normal);
-            r.TryRegister("XYZ 444", Customer.Normal);
-            r.TryRegister("PDF 543", Customer.Advertisment);
-
-            Assert.AreEqual(5, r.NrOfRegistredPlates);
+            Assert.AreEqual(4, _service.NrOfRegistredPlates);
         }
 
         [TestMethod]
         [DataRow("ABC X23")]
+        [DataRow("ÅBC 123")]
+        [DataRow("QBC 123")]
         [DataRow("1BC 123")]
         [DataRow("ABC  123")]
-        public void incorrect_format_should_throw_InvalidFormatException(string incorrectFormat)
+        public void throw_InvalidFormatException_when_format_is_incorrect(string incorrectFormat)
         {
-            Assert.ThrowsException<LicenePlateRegistration.InvalidFormatException>(() =>
+            Assert.ThrowsException<RegistrationService.InvalidFormatException>(() =>
             {
-                Registration.TryRegister(incorrectFormat, Customer.Normal);
+                _service.AddLicensePlate(incorrectFormat, CustomerType.Normal);
             });
         }
 
         [TestMethod]
-        public void normal_customer_should_not_register_numbers_starting_with_MLB()
+        public void throw_OnlyForAdvertismentException_when_normal_customer_register_plate_starting_with_MLB()
         {
-            Assert.ThrowsException<LicenePlateRegistration.OnlyForAdvertismentException>(() =>
+            Assert.ThrowsException<RegistrationService.OnlyForAdvertismentException>(() =>
             {
-                Registration.TryRegister("MLB 123", Customer.Normal);
+                _service.AddLicensePlate("MLB 123", CustomerType.Normal);
             });
         }
 
         [TestMethod]
-        public void advertisment_customer_may_register_numbers_starting_with_MLB()
+        public void register_successful_when_advertisment_want_plate_starting_with_MLB()
         {
-            Registration.TryRegister("MLB 123", Customer.Advertisment);
+            _service.AddLicensePlate("MLB 123", CustomerType.Advertisment);
+            Assert.AreEqual(1, _service.NrOfRegistredPlates);
         }
 
         [TestMethod]
-        public void not_available_numbers_should_throw_NotAvailableException()
+        public void throw_NotAvailableException_when_plate_is_already_registered()
         {
-            Assert.ThrowsException<LicenePlateRegistration.NotAvailableException>(() =>
+            _service.AddLicensePlate("ABC 123", CustomerType.Normal);
+
+            Assert.ThrowsException<RegistrationService.NotAvailableException>(() =>
             {
-                Registration.TryRegister("CCC 777", Customer.Normal);
+                _service.AddLicensePlate("ABC 123", CustomerType.Normal);
             });
         }
 
         [TestMethod]
-        public void database_exception_should_be_thrown_if_problem_with_database()
+        public void throw_DatabaseException_when_unexpected_problem_with_database()
         {
-            Assert.ThrowsException<LicenePlateRegistration.DatabaseException>(() =>
+            Assert.ThrowsException<RegistrationService.RepositoryException>(() =>
             {
-                Registration.TryRegister("AAA 666", Customer.Normal);
+                _service.AddLicensePlate("XXX 666", CustomerType.Normal);
+            });
+
+            Assert.ThrowsException<RegistrationService.RepositoryException>(() =>
+            {
+                _service.AddLicensePlate("YYY 666", CustomerType.Normal);
             });
         }
 
-        class LicenePlateRegistration
+        class RegistrationService
         {
             private readonly ILicensePlateRepository _repo;
 
             public class InvalidFormatException : Exception { }
             public class OnlyForAdvertismentException : Exception { }
             public class NotAvailableException : Exception { }
-            public class DatabaseException : Exception { }
+            public class RepositoryException : Exception { }
 
-            public LicenePlateRegistration(ILicensePlateRepository repo)
+            public RegistrationService(ILicensePlateRepository repo)
             {
                 _repo = repo;
             }
@@ -100,12 +116,29 @@ namespace DesignPatterns.ChainOfResponsibility
 
             public int NrOfRegistredPlates => _repo.CountRegisteredPlates();
 
-            public void TryRegister(string number, Customer customer)
+            /*
+             
+                 Question: Is current code a good solution (with exceptions) or should I create a method that return something e.g an enum:
+
+                        public Result AddLicensePlate(....)
+                        {
+                        }
+
+                        enum Result
+                        {
+                            Success, InvalidFormat, OnlyForAdvertisment, Database, NotAvailable
+                        }
+
+            */
+
+            // (This will changed with "chain of responsibility pattern")
+
+            public void AddLicensePlate(string number, CustomerType customer)
             {
                 if (!Regex.IsMatch(number, ValidRegexPattern))
                     throw new InvalidFormatException();
 
-                if (number.StartsWith("MLB") && customer != Customer.Advertisment)
+                if (number.StartsWith("MLB") && customer != CustomerType.Advertisment)
                     throw new OnlyForAdvertismentException();
 
                 bool isAvailable;
@@ -116,14 +149,20 @@ namespace DesignPatterns.ChainOfResponsibility
                 }
                 catch
                 {
-                    throw new DatabaseException();
+                    throw new RepositoryException();
                 }
 
                 if (!isAvailable)
                     throw new NotAvailableException();
 
-                _repo.Save(number);
-
+                try
+                {
+                    _repo.Save(number);
+                }
+                catch
+                {
+                    throw new RepositoryException();
+                }
             }
         }
 
@@ -136,33 +175,30 @@ namespace DesignPatterns.ChainOfResponsibility
 
         class MockLicensePlateRepository : ILicensePlateRepository
         {
-            readonly List<string> _alreadyRegistered = new List<string> {
-                    "AAA 123",
-                    "CCC 777",
-                };
+            private readonly List<string> _registered = new List<string>();
 
-            public int CountRegisteredPlates() => _alreadyRegistered.Count;
+            public int CountRegisteredPlates() => _registered.Count;
 
             public bool IsAvailable(string number)
             {
                 // Simulation of database error is some cases
-                if (number == "AAA 666")
-                    throw new Exception();
+                if (number == "XXX 666")
+                    throw new Exception(); 
 
-                return !_alreadyRegistered.Contains(number);
+                return !_registered.Contains(number);
             }
 
             public void Save(string number)
             {
                 // Simulation of database error is some cases
-                if (number == "BBB 666")
+                if (number == "YYY 666")
                     throw new Exception();
 
-                _alreadyRegistered.Add(number);
+                _registered.Add(number);
             }
         }
 
-        enum Customer
+        enum CustomerType
         {
             Normal, Advertisment
         }
