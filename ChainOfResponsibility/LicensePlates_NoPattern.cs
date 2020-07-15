@@ -1,6 +1,8 @@
 ﻿
 /*
 
+    Question: what do you think about the general solution to this problem?
+
     Note: doesn't use chain of responsibility yet
 
  */
@@ -26,7 +28,7 @@ namespace DesignPatterns.ChainOfResponsibility
         public void register_three_valid_license_plates()
         {
             _service.AddLicensePlate("ABC 123", CustomerType.Normal);
-            _service.AddLicensePlate("ABC 12A", CustomerType.Normal);
+            _service.AddLicensePlate("ABC 12B", CustomerType.Normal); // note: the last char don't have to be a number
             _service.AddLicensePlate("XYZ 444", CustomerType.Normal);
             _service.AddLicensePlate("PDF 543", CustomerType.Advertisment);
 
@@ -87,7 +89,7 @@ namespace DesignPatterns.ChainOfResponsibility
                 _service.AddLicensePlate("YYY 666", CustomerType.Normal);
             });
         }
-
+        
         class RegistrationService
         {
             private readonly ILicensePlateRepository _repo;
