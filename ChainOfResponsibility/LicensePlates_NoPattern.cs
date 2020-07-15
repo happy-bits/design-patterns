@@ -77,12 +77,12 @@ namespace DesignPatterns.ChainOfResponsibility
         [TestMethod]
         public void throw_DatabaseException_when_unexpected_problem_with_database()
         {
-            Assert.ThrowsException<RegistrationService.RepositoryException>(() =>
+            Assert.ThrowsException<RepositoryException>(() =>
             {
                 _service.AddLicensePlate("XXX 666", CustomerType.Normal);
             });
 
-            Assert.ThrowsException<RegistrationService.RepositoryException>(() =>
+            Assert.ThrowsException<RepositoryException>(() =>
             {
                 _service.AddLicensePlate("YYY 666", CustomerType.Normal);
             });
@@ -95,7 +95,6 @@ namespace DesignPatterns.ChainOfResponsibility
             public class InvalidFormatException : Exception { }
             public class OnlyForAdvertismentException : Exception { }
             public class NotAvailableException : Exception { }
-            public class RepositoryException : Exception { }
 
             public RegistrationService(ILicensePlateRepository repo)
             {
@@ -141,28 +140,10 @@ namespace DesignPatterns.ChainOfResponsibility
                 if (number.StartsWith("MLB") && customer != CustomerType.Advertisment)
                     throw new OnlyForAdvertismentException();
 
-                bool isAvailable;
-
-                try
-                {
-                    isAvailable = _repo.IsAvailable(number);
-                }
-                catch
-                {
-                    throw new RepositoryException();
-                }
-
-                if (!isAvailable)
+                if (!_repo.IsAvailable(number))
                     throw new NotAvailableException();
 
-                try
-                {
-                    _repo.Save(number);
-                }
-                catch
-                {
-                    throw new RepositoryException();
-                }
+                _repo.Save(number);
             }
         }
 
@@ -172,6 +153,8 @@ namespace DesignPatterns.ChainOfResponsibility
             void Save(string number);
             int CountRegisteredPlates();
         }
+
+        class RepositoryException : Exception { };
 
         class MockLicensePlateRepository : ILicensePlateRepository
         {
@@ -183,7 +166,7 @@ namespace DesignPatterns.ChainOfResponsibility
             {
                 // Simulation of database error is some cases
                 if (number == "XXX 666")
-                    throw new Exception(); 
+                    throw new RepositoryException(); 
 
                 return !_registered.Contains(number);
             }
@@ -192,7 +175,7 @@ namespace DesignPatterns.ChainOfResponsibility
             {
                 // Simulation of database error is some cases
                 if (number == "YYY 666")
-                    throw new Exception();
+                    throw new RepositoryException();
 
                 _registered.Add(number);
             }
