@@ -2,7 +2,6 @@
  * From: https://refactoring.guru/design-patterns/chain-of-responsibility/csharp/example
  */
 
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
@@ -71,11 +70,11 @@ namespace DesignPatterns.ChainOfResponsibility
 
         // The Handler interface declares a method for building the chain of
         // handlers. It also declares a method for executing a request.
-        public interface IHandler
+        interface IHandler
         {
             IHandler SetNext(IHandler handler);
 
-            object Handle(object request);
+            string Handle(string request);
         }
 
         // The default chaining behavior can be implemented inside a base handler
@@ -94,7 +93,7 @@ namespace DesignPatterns.ChainOfResponsibility
                 return handler;
             }
 
-            public virtual object Handle(object request)
+            public virtual string Handle(string request)
             {
                 if (_nextHandler != null)
                 {
@@ -110,7 +109,7 @@ namespace DesignPatterns.ChainOfResponsibility
 
         class MonkeyHandler : AbstractHandler
         {
-            public override object Handle(object request)
+            public override string Handle(string request)
             {
                 if ((request as string) == "Banana")
                 {
@@ -128,7 +127,7 @@ namespace DesignPatterns.ChainOfResponsibility
 
         class SquirrelHandler : AbstractHandler
         {
-            public override object Handle(object request)
+            public override string Handle(string request)
             {
                 if (request.ToString() == "Nut")
                 {
@@ -143,7 +142,7 @@ namespace DesignPatterns.ChainOfResponsibility
 
         class DogHandler : AbstractHandler
         {
-            public override object Handle(object request)
+            public override string Handle(string request)
             {
                 if (request.ToString() == "MeatBall")
                 {
