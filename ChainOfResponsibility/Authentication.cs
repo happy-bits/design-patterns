@@ -1,12 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 /*
- Chain of command: a message should be handled in a specific order.
  
- Here: authorization. Rules of type Allow or Deny is chained together
+    Okej exempel. Lite svårt att se nyttan (det borde gå att göra på enklare sätt)
+
+    Chain of command: a message should be handled in a specific order.
+ 
+    Here: authorization. Rules of type Allow or Deny is chained together
  
 */
 namespace DesignPatterns.ChainOfResponsibility
@@ -40,6 +42,8 @@ namespace DesignPatterns.ChainOfResponsibility
             public User User { get; set; }
         }
 
+        // A user can have many roles
+
         class User
         {
             public string[] Roles { get; set; }
@@ -58,7 +62,8 @@ namespace DesignPatterns.ChainOfResponsibility
                 authenticated && (administrator || name is "bobo")
         */
 
-        Rule chain = new Deny
+
+        Rule _chain = new Deny
         {
             Condition = r => !r.User.IsAuthenticated,
             Next = new Allow
@@ -74,6 +79,10 @@ namespace DesignPatterns.ChainOfResponsibility
                 }
             }
         };
+        private AuthResult TryAuthenticate(User user)
+        {
+            return _chain.Handle(new Request { User = user });
+        }
 
         [TestMethod]
         public void should_be_denied_if_not_authenticated()
@@ -85,8 +94,9 @@ namespace DesignPatterns.ChainOfResponsibility
                 Name = "bobo"
             };
 
-            Assert.AreEqual(AuthResult.Deny, chain.Handle(new Request { User = user }));
+            Assert.AreEqual(AuthResult.Deny, TryAuthenticate(user));
         }
+
 
         [TestMethod]
         public void should_deny_if_not_in_adminrole_and_not_bobo()
@@ -98,7 +108,7 @@ namespace DesignPatterns.ChainOfResponsibility
                 Name = "lucy",
             };
 
-            Assert.AreEqual(AuthResult.Deny, chain.Handle(new Request { User = user }));
+            Assert.AreEqual(AuthResult.Deny, TryAuthenticate(user));
         }
 
         [TestMethod]
@@ -111,7 +121,7 @@ namespace DesignPatterns.ChainOfResponsibility
                 Name = "bobo",
             };
 
-            Assert.AreEqual(AuthResult.Allow, chain.Handle(new Request { User = user }));
+            Assert.AreEqual(AuthResult.Allow, TryAuthenticate(user));
         }
 
         [TestMethod]
@@ -124,7 +134,7 @@ namespace DesignPatterns.ChainOfResponsibility
                 Name = "lucy",
             };
 
-            Assert.AreEqual(AuthResult.Allow, chain.Handle(new Request { User = user }));
+            Assert.AreEqual(AuthResult.Allow, TryAuthenticate(user));
         }
     }
 
