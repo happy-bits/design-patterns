@@ -1,6 +1,10 @@
 ﻿
 /*
 
+    This exercise is about creating a "RegistrationService" with a method AddLicensePlate.
+    It's about trying to add a (swedish) license plates to a repository and handle problems.
+    The license plates have to be on a special format.
+
     Question: what do you think about the general solution to this problem?
 
     Note: doesn't use chain of responsibility yet
