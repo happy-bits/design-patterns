@@ -49,7 +49,20 @@ namespace DesignPatterns.ChainOfResponsibility
     public class BookPublishing
     {
         [TestMethod]
-        public void Test()
+        public void Ex1()
+        {
+            // IsSatisfiedBy returnerar true om inkomna strängen är "hej"
+            var hejSpec = new Specification<string>(y => y == "hej");
+
+            // IsSatisfiedBy returnerar true om inkomna siffran är 42
+            var fortytwoSpec = new Specification<int>(y => y == 42);
+
+            Assert.IsTrue(hejSpec.IsSatisfiedBy("hej"));
+            Assert.IsFalse(hejSpec.IsSatisfiedBy("oooo"));
+        }
+
+        [TestMethod]
+        public void Ex2()
         {
             // Skapa ett par böcker (med titel, författare, boktyp och publiceringskostnad)
 
@@ -62,15 +75,13 @@ namespace DesignPatterns.ChainOfResponsibility
                 new Book("Jane Eyre", "Charlotte Brontë", CoverType.Hard, 82750)
             };
 
-            LabWithSpecification();
-
-            // Skapa specifikationer för olika sorters böcker
+            // Skapa specifikationer för olika sorters böcker (de kräver att boken är Digital, Hard, Paperback)
 
             var digitalCoverSpec = new Specification<Book>(book => book.CoverType == CoverType.Digital);
             var hardCoverSpec = new Specification<Book>(book => book.CoverType == CoverType.Hard);
             var paperbackCoverSpec = new Specification<Book>(book => book.CoverType == CoverType.Paperback);
 
-            // Skapa specifkationer för intervall av publiceringskostnader
+            // Skapa specifikationer för intervall av publiceringskostnader
 
             var extremeBudgetSpec = new Specification<Book>(book => book.PublicationCost >= 75000);
             var highBudgetSpec = new Specification<Book>(book => book.PublicationCost >= 50000 && book.PublicationCost < 75000);
@@ -81,8 +92,9 @@ namespace DesignPatterns.ChainOfResponsibility
             // Skapa de anställda och om de kan publicera böcker eller ej
             var publicationProcess = new PublicationProcess();
 
+            // Emplyee<Book> ==> en anställd som kan publicera Book's
             // Tredje parametern hänvisar till en enkel metod som antingen ger error eller försöker publicera boken
-            // Trejde parametern är en Action<T>, så det måste i detta fall vara en funktion som tar en bok som indata
+            // Tredje parametern är en Action<T>, så det måste i detta fall vara en funktion som tar en bok som indata
 
             var ceo = new Employee<Book>("Alice", Position.CEO, publicationProcess.PublishBook);
             var president = new Employee<Book>("Bob", Position.President, publicationProcess.PublishBook);
@@ -93,13 +105,13 @@ namespace DesignPatterns.ChainOfResponsibility
             // Ange vad de olika anställda har för rättighet att göra (ex director kan bara hantera digitala och billiga böcker)
             // Tack vare "specification pattern" kan vi slå ihop flera specifikationer
 
-            director.SetSpecification(digitalCoverSpec.And<Book>(lowBudgetSpec));
-            cfo.SetSpecification(digitalCoverSpec.Or<Book>(paperbackCoverSpec).And<Book>(mediumBudgetSpec.Or<Book>(highBudgetSpec)));
-            president.SetSpecification(mediumBudgetSpec.Or<Book>(highBudgetSpec));
+            director.SetSpecification(digitalCoverSpec.And(lowBudgetSpec));
+            cfo.SetSpecification(digitalCoverSpec.Or(paperbackCoverSpec).And(mediumBudgetSpec.Or(highBudgetSpec)));
+            president.SetSpecification(mediumBudgetSpec.Or(highBudgetSpec));
             ceo.SetSpecification(extremeBudgetSpec);
             defaultEmployee.SetSpecification(defaultSpec);
 
-            // Chain of responsibility: director => cfo => president => ceo
+            // Chain of responsibility: director => cfo => president => ceo (börja med den som har lägst makt)
             director.SetSuccessor(cfo);
             cfo.SetSuccessor(president);
             president.SetSuccessor(ceo);
@@ -135,14 +147,7 @@ namespace DesignPatterns.ChainOfResponsibility
 
         }
 
-        private void LabWithSpecification()
-        {
-            var hejSpec = new Specification<string>(y => y == "hej");
-            var fortytwoSpec = new Specification<int>(y => y == 42);
 
-            Assert.IsTrue(hejSpec.IsSatisfiedBy("hej"));
-            Assert.IsFalse(hejSpec.IsSatisfiedBy("oooo"));
-        }
     }
 
     public class PublicationProcess
