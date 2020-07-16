@@ -25,11 +25,17 @@ namespace DesignPatterns.ChainOfResponsibility
 
         public LicensePlates_NoPattern()
         {
-            _service = new RegistrationService(new MockLicensePlateRepository());
+            _service = new RegistrationService(new FakeLicensePlateRepository());
         }
 
         [TestMethod]
-        public void register_three_valid_license_plates()
+        public void return_Success_when_plate_is_available_and_correct_format()
+        {
+            _service.AddLicensePlate("ABC 123", CustomerType.Normal);
+        }
+
+        [TestMethod]
+        public void count_nr_or_plates_to_four_after_four_registred_plates()
         {
             _service.AddLicensePlate("ABC 123", CustomerType.Normal);
             _service.AddLicensePlate("ABC 12B", CustomerType.Normal); // note: the last char don't have to be a number
@@ -45,39 +51,37 @@ namespace DesignPatterns.ChainOfResponsibility
         [DataRow("QBC 123")]
         [DataRow("1BC 123")]
         [DataRow("ABC  123")]
-        public void throw_InvalidFormatException_when_format_is_incorrect(string incorrectFormat)
+        public void return_InvalidFormat_when_format_is_incorrect(string plate)
         {
-            Assert.ThrowsException<RegistrationService.InvalidFormatException>(() =>
-            {
-                _service.AddLicensePlate(incorrectFormat, CustomerType.Normal);
-            });
+            var result = _service.AddLicensePlate(plate, CustomerType.Normal);
+            Assert.AreEqual(Result.InvalidFormat, result);
         }
 
         [TestMethod]
-        public void throw_OnlyForAdvertismentException_when_normal_customer_register_plate_starting_with_MLB()
+        [DataRow("MLB 123")]
+        [DataRow("MLB 456")]
+        public void return_OnlyForAdvertisment_when_normal_customer_register_plate_starting_with_MLB(string plate)
         {
-            Assert.ThrowsException<RegistrationService.OnlyForAdvertismentException>(() =>
-            {
-                _service.AddLicensePlate("MLB 123", CustomerType.Normal);
-            });
+            var result = _service.AddLicensePlate(plate, CustomerType.Normal);
+            Assert.AreEqual(Result.OnlyForAdvertisment, result);
         }
 
         [TestMethod]
-        public void register_successful_when_advertisment_want_plate_starting_with_MLB()
+        public void return_Success_when_advertisment_register_plate_starting_with_MLB()
         {
-            _service.AddLicensePlate("MLB 123", CustomerType.Advertisment);
+            var result = _service.AddLicensePlate("MLB 123", CustomerType.Advertisment);
             Assert.AreEqual(1, _service.NrOfRegistredPlates);
+            Assert.AreEqual(Result.Success, result);
         }
 
         [TestMethod]
-        public void throw_NotAvailableException_when_plate_is_already_registered()
+        public void return_NotAvailable_when_plate_is_already_registered()
         {
             _service.AddLicensePlate("ABC 123", CustomerType.Normal);
 
-            Assert.ThrowsException<RegistrationService.NotAvailableException>(() =>
-            {
-                _service.AddLicensePlate("ABC 123", CustomerType.Normal);
-            });
+            var result = _service.AddLicensePlate("ABC 123", CustomerType.Normal);
+            Assert.AreEqual(Result.NotAvailable, result);
+            
         }
 
         [TestMethod]
@@ -93,63 +97,45 @@ namespace DesignPatterns.ChainOfResponsibility
                 _service.AddLicensePlate("YYY 666", CustomerType.Normal);
             });
         }
-        
+
+        enum Result
+        {
+            Success, InvalidFormat, OnlyForAdvertisment, Database, NotAvailable
+        }
+
         class RegistrationService
         {
             private readonly ILicensePlateRepository _repo;
-
-            public class InvalidFormatException : Exception { }
-            public class OnlyForAdvertismentException : Exception { }
-            public class NotAvailableException : Exception { }
 
             public RegistrationService(ILicensePlateRepository repo)
             {
                 _repo = repo;
             }
 
-            private static string ValidRegexPattern
-            {
-                get
-                {
-                    var allSwedishLetters = "ABCDEFGHIJKLMNOPQRSTWXYZÅÄÖ";
-                    var invalidLetters = "IQVÅÄÖ";
-                    var validLetters = string.Join("", allSwedishLetters.Where(c => !invalidLetters.Contains(c)));
-                    var validLastCharacter = validLetters + "0123456789";
-                    return "[" + validLetters + "]{3} [0-9][0-9][" + validLastCharacter + "]";
-                }
-            }
-
             public int NrOfRegistredPlates => _repo.CountRegisteredPlates();
 
-            /*
-             
-                 Question: Is current code a good solution (with exceptions) or should I create a method that return something e.g an enum:
-
-                        public Result AddLicensePlate(....)
-                        {
-                        }
-
-                        enum Result
-                        {
-                            Success, InvalidFormat, OnlyForAdvertisment, Database, NotAvailable
-                        }
-
-            */
-
-            // (This will changed with "chain of responsibility pattern")
-
-            public void AddLicensePlate(string number, CustomerType customer)
+            public Result AddLicensePlate(string number, CustomerType customer)
             {
-                if (!Regex.IsMatch(number, ValidRegexPattern))
-                    throw new InvalidFormatException();
+                if (!Regex.IsMatch(number, GetValidRegexPattern()))
+                    return Result.InvalidFormat;
 
                 if (number.StartsWith("MLB") && customer != CustomerType.Advertisment)
-                    throw new OnlyForAdvertismentException();
+                    return Result.OnlyForAdvertisment;
 
                 if (!_repo.IsAvailable(number))
-                    throw new NotAvailableException();
+                    return Result.NotAvailable;
 
                 _repo.Save(number);
+                return Result.Success;
+            }
+
+            private static string GetValidRegexPattern()
+            {
+                var allSwedishLetters = "ABCDEFGHIJKLMNOPQRSTWXYZÅÄÖ";
+                var invalidLetters = "IQVÅÄÖ";
+                var validLetters = string.Join("", allSwedishLetters.Where(c => !invalidLetters.Contains(c)));
+                var validLastCharacter = validLetters + "0123456789";
+                return "[" + validLetters + "]{3} [0-9][0-9][" + validLastCharacter + "]";
             }
         }
 
@@ -160,9 +146,9 @@ namespace DesignPatterns.ChainOfResponsibility
             int CountRegisteredPlates();
         }
 
-        class RepositoryException : Exception { };
+        class RepositoryException: Exception { };
 
-        class MockLicensePlateRepository : ILicensePlateRepository
+        class FakeLicensePlateRepository : ILicensePlateRepository
         {
             private readonly List<string> _registered = new List<string>();
 
