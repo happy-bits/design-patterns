@@ -114,12 +114,15 @@ namespace DesignPatterns.ChainOfResponsibility
 
             public int NrOfRegistredPlates => _repo.CountRegisteredPlates();
 
+            private static bool PlateIsReservedForAdvertisment(string number) => number.StartsWith("MLB");
+            private static bool PlateHaveCorrectFormat(string number) => Regex.IsMatch(number, GetValidPlateRegexPattern());
+
             public Result AddLicensePlate(string number, CustomerType customer)
             {
-                if (!Regex.IsMatch(number, GetValidRegexPattern()))
+                if (!PlateHaveCorrectFormat(number))
                     return Result.InvalidFormat;
 
-                if (number.StartsWith("MLB") && customer != CustomerType.Advertisment)
+                if (PlateIsReservedForAdvertisment(number) && customer != CustomerType.Advertisment) 
                     return Result.OnlyForAdvertisment;
 
                 if (!_repo.IsAvailable(number))
@@ -129,7 +132,7 @@ namespace DesignPatterns.ChainOfResponsibility
                 return Result.Success;
             }
 
-            private static string GetValidRegexPattern()
+            private static string GetValidPlateRegexPattern()
             {
                 var allSwedishLetters = "ABCDEFGHIJKLMNOPQRSTWXYZÅÄÖ";
                 var invalidLetters = "IQVÅÄÖ";
