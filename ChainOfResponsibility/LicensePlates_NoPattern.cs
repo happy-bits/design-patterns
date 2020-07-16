@@ -35,7 +35,7 @@ namespace DesignPatterns.ChainOfResponsibility
         }
 
         [TestMethod]
-        public void count_nr_or_plates_to_four_after_four_registred_plates()
+        public void count_NrOfRegistredPlates_to_four_after_four_registred_plates()
         {
             _service.AddLicensePlate("ABC 123", CustomerType.Normal);
             _service.AddLicensePlate("ABC 12B", CustomerType.Normal); // note: the last char don't have to be a number
@@ -81,7 +81,6 @@ namespace DesignPatterns.ChainOfResponsibility
 
             var result = _service.AddLicensePlate("ABC 123", CustomerType.Normal);
             Assert.AreEqual(Result.NotAvailable, result);
-            
         }
 
         [TestMethod]
