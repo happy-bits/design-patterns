@@ -2,9 +2,6 @@
  
  Own example with traffic lights
 
- Nackdel:
- - Behövs throw new exception. Vet inte om vi täcker in alla enums
- - 
  */
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
