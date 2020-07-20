@@ -21,7 +21,9 @@ namespace DesignPatterns.StateDesignPattern
             */
 
             // Open a new account
-            Account account = new Account("Jim Johnson");
+            Account account = new Account("Jim");
+
+            Assert.AreEqual("Jim", account.Owner);
 
             // Apply financial transactions
 
@@ -89,28 +91,14 @@ namespace DesignPatterns.StateDesignPattern
         // The 'State' abstract class
 
         abstract class State
-
         {
-            protected Account account;
-            protected double balance;
+            protected double _interest;
+            protected double _lowerLimit;
+            protected double _upperLimit;
 
-            protected double interest;
-            protected double lowerLimit;
-            protected double upperLimit;
+            public Account Account { get; set; }
 
-            // Properties
-
-            public Account Account
-            {
-                get { return account; }
-                set { account = value; }
-            }
-
-            public double Balance
-            {
-                get { return balance; }
-                set { balance = value; }
-            }
+            public double Balance { get; protected set; }
 
             public abstract void Deposit(double amount);
             public abstract void Withdraw(double amount);
@@ -125,22 +113,22 @@ namespace DesignPatterns.StateDesignPattern
         {
             public Red(State state)
             {
-                balance = state.Balance;
-                account = state.Account;
+                Balance = state.Balance;
+                Account = state.Account;
                 Initialize();
             }
 
             private void Initialize()
             {
                 // Should come from a datasource
-                interest = 0.0;
-                lowerLimit = -100.0;
-                upperLimit = 0.0;
+                _interest = 0.0;
+                _lowerLimit = -100.0;
+                _upperLimit = 0.0;
             }
 
             public override void Deposit(double amount)
             {
-                balance += amount;
+                Balance += amount;
                 StateChangeCheck();
             }
 
@@ -156,9 +144,9 @@ namespace DesignPatterns.StateDesignPattern
 
             private void StateChangeCheck()
             {
-                if (balance > upperLimit)
+                if (Balance > _upperLimit)
                 {
-                    account.State = new Silver(this);
+                    Account.State = new Silver(this);
                 }
             }
         }
@@ -176,8 +164,8 @@ namespace DesignPatterns.StateDesignPattern
 
             public Silver(double balance, Account account)
             {
-                this.balance = balance;
-                this.account = account;
+                Balance = balance;
+                Account = account;
                 Initialize();
             }
 
@@ -185,39 +173,39 @@ namespace DesignPatterns.StateDesignPattern
             {
                 // Should come from a datasource
 
-                interest = 0.0;
-                lowerLimit = 0.0;
-                upperLimit = 1000.0;
+                _interest = 0.0;
+                _lowerLimit = 0.0;
+                _upperLimit = 1000.0;
             }
 
             public override void Deposit(double amount)
             {
-                balance += amount;
+                Balance += amount;
                 StateChangeCheck();
             }
 
             public override void Withdraw(double amount)
             {
-                balance -= amount;
+                Balance -= amount;
                 StateChangeCheck();
             }
 
             public override void PayInterest()
             {
-                balance += interest * balance;
+                Balance += _interest * Balance;
                 StateChangeCheck();
             }
 
             // Om kunden satt in mycket pengar => ändra state till GoldState
             private void StateChangeCheck()
             {
-                if (balance < lowerLimit)
+                if (Balance < _lowerLimit)
                 {
-                    account.State = new Red(this);
+                    Account.State = new Red(this);
                 }
-                else if (balance > upperLimit)
+                else if (Balance > _upperLimit)
                 {
-                    account.State = new Gold(this);
+                    Account.State = new Gold(this);
                 }
             }
         }
@@ -236,8 +224,8 @@ namespace DesignPatterns.StateDesignPattern
 
             public Gold(double balance, Account account)
             {
-                this.balance = balance;
-                this.account = account;
+                Balance = balance;
+                Account = account;
                 Initialize();
             }
 
@@ -245,26 +233,26 @@ namespace DesignPatterns.StateDesignPattern
             {
                 // Should come from a database
 
-                interest = 0.05;
-                lowerLimit = 1000.0;
-                upperLimit = 10000000.0;
+                _interest = 0.05;
+                _lowerLimit = 1000.0;
+                _upperLimit = 10000000.0;
             }
 
             public override void Deposit(double amount)
             {
-                balance += amount;
+                Balance += amount;
                 StateChangeCheck();
             }
 
             public override void Withdraw(double amount)
             {
-                balance -= amount;
+                Balance -= amount;
                 StateChangeCheck();
             }
 
             public override void PayInterest()
             {
-                balance += interest * balance;
+                Balance += _interest * Balance;
                 StateChangeCheck();
             }
 
@@ -272,13 +260,13 @@ namespace DesignPatterns.StateDesignPattern
             // "this" skickas bara med för att få med "balance" och en hänvisning till Account
             private void StateChangeCheck()
             {
-                if (balance < 0.0)
+                if (Balance < 0.0)
                 {
-                    account.State = new Red(this);
+                    Account.State = new Red(this);
                 }
-                else if (balance < lowerLimit)
+                else if (Balance < _lowerLimit)
                 {
-                    account.State = new Silver(this);
+                    Account.State = new Silver(this);
                 }
             }
         }
@@ -297,16 +285,15 @@ namespace DesignPatterns.StateDesignPattern
         */
         class Account
         {
-            private readonly string _owner;
-
             public Account(string owner)
             {
                 // New accounts are 'Silver' by default
 
-                _owner = owner;
+                Owner = owner;
                 State = new Silver(0.0, this);
             }
 
+            public string Owner { get; }
             public double Balance
             {
                 get { return State.Balance; }

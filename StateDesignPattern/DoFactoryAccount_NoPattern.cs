@@ -1,9 +1,4 @@
-﻿/*
-
-STATE DESIGN PATTERN - https://www.dofactory.com/net/state-design-pattern
-(Written as a test)
-
-*/
+﻿
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -18,12 +13,11 @@ namespace DesignPatterns.StateDesignPattern
         [TestMethod]
         public void Ex1()
         {
-            /*
-            Klienten behöver inte veta att det finns klasser som RedState, SilverState, GoldState
-            */
 
             // Open a new account
-            Account account = new Account("Jim Johnson");
+            Account account = new Account("Jim");
+
+            Assert.AreEqual("Jim", account.Owner);
 
             // Apply financial transactions
 
@@ -48,14 +42,14 @@ namespace DesignPatterns.StateDesignPattern
             AssertAndClearLog(new[] {
                     "Deposited: 550",
                     "Balance: 1350",
-                    "Status: Gold"        // Status ändrat till Gold
+                    "Status: Gold"          // Status ändrat till Gold
             });
 
             account.PayInterest();
 
             AssertAndClearLog(new[] {
                     "Interest Paid",
-                    "Balance: 1417.5",           // 5% ränta som guldkund
+                    "Balance: 1417.5",      // 5% ränta som guldkund
                     "Status: Gold"
             });
 
@@ -95,15 +89,16 @@ namespace DesignPatterns.StateDesignPattern
 
         class Account     
         {
-            private readonly string _owner;
             private double _balance;
+
             public Account(string owner)
             {
-                _owner = owner;
+                Owner = owner;
                 State = State.Silver;
             }
 
             public State State { get; private set; }
+            public string Owner { get; }
 
             public void Deposit(double amount)
             {
