@@ -98,6 +98,25 @@ namespace DesignPatterns.StateDesignPattern.Bookings
             AssertQueuesAreEmpty(view, context);
 
         }
+
+        [TestMethod]
+        public void date_passed()
+        {
+            var view = new MainWindow();
+            var context = new BookingContext(view);
+
+            Assert.AreEqual("New booking", view.Debug.Dequeue());
+            Assert.AreEqual("New.TicketCount=0.Attendee=.", context.Debug.Dequeue());
+
+            context.DatePassed();
+
+            Assert.AreEqual("Booking Expired", view.Debug.Dequeue());
+            Assert.AreEqual("Closed.TicketCount=0.Attendee=.", context.Debug.Dequeue());
+
+            AssertQueuesAreEmpty(view, context);
+
+
+        }
     }
 
 }

@@ -14,7 +14,7 @@ namespace DesignPatterns.StateDesignPattern.Bookings.Common
 
         internal void ShowStatusPage(string message)
         {
-            Debug.Enqueue($"{message}");
+            Debug.Enqueue(message);
         }
 
         internal void ShowProcessingError()
@@ -24,6 +24,7 @@ namespace DesignPatterns.StateDesignPattern.Bookings.Common
 
         internal void ShowError(string v1, string v2)
         {
+
             throw new NotImplementedException();
         }
     }
