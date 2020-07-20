@@ -41,6 +41,8 @@ namespace DesignPatterns.StateDesignPattern
 
             context.SubmitDetails("Oscar", 5);
 
+            Task.Delay(500).Wait();
+
             Assert.AreEqual("Processing Booking", view.Debug.Dequeue());
             Assert.AreEqual("Pending.TicketCount=5.Attendee=Oscar.", context.Debug.Dequeue());
 
@@ -64,6 +66,8 @@ namespace DesignPatterns.StateDesignPattern
 
             context.SubmitDetails("Oscar", 666);
 
+            Task.Delay(500).Wait();
+
             Assert.AreEqual("Processing Booking", view.Debug.Dequeue());
             Assert.AreEqual("Pending.TicketCount=666.Attendee=Oscar.", context.Debug.Dequeue());
 
@@ -78,7 +82,6 @@ namespace DesignPatterns.StateDesignPattern
             Assert.AreNotEqual(b1, b2); // vi ska ha fått ett nytt bookingid
 
             AssertQueuesAreEmpty(view, context);
-
 
         }
 
@@ -294,10 +297,20 @@ namespace DesignPatterns.StateDesignPattern
 
         public static class StaticFunctions
         {
-            public static void ProcessBooking(BookingContext booking, Action<BookingContext, ProcessingResult> callback, CancellationTokenSource token)
+            public static async void ProcessBooking(BookingContext booking, Action<BookingContext, ProcessingResult> callback, CancellationTokenSource token)
             {
-                // todo: fixa
-                Task.Delay(100).Wait();
+                try
+                {
+                    await Task.Run(async delegate
+                    {
+                        await Task.Delay(200, token.Token);
+                    });
+                }
+                catch (OperationCanceledException)
+                {
+                    callback(booking, ProcessingResult.Cancel);
+                    return;
+                }
 
                 ProcessingResult result = ProcessingResult.Success;
 
