@@ -21,9 +21,9 @@ namespace DesignPatterns.StateDesignPattern
         [TestMethod]
         public void Ex1()
         {
-            // "Client code"
-            var light = new TrafficLight(Light.Red);
-            Assert.AreEqual("Traffic is in state Red", _log.Dequeue());
+            var light = new TrafficLight(Material.LED, Light.Red);
+
+            Assert.AreEqual("Light is in state Red", _log.Dequeue());
             CollectionAssert.AreEqual(new[] {
                 "⚫",
                 "⚪",
@@ -31,7 +31,7 @@ namespace DesignPatterns.StateDesignPattern
             }, light.Render());
 
             light.Next();
-            Assert.AreEqual("Traffic is in state RedYellow", _log.Dequeue());
+            Assert.AreEqual("Light is in state RedYellow", _log.Dequeue());
             CollectionAssert.AreEqual(new[] {
                 "⚫",
                 "⚫",
@@ -39,7 +39,7 @@ namespace DesignPatterns.StateDesignPattern
             }, light.Render());
 
             light.Next();
-            Assert.AreEqual("Traffic is in state Green", _log.Dequeue());
+            Assert.AreEqual("Light is in state Green", _log.Dequeue());
             CollectionAssert.AreEqual(new[] {
                 "⚪",
                 "⚪",
@@ -47,7 +47,7 @@ namespace DesignPatterns.StateDesignPattern
             }, light.Render());
 
             light.Next();
-            Assert.AreEqual("Traffic is in state Yellow", _log.Dequeue());
+            Assert.AreEqual("Light is in state Yellow", _log.Dequeue());
             CollectionAssert.AreEqual(new[] {
                 "⚪",
                 "⚫",
@@ -55,14 +55,21 @@ namespace DesignPatterns.StateDesignPattern
             }, light.Render());
 
             light.Next();
-            Assert.AreEqual("Traffic is in state Red", _log.Dequeue());
+            Assert.AreEqual("Light is in state Red", _log.Dequeue());
             CollectionAssert.AreEqual(new[] {
                 "⚫",
                 "⚪",
                 "⚪",
             }, light.Render());
+
+            Assert.AreEqual("LED", light.Material.ToString());
 
             Assert.AreEqual(0, _log.Count);
+        }
+
+        public enum Material
+        {
+            Halogen, LED
         }
 
         // "Context"
@@ -70,17 +77,19 @@ namespace DesignPatterns.StateDesignPattern
         {
             private Light _light;
 
-            public TrafficLight(Light light)
+            public TrafficLight(Material material, Light light)
             {
                 _light = light;
-
-                _log.Enqueue($"Traffic is in state {_light}");
+                Material = material;
+                _log.Enqueue($"Light is in state {_light}");
             }
+
+            public Material Material { get; }
 
             internal void Next()
             {
                 _light = GetNextLight();
-                _log.Enqueue($"Traffic is in state {_light}");
+                _log.Enqueue($"Light is in state {_light}");
             }
 
             private Light GetNextLight() => _light switch
