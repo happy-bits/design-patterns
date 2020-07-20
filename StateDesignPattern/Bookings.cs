@@ -11,18 +11,6 @@ namespace DesignPatterns.StateDesignPattern
     [TestClass]
     public class Bookings
     {
-        [TestMethod]
-        public void state_should_be_new_at_start()
-        {
-            var view = new MainWindow();
-            var context = new BookingContext(view);
-
-            Assert.AreEqual("New booking", view.Debug.Dequeue());
-            Assert.AreEqual("New.TicketCount=0.Attendee=.", context.Debug.Dequeue());
-
-            AssertQueuesAreEmpty(view, context);
-
-        }
 
         private void AssertQueuesAreEmpty(MainWindow view, BookingContext context)
         {
@@ -41,10 +29,10 @@ namespace DesignPatterns.StateDesignPattern
 
             context.SubmitDetails("Oscar", 5);
 
-            Task.Delay(500).Wait();
-
             Assert.AreEqual("Processing Booking", view.Debug.Dequeue());
             Assert.AreEqual("Pending.TicketCount=5.Attendee=Oscar.", context.Debug.Dequeue());
+
+            Task.Delay(500).Wait();
 
             Assert.AreEqual("Enjoy the Event", view.Debug.Dequeue());
             Assert.AreEqual("Booked.TicketCount=5.Attendee=Oscar.", context.Debug.Dequeue());
@@ -81,6 +69,31 @@ namespace DesignPatterns.StateDesignPattern
 
             Assert.AreNotEqual(b1, b2); // vi ska ha fått ett nytt bookingid
 
+            AssertQueuesAreEmpty(view, context);
+
+        }
+
+        [TestMethod]
+        public void canceled_booking()
+        {
+            var view = new MainWindow();
+            var context = new BookingContext(view);
+
+            Assert.AreEqual("New booking", view.Debug.Dequeue());
+            Assert.AreEqual("New.TicketCount=0.Attendee=.", context.Debug.Dequeue());
+
+            context.SubmitDetails("Oscar", 5);
+
+            Assert.AreEqual("Processing Booking", view.Debug.Dequeue());
+            Assert.AreEqual("Pending.TicketCount=5.Attendee=Oscar.", context.Debug.Dequeue());
+
+            context.Cancel();
+
+            Task.Delay(500).Wait();
+
+            Assert.AreEqual("Processing Canceled", view.Debug.Dequeue());
+            Assert.AreEqual("Closed.TicketCount=5.Attendee=Oscar.", context.Debug.Dequeue());
+            
             AssertQueuesAreEmpty(view, context);
 
         }
