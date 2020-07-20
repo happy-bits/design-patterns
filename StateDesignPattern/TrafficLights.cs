@@ -2,24 +2,26 @@
  
  Own example with traffic lights
 
+ Fördel:
+ - Koden som rör t.ex Red är inom samma klass (texten "Rött" och Render)
+ - Behöver inte throw new exception (som i förra exemplet)
+
+ Nackdel
+ - Mer kod, mer komplext
  */
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
 
 namespace DesignPatterns.StateDesignPattern
 {
     [TestClass]
     public class TrafficLights
     {
-        static Queue<string> _log = new Queue<string>();
-
         [TestMethod]
         public void Ex1()
         {
-            // "Client code"
             var light = new TrafficLight(Material.LED, new Red());
 
-            Assert.AreEqual("Light is in state Red", _log.Dequeue());
+            Assert.AreEqual("Rött", light.Describe);
             CollectionAssert.AreEqual(new[] {
                 "⚫",
                 "⚪",
@@ -27,7 +29,7 @@ namespace DesignPatterns.StateDesignPattern
             }, light.Render());
 
             light.Next();
-            Assert.AreEqual("Light is in state RedYellow", _log.Dequeue());
+            Assert.AreEqual("Rött och gult", light.Describe);
             CollectionAssert.AreEqual(new[] {
                 "⚫",
                 "⚫",
@@ -35,7 +37,7 @@ namespace DesignPatterns.StateDesignPattern
             }, light.Render());
 
             light.Next();
-            Assert.AreEqual("Light is in state Green", _log.Dequeue());
+            Assert.AreEqual("Grönt", light.Describe);
             CollectionAssert.AreEqual(new[] {
                 "⚪",
                 "⚪",
@@ -43,7 +45,7 @@ namespace DesignPatterns.StateDesignPattern
             }, light.Render());
 
             light.Next();
-            Assert.AreEqual("Light is in state Yellow", _log.Dequeue());
+            Assert.AreEqual("Gult", light.Describe);
             CollectionAssert.AreEqual(new[] {
                 "⚪",
                 "⚫",
@@ -51,7 +53,7 @@ namespace DesignPatterns.StateDesignPattern
             }, light.Render());
 
             light.Next();
-            Assert.AreEqual("Light is in state Red", _log.Dequeue());
+            Assert.AreEqual("Rött", light.Describe);
             CollectionAssert.AreEqual(new[] {
                 "⚫",
                 "⚪",
@@ -59,9 +61,6 @@ namespace DesignPatterns.StateDesignPattern
             }, light.Render());
 
             Assert.AreEqual("LED", light.Material.ToString());
-
-            Assert.AreEqual(0, _log.Count);
-
         }
 
         [TestMethod]
@@ -76,11 +75,11 @@ namespace DesignPatterns.StateDesignPattern
             Halogen, LED
         }
         // "Context"
-        internal class TrafficLight
+        public class TrafficLight
         {
             private State _state;
 
-            internal TrafficLight(Material material, State state)
+            public TrafficLight(Material material, State state)
             {
                 TransitionTo(state);
                 Material = material;
@@ -88,54 +87,62 @@ namespace DesignPatterns.StateDesignPattern
 
             public Material Material { get; }
 
-            internal void Next() => _state.Next();
-            internal string[] Render() => _state.Render();
+            public void Next() => _state.Next();
+            public string[] Render() => _state.Render();
 
-            internal void TransitionTo(State state)
+            public void TransitionTo(State state)
             {
                 _state = state;
                 _state.SetContext(this);
-                _log.Enqueue($"Light is in state {_state.GetType().Name}");
             }
+
+            public string Describe => _state.Describe;
+
         }
 
         // "State"
-        internal abstract class State
+        public abstract class State
         {
             protected TrafficLight _light;
 
-            internal abstract void Next();
+            public abstract void Next();
 
-            internal abstract string[] Render();
+            public abstract string[] Render();
 
-            internal void SetContext(TrafficLight light)
+            public abstract string Describe { get; }
+
+            public void SetContext(TrafficLight light)
             {
                 _light = light;
             }
         }
 
-        internal class Red : State
+        public class Red : State
         {
-            internal override void Next()
+            public override string Describe => "Rött";
+
+            public override void Next()
             {
                 _light.TransitionTo(new RedYellow());
             }
 
-            internal override string[] Render() => new[] {
+            public override string[] Render() => new[] {
                 "⚫",
                 "⚪",
                 "⚪",
             };
         }
 
-        internal class RedYellow: State
+        public class RedYellow: State
         {
-            internal override void Next()
+            public override string Describe => "Rött och gult";
+
+            public override void Next()
             {
                 _light.TransitionTo(new Green());
             }
 
-            internal override string[] Render() => new[] {
+            public override string[] Render() => new[] {
                 "⚫",
                 "⚫",
                 "⚪",
@@ -143,14 +150,16 @@ namespace DesignPatterns.StateDesignPattern
 
         }
 
-        internal class Green: State
+        public class Green: State
         {
-            internal override void Next()
+            public override string Describe => "Grönt";
+
+            public override void Next()
             {
                 _light.TransitionTo(new Yellow());
             }
 
-            internal override string[] Render() => new[] {
+            public override string[] Render() => new[] {
                 "⚪",
                 "⚪",
                 "⚫",
@@ -158,23 +167,21 @@ namespace DesignPatterns.StateDesignPattern
 
         }
 
-        internal class Yellow: State
+        public class Yellow: State
         {
-            internal override void Next()
+            public override string Describe => "Gult";
+
+            public override void Next()
             {
                 _light.TransitionTo(new Red());
             }
 
-            internal override string[] Render() => new[] {
+            public override string[] Render() => new[] {
                 "⚪",
                 "⚫",
                 "⚪",
             };
 
-            // [ ]
-            // [X]
-            // [ ]
-            //  Gult
         }
     }
 }

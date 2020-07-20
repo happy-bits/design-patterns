@@ -2,6 +2,9 @@
  
  Own example with traffic lights
 
+ Nackdel:
+ - Behövs throw new exception. Vet inte om vi täcker in alla enums
+ - 
  */
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -12,18 +15,17 @@ namespace DesignPatterns.StateDesignPattern
     [TestClass]
     public class TrafficLights_NoPattern
     {
-        static Queue<string> _log = new Queue<string>();
-
         public enum Light
         {
             Red, RedYellow, Yellow, Green
         }
+        
         [TestMethod]
         public void Ex1()
         {
             var light = new TrafficLight(Material.LED, Light.Red);
 
-            Assert.AreEqual("Light is in state Red", _log.Dequeue());
+            Assert.AreEqual("Rött", light.Describe);
             CollectionAssert.AreEqual(new[] {
                 "⚫",
                 "⚪",
@@ -31,7 +33,7 @@ namespace DesignPatterns.StateDesignPattern
             }, light.Render());
 
             light.Next();
-            Assert.AreEqual("Light is in state RedYellow", _log.Dequeue());
+            Assert.AreEqual("Rött och gult", light.Describe);
             CollectionAssert.AreEqual(new[] {
                 "⚫",
                 "⚫",
@@ -39,7 +41,7 @@ namespace DesignPatterns.StateDesignPattern
             }, light.Render());
 
             light.Next();
-            Assert.AreEqual("Light is in state Green", _log.Dequeue());
+            Assert.AreEqual("Grönt", light.Describe);
             CollectionAssert.AreEqual(new[] {
                 "⚪",
                 "⚪",
@@ -47,7 +49,7 @@ namespace DesignPatterns.StateDesignPattern
             }, light.Render());
 
             light.Next();
-            Assert.AreEqual("Light is in state Yellow", _log.Dequeue());
+            Assert.AreEqual("Gult", light.Describe);
             CollectionAssert.AreEqual(new[] {
                 "⚪",
                 "⚫",
@@ -55,7 +57,7 @@ namespace DesignPatterns.StateDesignPattern
             }, light.Render());
 
             light.Next();
-            Assert.AreEqual("Light is in state Red", _log.Dequeue());
+            Assert.AreEqual("Rött", light.Describe);
             CollectionAssert.AreEqual(new[] {
                 "⚫",
                 "⚪",
@@ -63,17 +65,14 @@ namespace DesignPatterns.StateDesignPattern
             }, light.Render());
 
             Assert.AreEqual("LED", light.Material.ToString());
-
-            Assert.AreEqual(0, _log.Count);
         }
 
         public enum Material
         {
             Halogen, LED
         }
-
-        // "Context"
-        internal class TrafficLight
+        
+        public class TrafficLight
         {
             private Light _light;
 
@@ -81,15 +80,13 @@ namespace DesignPatterns.StateDesignPattern
             {
                 _light = light;
                 Material = material;
-                _log.Enqueue($"Light is in state {_light}");
             }
 
             public Material Material { get; }
 
-            internal void Next()
+            public void Next()
             {
                 _light = GetNextLight();
-                _log.Enqueue($"Light is in state {_light}");
             }
 
             private Light GetNextLight() => _light switch
@@ -98,10 +95,19 @@ namespace DesignPatterns.StateDesignPattern
                 Light.RedYellow => Light.Green,
                 Light.Green => Light.Yellow,
                 Light.Yellow => Light.Red,
-                _ => throw new Exception()
+                _ => throw new Exception()   // nackdel
             };
 
-            internal string[] Render() => _light switch
+            public string Describe => _light switch
+            {
+                Light.Red => "Rött",
+                Light.RedYellow => "Rött och gult",
+                Light.Green => "Grönt",
+                Light.Yellow => "Gult",
+                _ => throw new Exception()    // nackdel
+            };
+
+            public string[] Render() => _light switch
             {
                 Light.Red => new[] {
                     "⚫",
@@ -109,21 +115,21 @@ namespace DesignPatterns.StateDesignPattern
                     "⚪",
                 },
                 Light.RedYellow => new[] {
-                "⚫",
-                "⚫",
-                "⚪",
+                    "⚫",
+                    "⚫",
+                    "⚪",
                 },
                 Light.Green => new[] {
-                "⚪",
-                "⚪",
-                "⚫",
+                    "⚪",
+                    "⚪",
+                    "⚫",
                 },
                 Light.Yellow => new[] {
-                "⚪",
-                "⚫",
-                "⚪",
+                    "⚪",
+                    "⚫",
+                    "⚪",
                 },  
-                _ => throw new Exception()
+                _ => throw new Exception()    // nackdel
             };
         }
 
