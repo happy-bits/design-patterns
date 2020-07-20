@@ -27,8 +27,9 @@ namespace DesignPatterns.StateDesignPattern.Bookings.Pattern
             cancelToken = new CancellationTokenSource();
 
             booking.ShowState("Pending");
-            booking.View.ShowStatusPage("Processing Booking");
+            booking.View.ShowPage("Processing Booking");
 
+            // Efter anropet (200ms) så anropas metoden nedan och vi hamnar i nytt state
             StaticFunctions.ProcessBooking(booking, ProcessingComplete, cancelToken);
         }
 
@@ -40,7 +41,7 @@ namespace DesignPatterns.StateDesignPattern.Bookings.Pattern
                     booking.TransitionToState(new BookedState());
                     break;
                 case ProcessingResult.Fail:
-                    booking.View.ShowProcessingError();
+                    booking.View.ShowError("Error processing booking");
                     booking.TransitionToState(new NewState());
                     break;
                 case ProcessingResult.Cancel:

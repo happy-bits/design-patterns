@@ -9,25 +9,26 @@
             reasonClosed = reason;
         }
 
+        // Kan inte göra något när bokningen är Closed
         public override void Cancel(BookingContext booking)
         {
-            booking.View.ShowError("Invalid action for this state", "Closed Booking Error");
+            booking.View.ShowError("Invalid action for this state");
         }
 
         public override void DatePassed(BookingContext booking)
         {
-            booking.View.ShowError("Invalid action for this state", "Closed Booking Error");
+            booking.View.ShowError("Invalid action for this state");
         }
 
         public override void EnterDetails(BookingContext booking, string attendee, int ticketCount)
         {
-            booking.View.ShowError("Invalid action for this state", "Closed Booking Error");
+            booking.View.ShowError("Invalid action for this state");
         }
 
         public override void EnterState(BookingContext booking)
         {
             booking.ShowState("Closed");
-            booking.View.ShowStatusPage(reasonClosed);
+            booking.View.ShowPage(reasonClosed);
         }
     }
 }

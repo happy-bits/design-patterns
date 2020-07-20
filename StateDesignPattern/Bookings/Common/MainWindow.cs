@@ -7,25 +7,15 @@ namespace DesignPatterns.StateDesignPattern.Bookings.Common
     {
         public Queue<string> Debug { get; private set; } = new Queue<string>();
 
-        internal void ShowEntryPage()
-        {
-            Debug.Enqueue("New booking");
-        }
-
-        internal void ShowStatusPage(string message)
+        internal void ShowPage(string message)
         {
             Debug.Enqueue(message);
         }
 
-        internal void ShowProcessingError()
+        internal void ShowError(string message)
         {
-            Debug.Enqueue($"Error processing booking");
+            Debug.Enqueue(message);
         }
 
-        internal void ShowError(string v1, string v2)
-        {
-
-            throw new NotImplementedException();
-        }
     }
 }
