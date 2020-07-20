@@ -18,11 +18,6 @@ namespace DesignPatterns.StateDesignPattern
 
     Varje State har ett antal metoder med samma signatur (handlers)
 
-    Ett Context har ett (abstrakt) State
-    Ett (konkret) state kan ändra context'ets state (i runtime)
-
-    Varje State har ett antal metoder med samma signatur (handlers)
-
     */
     [TestClass]
     public class GuruConceptual

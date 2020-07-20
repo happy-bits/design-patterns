@@ -129,6 +129,7 @@ namespace DesignPatterns.StateDesignPattern
                 "⚫",
                 "⚪",
             };
+
         }
 
         internal class Green: State
@@ -143,6 +144,7 @@ namespace DesignPatterns.StateDesignPattern
                 "⚪",
                 "⚫",
             };
+
         }
 
         internal class Yellow: State

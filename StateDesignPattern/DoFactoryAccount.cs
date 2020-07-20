@@ -30,7 +30,7 @@ namespace DesignPatterns.StateDesignPattern
             AssertAndClearLog(new[] {
                     "Deposited: 500",
                     "Balance: 500",
-                    "Status: SilverState"
+                    "Status: Silver"
             });
 
             account.Deposit(300.0);
@@ -38,7 +38,7 @@ namespace DesignPatterns.StateDesignPattern
             AssertAndClearLog(new[] {
                     "Deposited: 300",
                     "Balance: 800",
-                    "Status: SilverState"
+                    "Status: Silver"
             });
 
             account.Deposit(550.0);
@@ -46,7 +46,7 @@ namespace DesignPatterns.StateDesignPattern
             AssertAndClearLog(new[] {
                     "Deposited: 550",
                     "Balance: 1350",
-                    "Status: GoldState"
+                    "Status: Gold"        // Status ändrat till Gold
             });
 
             account.PayInterest();
@@ -54,7 +54,7 @@ namespace DesignPatterns.StateDesignPattern
             AssertAndClearLog(new[] {
                     "Interest Paid",
                     "Balance: 1417.5",           // 5% ränta som guldkund
-                    "Status: GoldState"
+                    "Status: Gold"
             });
 
             account.Withdraw(2000.00);
@@ -62,7 +62,7 @@ namespace DesignPatterns.StateDesignPattern
             AssertAndClearLog(new[] {
                     "Withdrew: 2000",
                     "Balance: -582.5",
-                    "Status: RedState"
+                    "Status: Red"            // Status ändrad till Red
             });
 
             account.Withdraw(1100.00);
@@ -71,7 +71,7 @@ namespace DesignPatterns.StateDesignPattern
                     "No funds available for withdrawal!",
                     "Withdrew: 1100",
                     "Balance: -582.5",
-                    "Status: RedState"
+                    "Status: Red"
             });
         }
 
@@ -121,11 +121,9 @@ namespace DesignPatterns.StateDesignPattern
         /// A 'ConcreteState' class
         /// Red indicates that account is overdrawn 
 
-        class RedState : State  // **Won**
+        class Red : State
         {
-            private double _serviceFee;
-
-            public RedState(State state)
+            public Red(State state)
             {
                 balance = state.Balance;
                 account = state.Account;
@@ -138,7 +136,6 @@ namespace DesignPatterns.StateDesignPattern
                 interest = 0.0;
                 lowerLimit = -100.0;
                 upperLimit = 0.0;
-                _serviceFee = 15.00;
             }
 
             public override void Deposit(double amount)
@@ -149,7 +146,6 @@ namespace DesignPatterns.StateDesignPattern
 
             public override void Withdraw(double amount)
             {
-                amount = amount - _serviceFee;
                 _log.Add("No funds available for withdrawal!");
             }
 
@@ -162,7 +158,7 @@ namespace DesignPatterns.StateDesignPattern
             {
                 if (balance > upperLimit)
                 {
-                    account.State = new SilverState(this);
+                    account.State = new Silver(this);
                 }
             }
         }
@@ -170,15 +166,15 @@ namespace DesignPatterns.StateDesignPattern
         /// A 'ConcreteState' class
         /// Silver indicates a non-interest bearing state
 
-        class SilverState : State
+        class Silver : State
         {
             // Overloaded constructors
 
-            public SilverState(State state) : this(state.Balance, state.Account)
+            public Silver(State state) : this(state.Balance, state.Account)
             {
             }
 
-            public SilverState(double balance, Account account)
+            public Silver(double balance, Account account)
             {
                 this.balance = balance;
                 this.account = account;
@@ -217,11 +213,11 @@ namespace DesignPatterns.StateDesignPattern
             {
                 if (balance < lowerLimit)
                 {
-                    account.State = new RedState(this);
+                    account.State = new Red(this);
                 }
                 else if (balance > upperLimit)
                 {
-                    account.State = new GoldState(this);
+                    account.State = new Gold(this);
                 }
             }
         }
@@ -229,16 +225,16 @@ namespace DesignPatterns.StateDesignPattern
         // A 'ConcreteState' class
         // Gold indicates an interest bearing state
 
-        class GoldState : State
+        class Gold : State
 
         {
             // Overloaded constructors
 
-            public GoldState(State state) : this(state.Balance, state.Account)
+            public Gold(State state) : this(state.Balance, state.Account)
             {
             }
 
-            public GoldState(double balance, Account account)
+            public Gold(double balance, Account account)
             {
                 this.balance = balance;
                 this.account = account;
@@ -278,11 +274,11 @@ namespace DesignPatterns.StateDesignPattern
             {
                 if (balance < 0.0)
                 {
-                    account.State = new RedState(this);
+                    account.State = new Red(this);
                 }
                 else if (balance < lowerLimit)
                 {
-                    account.State = new SilverState(this);
+                    account.State = new Silver(this);
                 }
             }
         }
@@ -299,7 +295,7 @@ namespace DesignPatterns.StateDesignPattern
 
            Denna klass har bara "_owner" som ett eget fält. Sedan hänvisar klassen bara till State'ts metoder
         */
-        class Account      // ***Hangman***
+        class Account
         {
             private readonly string _owner;
 
@@ -308,7 +304,7 @@ namespace DesignPatterns.StateDesignPattern
                 // New accounts are 'Silver' by default
 
                 _owner = owner;
-                State = new SilverState(0.0, this);
+                State = new Silver(0.0, this);
             }
 
             public double Balance
