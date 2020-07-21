@@ -4,6 +4,7 @@ FACTORY METHOD - (own example)
 
  */
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,7 +24,7 @@ namespace DesignPatterns.FactoryMethod
         {
             var c = new Client();
 
-            var result = c.ClientCode(new HtmlCreator());
+            var result = c.ClientCode("html");
 
             CollectionAssert.AreEqual(new[] {
                 "<h1>HeaderA</h1>\n<body>BodyA</body>",
@@ -37,7 +38,7 @@ namespace DesignPatterns.FactoryMethod
         {
             var c = new Client();
 
-            var result = c.ClientCode(new MarkdownCreator());
+            var result = c.ClientCode("markdown");
 
             CollectionAssert.AreEqual(new[] {
                 "# HeaderA\nBodyA",
@@ -125,8 +126,10 @@ namespace DesignPatterns.FactoryMethod
         // "Client"
         class Client
         {
-            public List<string> ClientCode(DocumentCreator creator)
+            public List<string> ClientCode(string type)
             {
+                DocumentCreator creator = GetCreator(type);
+
                 List<string> result = new List<string>();
 
                 string result1 = creator.Render("HeaderA", "BodyA");
@@ -141,6 +144,13 @@ namespace DesignPatterns.FactoryMethod
 
                 return result;
             }
+
+            private static DocumentCreator GetCreator(string type) => type switch
+            {
+                "markdown" => new MarkdownCreator(),
+                "html" => new HtmlCreator(),
+                _ => throw new NotImplementedException()
+            };
         }
     }
 }
