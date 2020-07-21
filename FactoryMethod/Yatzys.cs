@@ -13,34 +13,36 @@ namespace DesignPatterns.FactoryMethod
     [TestClass]
     public class Yatzys
     {
-        static readonly List<string> _log = new List<string>();
 
         [TestMethod]
-        public void Ex1()
+        public void fake_yatzy_should_always_return_the_same()
         {
             var c = new Client();
 
-            c.ClientCode(new MockYatzyGameCreator());
+            var result = c.RollDices(new FakeYatzyCreator());
             CollectionAssert.AreEqual(new[] {
                 "1,1,1,1,1",
                 "2,2,2,2,2",
                 "3,3,3,3,3",
-            }, _log);
-
-            c.ClientCode(new YatzyCreator());
-
-            Assert.AreEqual(6, _log.Count);
-
+            }, result);
 
         }
 
+        [TestMethod]
+        public void should_give_three_rolls()
+        {
+            var c = new Client();
+            var result = c.RollDices(new YatzyCreator());
+            Assert.AreEqual(3, result.Count);
+        }
+
         // "Creator"
-        abstract class YatzyCreatorBase
+        abstract class YatzyBaseCreator
         {
 
-            private YatzyGameBase _game;
+            private YatzyBase _game;
 
-            internal abstract YatzyGameBase Create();
+            protected abstract YatzyBase Create();
 
             internal DiceRoll Roll()
             {
@@ -51,26 +53,24 @@ namespace DesignPatterns.FactoryMethod
         }
 
         // "Concrete Creator" 
-        class YatzyCreator : YatzyCreatorBase
+        class YatzyCreator : YatzyBaseCreator
         {
-            internal override YatzyGameBase Create() => new YatzyGame();
+            protected override YatzyBase Create() => new Yatzy();
         }
-
 
         // "Concrete Creator" 
-        class MockYatzyGameCreator : YatzyCreatorBase
+        class FakeYatzyCreator : YatzyBaseCreator
         {
-            internal override YatzyGameBase Create() => new FakeYatzyGame();
+            protected override YatzyBase Create() => new FakeYatzy();
         }
 
-
         // "Product"
-        abstract class YatzyGameBase
+        abstract class YatzyBase
         {
             public abstract DiceRoll Roll();
         }
 
-        class YatzyGame : YatzyGameBase
+        class Yatzy : YatzyBase
         {
             static Random _rnd = new Random();
 
@@ -83,7 +83,7 @@ namespace DesignPatterns.FactoryMethod
                     );
         }
 
-        class FakeYatzyGame : YatzyGameBase
+        class FakeYatzy : YatzyBase
         {
             private readonly DiceRoll[] _diceRolls = new DiceRoll[] {
                 new DiceRoll(1,1,1,1,1),
@@ -123,21 +123,26 @@ namespace DesignPatterns.FactoryMethod
 
             public override string ToString() => string.Join(",", Value.Select(d => d.Value));
         }
+
         // "Client"
         class Client
         {
-            public void ClientCode(YatzyCreatorBase creator)
+            public List<string> RollDices(YatzyBaseCreator creator)
             {
+                List<string> rolls = new List<string>();
+
                 DiceRoll result;
 
                 result = creator.Roll();
-                _log.Add(result.ToString());
+                rolls.Add(result.ToString());
 
                 result = creator.Roll();
-                _log.Add(result.ToString());
+                rolls.Add(result.ToString());
 
                 result = creator.Roll();
-                _log.Add(result.ToString());
+                rolls.Add(result.ToString());
+
+                return rolls;
 
             }
         }
