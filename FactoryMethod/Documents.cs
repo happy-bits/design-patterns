@@ -12,7 +12,6 @@ namespace DesignPatterns.FactoryMethod
     [TestClass]
     public class Documents
     {
-        static readonly List<string> _log = new List<string>();
 
         /*
          
@@ -24,29 +23,38 @@ namespace DesignPatterns.FactoryMethod
         {
             var c = new Client();
 
-            c.ClientCode(new HtmlCreator());
-            c.ClientCode(new MarkdownCreator());
+            var result = c.ClientCode(new HtmlCreator());
 
             CollectionAssert.AreEqual(new[] {
                 "<h1>HeaderA</h1>\n<body>BodyA</body>",
                 "<h1>HeaderB</h1>\n<body>BodyB</body>",
                 "<body>BodyC</body>\n<h1>HeaderC</h1>",
+            }, result);
+        }
 
+        [TestMethod]
+        public void Ex2()
+        {
+            var c = new Client();
+
+            var result = c.ClientCode(new MarkdownCreator());
+
+            CollectionAssert.AreEqual(new[] {
                 "# HeaderA\nBodyA",
                 "# HeaderB\nBodyB",
                 "BodyC\n# HeaderC",
-            }, _log);
+            }, result);
         }
 
         // "Creator"
         abstract class DocumentCreator
         {
-            public bool Ascending { get; set; } = true;
-            public string Delimiter { get; set; } = "\n";
+            public bool Ascending { get; set; } = true;   // extra egenskaper
+            public string Delimiter { get; set; } = "\n"; // extra egenskaper
 
             internal abstract IEnumerable<Element> Create(string header, string body);
 
-            internal string Render(string header, string body)
+            internal string Render(string header, string body) // extra logik
             {
                 var elements = Create(header, body);
 
@@ -117,17 +125,21 @@ namespace DesignPatterns.FactoryMethod
         // "Client"
         class Client
         {
-            public void ClientCode(DocumentCreator creator)
+            public List<string> ClientCode(DocumentCreator creator)
             {
+                List<string> result = new List<string>();
+
                 string result1 = creator.Render("HeaderA", "BodyA");
                 string result2 = creator.Render("HeaderB", "BodyB");
 
                 creator.Ascending = false;
                 string result3 = creator.Render("HeaderC", "BodyC");
 
-                _log.Add(result1);
-                _log.Add(result2);
-                _log.Add(result3);
+                result.Add(result1);
+                result.Add(result2);
+                result.Add(result3);
+
+                return result;
             }
         }
     }

@@ -39,9 +39,9 @@ namespace DesignPatterns.FactoryMethod
         {
             private Log _log;
 
-            public abstract Log CreateLogger();
+            protected abstract Log CreateLogger();
 
-            public bool IsActive { get; set; }
+            public bool IsActive { get; set; }   // Ger loggern extra förmåga
 
             public void Info(string message)
             {
@@ -58,7 +58,7 @@ namespace DesignPatterns.FactoryMethod
         // "Concrete Creator" 
         class DetailedLoggerCreator : LoggerCreator
         {
-            public override Log CreateLogger()
+            protected override Log CreateLogger()
             {
                 return new DetailedLogger();
             }
@@ -67,7 +67,7 @@ namespace DesignPatterns.FactoryMethod
         // "Concrete Creator" 
         class SimpleLoggerCreator : LoggerCreator
         {
-            public override Log CreateLogger()
+            protected override Log CreateLogger()
             {
                 return new SimpleLogger();
             }

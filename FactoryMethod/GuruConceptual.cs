@@ -49,8 +49,8 @@ namespace DesignPatterns.FactoryMethod
             public abstract IProduct FactoryMethod();
 
             /*
-             Creator är inte främst ansvarif för att skapa produkter (även om det låter så)
-             Den innehåller vanligtvis nån coro business logik som är beroende på Product-objekten
+             Creator är inte främst ansvarig för att skapa produkter (även om det låter så)
+             Den innehåller vanligtvis nån business logik som är beroende på Product-objekten
              */
             public string SomeOperation()
             {
