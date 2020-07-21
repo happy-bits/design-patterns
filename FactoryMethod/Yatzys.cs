@@ -60,7 +60,7 @@ namespace DesignPatterns.FactoryMethod
         // "Concrete Creator" 
         class MockYatzyGameCreator : YatzyCreatorBase
         {
-            internal override YatzyGameBase Create() => new MockYatzyGame();
+            internal override YatzyGameBase Create() => new FakeYatzyGame();
         }
 
 
@@ -83,7 +83,7 @@ namespace DesignPatterns.FactoryMethod
                     );
         }
 
-        class MockYatzyGame : YatzyGameBase
+        class FakeYatzyGame : YatzyGameBase
         {
             private readonly DiceRoll[] _diceRolls = new DiceRoll[] {
                 new DiceRoll(1,1,1,1,1),
