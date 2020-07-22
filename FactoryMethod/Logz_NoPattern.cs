@@ -30,9 +30,6 @@ namespace DesignPatterns.FactoryMethod
             }, _events);
         }
 
-
-        private static string[] ClassNames(IEnumerable<object> shapes) => shapes.Select(s => s.GetType().Name).ToArray();
-
         static List<string> _events = new List<string>();
 
         abstract class Logger
@@ -67,7 +64,7 @@ namespace DesignPatterns.FactoryMethod
         }
 
 
-        // Exercise: create the code below (Client and Factory)
+        // Exercise: create the code below (Client and LogCreator)
 
         class LogCreator
         {
