@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,8 +20,9 @@ namespace DesignPatterns.FactoryMethod
                 "Circle",
                 "Square",
                 "Circle",
-            }, shapes.Select(s => s.GetType().Name).ToArray());
+            }, ClassNames(shapes)); 
         }
+
 
         [TestMethod]
         public void Ex2()
@@ -35,9 +37,10 @@ namespace DesignPatterns.FactoryMethod
                 "Triangle",
                 "Circle",
 
-            }, shapes.Select(s => s.GetType().Name).ToArray());
+            }, ClassNames(shapes));
         }
 
+        private static string[] ClassNames(IEnumerable<object> shapes) => shapes.Select(s => s.GetType().Name).ToArray();
 
         abstract class Shape
         {

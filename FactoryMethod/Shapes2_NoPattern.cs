@@ -19,8 +19,9 @@ namespace DesignPatterns.FactoryMethod
                 "Circle",
                 "Square",
                 "Circle",
-            }, shapes.Select(s => s.GetType().Name).ToArray());
+            }, ClassNames(shapes));
         }
+
 
         [TestMethod]
         public void Ex2()
@@ -35,9 +36,10 @@ namespace DesignPatterns.FactoryMethod
                 "Triangle",
                 "Circle",
 
-            }, shapes.Select(s => s.GetType().Name).ToArray());
+            }, ClassNames(shapes));
         }
 
+        private static string[] ClassNames(IEnumerable<object> shapes) => shapes.Select(s => s.GetType().Name).ToArray();
 
         abstract class Shape
         {
@@ -63,35 +65,35 @@ namespace DesignPatterns.FactoryMethod
             {
                 var result = new List<Shape>();
 
+                for (int i = 1; i <= num; i++)
+                {
+                    result.Add(CreateShape(factoryname, i));
+                }
+                return result;
+
+            }
+
+            private static Shape CreateShape(string factoryname, int _counter)
+            {
                 switch (factoryname)
                 {
                     case "SC":
 
-                        for (int i = 1; i <= num; i++)
-                        {
+                        if (IsEven(_counter))
+                            return new Circle();
+                        else
+                            return new Square();
 
-                            if (IsEven(i))
-                                result.Add(new Circle());
-                            else
-                                result.Add(new Square());
-                        }
-                        return result;
                     case "TTC":
 
-                        for (int i = 1; i <= num; i++)
-                        {
+                        if (DividableByThree(_counter))
+                            return new Circle();
+                        else
+                            return new Triangle();
 
-                            if (DividableByThree(i))
-                                result.Add(new Circle());
-                            else
-                                result.Add(new Triangle());
-                        }
-                        return result;
                     default: throw new ArgumentException();
                 }
-
             }
-
         }
     }
 }
