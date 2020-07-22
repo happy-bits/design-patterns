@@ -141,13 +141,29 @@ namespace DesignPatterns.FactoryMethod
                     calculator = new AlternativeCalculator(log);
                 }
 
+                var x = new ClientX(calculator);
                 var y = new ClientY(calculator);
-                y.MethodA();
+                
+                x.MethodA();
                 y.MethodB();
             }
 
 
 
+        }
+
+        class ClientX
+        {
+            private readonly ICalculator _calculator;
+
+            public ClientX(ICalculator calculator)
+            {
+                _calculator = calculator;
+            }
+            public void MethodA()
+            {
+                _calculator.Add(3, 4);
+            }
         }
 
         class ClientY
@@ -157,10 +173,6 @@ namespace DesignPatterns.FactoryMethod
             public ClientY(ICalculator calculator)
             {
                 _calculator = calculator;
-            }
-            public void MethodA()
-            {
-                _calculator.Add(3, 4);
             }
 
             public void MethodB()

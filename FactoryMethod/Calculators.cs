@@ -193,13 +193,15 @@ namespace DesignPatterns.FactoryMethod
             {
                 IocContainer.Setup(environment);
 
+                var x = new ClientX();
                 var y = new ClientY();
-                y.MethodA();
+                
+                x.MethodA();
                 y.MethodB();
             }
         }
 
-        class ClientY
+        class ClientX
         {
             private readonly ICalculator _calculator = IocContainer.Instance.GetCalculator();
 
@@ -207,6 +209,12 @@ namespace DesignPatterns.FactoryMethod
             {
                 _calculator.Add(3, 4);
             }
+
+        }
+
+        class ClientY
+        {
+            private readonly ICalculator _calculator = IocContainer.Instance.GetCalculator();
 
             public void MethodB()
             {
