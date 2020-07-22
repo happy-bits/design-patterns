@@ -67,13 +67,13 @@ namespace DesignPatterns.FactoryMethod
 
                 for (int i = 1; i <= num; i++)
                 {
-                    result.Add(CreateShape(factoryname, i));
+                    result.Add(GetShape(factoryname, i));
                 }
                 return result;
 
             }
 
-            private static Shape CreateShape(string factoryname, int _counter)
+            private static Shape GetShape(string factoryname, int _counter)
             {
                 switch (factoryname)
                 {
