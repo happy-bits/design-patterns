@@ -1,13 +1,14 @@
-﻿// Akademiskt
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DesignPatterns.FactoryMethod
 {
     [TestClass]
-    public class Shapes
+    public class Shapes_NoPattern
     {
         [TestMethod]
         public void Ex1()
@@ -35,37 +36,27 @@ namespace DesignPatterns.FactoryMethod
 
         }
 
-        // Exercise: create the code below (Client and Factory)
+        // Exercise: create the "Client"-code below
+
         class Client
         {
+            private static bool IsEven(int number) => number % 2 == 0;
+
             internal static IEnumerable<Shape> Run(int num)
             {
-                var factory = new ShapeFactory();
-
                 var result = new List<Shape>();
 
-                for (int i = 0; i < num; i++)
-                {
-                    result.Add(factory.CreateShape());
+                for (int i = 1; i <= num; i++) {
+
+                    if (IsEven(i))
+                        result.Add(new Circle());
+                    else
+                        result.Add(new Square());
                 }
+
                 return result;
+
             }
-        }
-
-        class ShapeFactory
-        {
-            private int _counter = 0;
-
-            internal Shape CreateShape()
-            {
-                _counter++;
-
-                if (IsEven(_counter))
-                    return new Circle();
-                return new Square();
-            }
-
-            private static bool IsEven(int number) => number % 2 == 0;
         }
     }
 }
