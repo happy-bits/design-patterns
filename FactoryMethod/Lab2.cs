@@ -8,7 +8,6 @@ namespace DesignPatterns.FactoryMethod
     {
         static readonly List<string> _actions = new List<string>();
         
-
         [TestMethod]
         public void Ex1()
         {
@@ -20,33 +19,36 @@ namespace DesignPatterns.FactoryMethod
             y.Run(environment);
 
             CollectionAssert.AreEqual(new[] {
-                "Enter ClientX",
-                "Logger:ClientX",
+                "New Logger",
 
-                "Enter ClientY",
-                "Logger:ClientY",
+                "ClientX",
+                "Logger:1",
+                "Logger:2",
+
+                "ClientY",
+                "Logger:3",
+                "Logger:4",
             }, _actions);
         }
 
         class LoggerFactory
         {
-            private LoggerFactory()
-            {
+            private static ILoggable _log;
 
-            }
             internal static ILoggable GetLogger(string environment)
             {
-                ILoggable log;
+                if (_log != null)
+                    return _log;
 
                 if (environment == "production")
                 {
-                    log = new Logger();
+                    _log = new Logger();
                 }
                 else
                 {
-                    log = new FakeLogger();
+                    _log = new FakeLogger();
                 }
-                return log;
+                return _log;
             }
         }
         interface ILoggable
@@ -56,6 +58,10 @@ namespace DesignPatterns.FactoryMethod
 
         class Logger : ILoggable
         {
+            public Logger()
+            {
+                _actions.Add("New Logger");
+            }
             public void Log(string s)
             {
                 _actions.Add($"Logger:{s}");
@@ -64,6 +70,10 @@ namespace DesignPatterns.FactoryMethod
 
         class FakeLogger : ILoggable
         {
+            public FakeLogger()
+            {
+                _actions.Add("New FakeLogger");
+            }
             public void Log(string s)
             {
                 _actions.Add($"FakeLogger:{s}");
@@ -76,8 +86,9 @@ namespace DesignPatterns.FactoryMethod
             internal void Run(string environment)
             {
                 ILoggable log = LoggerFactory.GetLogger(environment);
-                _actions.Add("Enter ClientX");
-                log.Log("ClientX");
+                _actions.Add("ClientX");
+                log.Log("1");
+                log.Log("2");
             }
 
         }
@@ -88,8 +99,9 @@ namespace DesignPatterns.FactoryMethod
             internal void Run(string environment)
             {
                 ILoggable log = LoggerFactory.GetLogger(environment);
-                _actions.Add("Enter ClientY");
-                log.Log("ClientY");
+                _actions.Add("ClientY");
+                log.Log("3");
+                log.Log("4");
 
             }
 

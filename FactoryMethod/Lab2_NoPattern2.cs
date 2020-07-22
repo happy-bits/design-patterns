@@ -32,11 +32,15 @@ namespace DesignPatterns.FactoryMethod
             y.Run(log);
 
             CollectionAssert.AreEqual(new[] {
-                "Enter ClientX",
-                "Logger:ClientX",
+                "New Logger",
 
-                "Enter ClientY",
-                "Logger:ClientY",
+                "ClientX",
+                "Logger:1",
+                "Logger:2",
+
+                "ClientY",
+                "Logger:3",
+                "Logger:4",
             }, _actions);
         }
 
@@ -47,6 +51,10 @@ namespace DesignPatterns.FactoryMethod
 
         class Logger : ILoggable
         {
+            public Logger()
+            {
+                _actions.Add("New Logger");
+            }
             public void Log(string s)
             {
                 _actions.Add($"Logger:{s}");
@@ -55,6 +63,10 @@ namespace DesignPatterns.FactoryMethod
 
         class FakeLogger : ILoggable
         {
+            public FakeLogger()
+            {
+                _actions.Add("New FakeLogger");
+            }
             public void Log(string s)
             {
                 _actions.Add($"FakeLogger:{s}");
@@ -65,8 +77,9 @@ namespace DesignPatterns.FactoryMethod
         {
             internal void Run(ILoggable log)
             {
-                _actions.Add("Enter ClientX");
-                log.Log("ClientX");
+                _actions.Add("ClientX");
+                log.Log("1");
+                log.Log("2");
             }
         }
 
@@ -74,10 +87,10 @@ namespace DesignPatterns.FactoryMethod
         {
             internal void Run(ILoggable log)
             {
-                _actions.Add("Enter ClientY");
-                log.Log("ClientY");
+                _actions.Add("ClientY");
+                log.Log("3");
+                log.Log("4");
             }
         }
-
     }
 }
