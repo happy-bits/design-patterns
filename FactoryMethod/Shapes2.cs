@@ -60,10 +60,6 @@ namespace DesignPatterns.FactoryMethod
             {
                 ShapeFactory factory = SelectFactoryByName(factoryname);
 
-                    //factoryname == "SC" ? new SquareCircleFactory() :
-                    //factoryname == "TTC" ? (ShapeFactory) new TriangleTriangleCircleFactory() :
-                    //throw new ArgumentException();
-
                 var result = new List<Shape>();
 
                 for (int i = 0; i < num; i++)
