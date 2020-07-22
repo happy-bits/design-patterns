@@ -1,13 +1,14 @@
 ﻿
-// todo: vad är problemet?
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace DesignPatterns.FactoryMethod
 {
     [TestClass]
-    public class Calculators_NoPattern
+    public class Calculators
     {
         static readonly List<string> _actions = new List<string>();
 
@@ -49,6 +50,7 @@ namespace DesignPatterns.FactoryMethod
 
 
         }
+
         interface ILoggable
         {
             void Log(string s);
@@ -86,7 +88,7 @@ namespace DesignPatterns.FactoryMethod
         class Calculator : ICalculator
         {
             private readonly ILoggable _log;
-            
+
             public Calculator(ILoggable log)
             {
                 _actions.Add("New Calculator");
@@ -121,43 +123,86 @@ namespace DesignPatterns.FactoryMethod
             }
         }
 
+        class IocContainer
+        {
+            private ILoggable _logger;
+            private ICalculator _calculator;
+
+            public IocContainer(string environment)
+            {
+                var validValues = new[] { "production", "development" };
+
+                if (!validValues.Contains(environment))
+                    throw new ArgumentException();
+
+                Environment = environment;
+            }
+
+            public static IocContainer Instance;
+
+            public static void Setup(string environment)
+            {
+                Instance = new IocContainer(environment);
+            }
+
+            public string Environment { get; }
+
+            internal ILoggable GetLogger()
+            {
+                if (Instance == null)
+                    throw new InvalidOperationException();
+
+                if (_logger == null)
+                {
+                    if (Environment == "production")
+                    {
+                        _logger = new Logger();
+                    }
+                    else
+                    {
+                        _logger = new AlternativeLogger();
+                    }
+                }
+                return _logger;
+            }
+
+            internal ICalculator GetCalculator()
+            {
+                if (Instance == null)
+                    throw new InvalidOperationException();
+
+                if (_calculator == null)
+                {
+                    if (Environment == "production")
+                    {
+                        _calculator = new Calculator(GetLogger());
+                    }
+                    else
+                    {
+                        _calculator = new AlternativeCalculator(GetLogger());
+                    }
+                }
+                return _calculator;
+            }
+
+        }
 
         class Client
         {
-
             public static void Run(string environment)
             {
-                ILoggable log;
-                ICalculator calculator;
+                IocContainer.Setup(environment);
 
-                if (environment == "production")
-                {
-                    log = new Logger();
-                    calculator = new Calculator(log);
-                }
-                else
-                {
-                    log = new AlternativeLogger();
-                    calculator = new AlternativeCalculator(log);
-                }
-
-                var y = new ClientY(calculator);
+                var y = new ClientY();
                 y.MethodA();
                 y.MethodB();
             }
-
-
-
         }
 
         class ClientY
         {
-            private readonly ICalculator _calculator;
+            private readonly ICalculator _calculator = IocContainer.Instance.GetCalculator();
 
-            public ClientY(ICalculator calculator)
-            {
-                _calculator = calculator;
-            }
             public void MethodA()
             {
                 _calculator.Add(3, 4);
