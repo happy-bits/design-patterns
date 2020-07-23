@@ -1,7 +1,7 @@
 ﻿
 /*
 
-    This exercise is about creating a "RegistrationService" with a method AddLicensePlate.
+    This exercise is about creating a "RegistrationService" with a method "AddLicensePlate".
     It's about trying to add a (swedish) license plates to a repository and handle problems.
     The license plates have to be on a special format.
 
@@ -28,27 +28,20 @@ namespace DesignPatterns.ChainOfResponsibility
             _service = new RegistrationService(new FakeLicensePlateRepository());
         }
 
+        // NORMAL CUSTOMER
+
         [TestMethod]
-        public void return_Success_when_plate_is_available_and_correct_format()
+        [DataRow("ABC 123")] 
+        [DataRow("ABC 12B")] // (last character may be a letter)
+        public void return_Success_when_plate_has_correct_format(string plate)
         {
-            _service.AddLicensePlate("ABC 123", CustomerType.Normal);
+            Assert.AreEqual(Result.Success, _service.AddLicensePlate(plate, CustomerType.Normal));
         }
 
         [TestMethod]
-        public void count_NrOfRegistredPlates_to_four_after_four_registred_plates()
-        {
-            _service.AddLicensePlate("ABC 123", CustomerType.Normal);
-            _service.AddLicensePlate("ABC 12B", CustomerType.Normal); // note: the last char don't have to be a number
-            _service.AddLicensePlate("XYZ 444", CustomerType.Normal);
-            _service.AddLicensePlate("PDF 543", CustomerType.Advertisment);
-
-            Assert.AreEqual(4, _service.NrOfRegistredPlates);
-        }
-
-        [TestMethod]
-        [DataRow("ABC X23")]
-        [DataRow("ÅBC 123")]
-        [DataRow("QBC 123")]
+        [DataRow("ABC X23")] 
+        [DataRow("ÅBC 123")] // Å is a swedish letter but not a valid letter anyway
+        [DataRow("QBC 123")] // Q is not a valid letter (too similair to O)
         [DataRow("1BC 123")]
         [DataRow("ABC  123")]
         public void return_InvalidFormat_when_format_is_incorrect(string plate)
@@ -60,18 +53,19 @@ namespace DesignPatterns.ChainOfResponsibility
         [TestMethod]
         [DataRow("MLB 123")]
         [DataRow("MLB 456")]
-        public void return_OnlyForAdvertisment_when_normal_customer_register_plate_starting_with_MLB(string plate)
+        public void return_OnlyForAdvertisment_when_non_advertisment_try_register_plate_starting_with_MLB(string plate)
         {
             var result = _service.AddLicensePlate(plate, CustomerType.Normal);
             Assert.AreEqual(Result.OnlyForAdvertisment, result);
         }
 
         [TestMethod]
-        public void return_Success_when_advertisment_register_plate_starting_with_MLB()
+        [DataRow("ABC 12T")]
+        [DataRow("CCC 77T")]
+        public void return_OnlyForTaxi_when_plate_ends_with_T_and_customer_isnot_taxi(string plate)
         {
-            var result = _service.AddLicensePlate("MLB 123", CustomerType.Advertisment);
-            Assert.AreEqual(1, _service.NrOfRegistredPlates);
-            Assert.AreEqual(Result.Success, result);
+            var result = _service.AddLicensePlate(plate, CustomerType.Normal);
+            Assert.AreEqual(Result.OnlyForTaxi, result);
         }
 
         [TestMethod]
@@ -83,8 +77,78 @@ namespace DesignPatterns.ChainOfResponsibility
             Assert.AreEqual(Result.NotAvailable, result);
         }
 
+        // ADVERTISMENT CUSTOMER
+
         [TestMethod]
-        public void throw_DatabaseException_when_unexpected_problem_with_database()
+        [DataRow("ABC 123")]
+        [DataRow("ABC 12B")]
+        [DataRow("MLB 123")]
+        [DataRow("MLB 456")]
+        public void return_Success_when_plate_has_correct_format_for_advertisment(string plate)
+        {
+            var result = _service.AddLicensePlate(plate, CustomerType.Advertisment);
+
+            Assert.AreEqual(Result.Success, result);
+        }
+
+        [TestMethod]
+        [DataRow("ABC X23")]
+        [DataRow("ÅBC 123")]
+        [DataRow("QBC 123")]
+        [DataRow("1BC 123")]
+        [DataRow("ABC  123")]
+        public void return_InvalidFormat_when_format_is_incorrect_for_advertisment(string plate)
+        {
+            var result = _service.AddLicensePlate(plate, CustomerType.Normal);
+            Assert.AreEqual(Result.InvalidFormat, result);
+        }
+
+        // TAXI CUSTOMER
+
+        [DataRow("ABC 12T")]
+        [DataRow("CCC 77T")]
+        public void return_Success_when_plate_has_correct_format_for_taxi(string plate)
+        {
+            Assert.AreEqual(Result.Success, _service.AddLicensePlate(plate, CustomerType.Taxi));
+        }
+
+        [TestMethod]
+        [DataRow("ABC X23")]
+        [DataRow("ÅBC 123")]
+        [DataRow("QBC 123")]
+        [DataRow("1BC 123")]
+        [DataRow("ABC  123")]
+        public void return_InvalidFormat_when_format_is_incorrect_for_taxi(string plate)
+        {
+            var result = _service.AddLicensePlate(plate, CustomerType.Taxi);
+            Assert.AreEqual(Result.InvalidFormat, result);
+        }
+
+        // DIPLOMAT
+
+        [TestMethod]
+        [DataRow("AA 111 A")]
+        [DataRow("CD 777 X")]
+        public void return_Success_when_plate_has_correct_format_for_diplomats(string plate)
+        {
+            Assert.AreEqual(Result.Success, _service.AddLicensePlate(plate, CustomerType.Diplomat));
+        }
+
+        [TestMethod]
+        [DataRow("ABC 123")]
+        [DataRow("ABC 12B")]
+        [DataRow("A8 111 A")]
+        [DataRow("CD A77 X")]
+        public void return_InvalidFormat_when_format_is_incorrect_for_diplomat(string plate)
+        {
+            var result = _service.AddLicensePlate(plate, CustomerType.Diplomat);
+            Assert.AreEqual(Result.InvalidFormat, result);
+        }
+
+        // EXCEPTIONS
+
+        [TestMethod]
+        public void throw_RepositoryException_when_unexpected_problem_with_database()
         {
             Assert.ThrowsException<RepositoryException>(() =>
             {
@@ -99,7 +163,7 @@ namespace DesignPatterns.ChainOfResponsibility
 
         enum Result
         {
-            Success, InvalidFormat, InvalidDiplomatFormat, OnlyForAdvertisment, OnlyForTaxi, NotAvailable
+            Success, InvalidFormat, OnlyForAdvertisment, OnlyForTaxi, NotAvailable
         }
 
         class RegistrationService
@@ -120,11 +184,10 @@ namespace DesignPatterns.ChainOfResponsibility
                 if (customer == CustomerType.Diplomat)
                 {
                     if (!ValidDiplomatLicencePlate(number))
-                        return Result.InvalidDiplomatFormat;
+                        return Result.InvalidFormat;
                 }
                 else
                 {
-
                     if (!ValidNormalLicensePlate(number))
                         return Result.InvalidFormat;
 
@@ -144,24 +207,26 @@ namespace DesignPatterns.ChainOfResponsibility
 
             private static bool ValidNormalLicensePlate(string number) => Regex.IsMatch(number, GetValidPlateRegexPattern());
 
-            private static bool ValidDiplomatLicencePlate(string number)
-            {
-                /*
-                 två bokstäver + tre siffror + en bokstav vänsterjusterade och sista positionen är tom. De första två bokstäverna anger vilket lands ambassad bilen tillhör, de tre följande siffrorna är ett löpnummer inom ambassaden, och den sista bokstaven anger vilken position bilens innehavare har på ambassaden.
+            /*
+             First two letters: country code
+             Three numbers: the embassy's serial number 
+             Last letter: the ambassadors rank
+            */
+            private static bool ValidDiplomatLicencePlate(string number) => Regex.IsMatch(number, "[A-Z]{2} \\d\\d\\d [A-Z]");
 
-                 */
-                return Regex.IsMatch(number, "[A-Z]{2} \\d\\d\\d [A-Z]");
-            }
-            private bool PlateIsReservedForTaxi(string number) => number.EndsWith("T");
+            private static bool PlateIsReservedForTaxi(string number) => number.EndsWith("T");
 
             private static string GetValidPlateRegexPattern()
             {
                 var allSwedishLetters = "ABCDEFGHIJKLMNOPQRSTWXYZÅÄÖ";
                 var invalidLetters = "IQVÅÄÖ";
-                var validLetters = string.Join("", allSwedishLetters.Where(c => !invalidLetters.Contains(c)));
+                var validLetters = ExcludeLetters(allSwedishLetters, invalidLetters); 
                 var validLastCharacter = validLetters + "0123456789";
                 return "[" + validLetters + "]{3} [0-9][0-9][" + validLastCharacter + "]";
             }
+
+            private static string ExcludeLetters(string letters, string lettersToRemove) => string.Join("", letters.Where(c => !lettersToRemove.Contains(c)));
+
         }
 
         interface ILicensePlateRepository
@@ -198,7 +263,7 @@ namespace DesignPatterns.ChainOfResponsibility
             }
         }
 
-        enum CustomerType
+        public enum CustomerType
         {
             Normal, Advertisment, Taxi, Diplomat
         }
