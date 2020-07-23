@@ -99,7 +99,7 @@ namespace DesignPatterns.ChainOfResponsibility
 
         enum Result
         {
-            Success, InvalidFormat, OnlyForAdvertisment, Database, NotAvailable
+            Success, InvalidFormat, InvalidDiplomatFormat, OnlyForAdvertisment, OnlyForTaxi, NotAvailable
         }
 
         class RegistrationService
@@ -114,15 +114,26 @@ namespace DesignPatterns.ChainOfResponsibility
             public int NrOfRegistredPlates => _repo.CountRegisteredPlates();
 
             private static bool PlateIsReservedForAdvertisment(string number) => number.StartsWith("MLB");
-            private static bool PlateHaveCorrectFormat(string number) => Regex.IsMatch(number, GetValidPlateRegexPattern());
 
             public Result AddLicensePlate(string number, CustomerType customer)
             {
-                if (!PlateHaveCorrectFormat(number))
-                    return Result.InvalidFormat;
+                if (customer == CustomerType.Diplomat)
+                {
+                    if (!ValidDiplomatLicencePlate(number))
+                        return Result.InvalidDiplomatFormat;
+                }
+                else
+                {
 
-                if (PlateIsReservedForAdvertisment(number) && customer != CustomerType.Advertisment) 
-                    return Result.OnlyForAdvertisment;
+                    if (!ValidNormalLicensePlate(number))
+                        return Result.InvalidFormat;
+
+                    if (PlateIsReservedForTaxi(number) && customer != CustomerType.Taxi)
+                        return Result.OnlyForTaxi;
+
+                    if (PlateIsReservedForAdvertisment(number) && customer != CustomerType.Advertisment)
+                        return Result.OnlyForAdvertisment;
+                }
 
                 if (!_repo.IsAvailable(number))
                     return Result.NotAvailable;
@@ -130,6 +141,18 @@ namespace DesignPatterns.ChainOfResponsibility
                 _repo.Save(number);
                 return Result.Success;
             }
+
+            private static bool ValidNormalLicensePlate(string number) => Regex.IsMatch(number, GetValidPlateRegexPattern());
+
+            private static bool ValidDiplomatLicencePlate(string number)
+            {
+                /*
+                 två bokstäver + tre siffror + en bokstav vänsterjusterade och sista positionen är tom. De första två bokstäverna anger vilket lands ambassad bilen tillhör, de tre följande siffrorna är ett löpnummer inom ambassaden, och den sista bokstaven anger vilken position bilens innehavare har på ambassaden.
+
+                 */
+                return Regex.IsMatch(number, "[A-Z]{2} \\d\\d\\d [A-Z]");
+            }
+            private bool PlateIsReservedForTaxi(string number) => number.EndsWith("T");
 
             private static string GetValidPlateRegexPattern()
             {
@@ -148,7 +171,7 @@ namespace DesignPatterns.ChainOfResponsibility
             int CountRegisteredPlates();
         }
 
-        class RepositoryException: Exception { };
+        class RepositoryException : Exception { };
 
         class FakeLicensePlateRepository : ILicensePlateRepository
         {
@@ -160,7 +183,7 @@ namespace DesignPatterns.ChainOfResponsibility
             {
                 // Simulation of database error is some cases
                 if (number == "XXX 666")
-                    throw new RepositoryException(); 
+                    throw new RepositoryException();
 
                 return !_registered.Contains(number);
             }
@@ -177,7 +200,7 @@ namespace DesignPatterns.ChainOfResponsibility
 
         enum CustomerType
         {
-            Normal, Advertisment
+            Normal, Advertisment, Taxi, Diplomat
         }
     }
 }
