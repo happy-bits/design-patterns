@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace DesignPatterns.LicensePlates.NoPattern
 {
@@ -19,6 +15,28 @@ namespace DesignPatterns.LicensePlates.NoPattern
         public int NrOfRegistredPlates => _repo.CountRegisteredPlates();
 
         private static bool PlateIsReservedForAdvertisment(string number) => number.StartsWith("MLB");
+
+        private static bool ValidNormalLicensePlate(string number) => Regex.IsMatch(number, GetValidPlateRegexPattern());
+
+        /*
+         First two letters: country code
+         Three numbers: the embassy's serial number 
+         Last letter: the ambassadors rank
+        */
+        private static bool ValidDiplomatLicencePlate(string number) => Regex.IsMatch(number, "[A-Z]{2} \\d\\d\\d [A-Z]");
+
+        private static bool PlateIsReservedForTaxi(string number) => number.EndsWith("T");
+
+        private static string ExcludeLetters(string letters, string lettersToRemove) => string.Join("", letters.Where(c => !lettersToRemove.Contains(c)));
+
+        private static string GetValidPlateRegexPattern()
+        {
+            var allSwedishLetters = "ABCDEFGHIJKLMNOPQRSTWXYZÅÄÖ";
+            var invalidLetters = "IQVÅÄÖ";
+            var validLetters = ExcludeLetters(allSwedishLetters, invalidLetters);
+            var validLastCharacter = validLetters + "0123456789";
+            return "[" + validLetters + "]{3} [0-9][0-9][" + validLastCharacter + "]";
+        }
 
         public Result AddLicensePlate(string number, CustomerType customer)
         {
@@ -45,28 +63,6 @@ namespace DesignPatterns.LicensePlates.NoPattern
             _repo.Save(number);
             return Result.Success;
         }
-
-        private static bool ValidNormalLicensePlate(string number) => Regex.IsMatch(number, GetValidPlateRegexPattern());
-
-        /*
-         First two letters: country code
-         Three numbers: the embassy's serial number 
-         Last letter: the ambassadors rank
-        */
-        private static bool ValidDiplomatLicencePlate(string number) => Regex.IsMatch(number, "[A-Z]{2} \\d\\d\\d [A-Z]");
-
-        private static bool PlateIsReservedForTaxi(string number) => number.EndsWith("T");
-
-        private static string GetValidPlateRegexPattern()
-        {
-            var allSwedishLetters = "ABCDEFGHIJKLMNOPQRSTWXYZÅÄÖ";
-            var invalidLetters = "IQVÅÄÖ";
-            var validLetters = ExcludeLetters(allSwedishLetters, invalidLetters);
-            var validLastCharacter = validLetters + "0123456789";
-            return "[" + validLetters + "]{3} [0-9][0-9][" + validLastCharacter + "]";
-        }
-
-        private static string ExcludeLetters(string letters, string lettersToRemove) => string.Join("", letters.Where(c => !lettersToRemove.Contains(c)));
 
     }
 
