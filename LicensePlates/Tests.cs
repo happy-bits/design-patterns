@@ -10,20 +10,17 @@
     Note: doesn't use chain of responsibility yet
 
  */
+using DesignPatterns.LicensePlates.NoPattern;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 
-namespace DesignPatterns.ChainOfResponsibility
+namespace DesignPatterns.LicensePlates
 {
     [TestClass]
-    public class LicensePlates_NoPattern
+    public class Tests
     {
         private readonly RegistrationService _service;
 
-        public LicensePlates_NoPattern()
+        public Tests()
         {
             _service = new RegistrationService(new FakeLicensePlateRepository());
         }
@@ -161,111 +158,5 @@ namespace DesignPatterns.ChainOfResponsibility
             });
         }
 
-        enum Result
-        {
-            Success, InvalidFormat, OnlyForAdvertisment, OnlyForTaxi, NotAvailable
-        }
-
-        class RegistrationService
-        {
-            private readonly ILicensePlateRepository _repo;
-
-            public RegistrationService(ILicensePlateRepository repo)
-            {
-                _repo = repo;
-            }
-
-            public int NrOfRegistredPlates => _repo.CountRegisteredPlates();
-
-            private static bool PlateIsReservedForAdvertisment(string number) => number.StartsWith("MLB");
-
-            public Result AddLicensePlate(string number, CustomerType customer)
-            {
-                if (customer == CustomerType.Diplomat)
-                {
-                    if (!ValidDiplomatLicencePlate(number))
-                        return Result.InvalidFormat;
-                }
-                else
-                {
-                    if (!ValidNormalLicensePlate(number))
-                        return Result.InvalidFormat;
-
-                    if (PlateIsReservedForTaxi(number) && customer != CustomerType.Taxi)
-                        return Result.OnlyForTaxi;
-
-                    if (PlateIsReservedForAdvertisment(number) && customer != CustomerType.Advertisment)
-                        return Result.OnlyForAdvertisment;
-                }
-
-                if (!_repo.IsAvailable(number))
-                    return Result.NotAvailable;
-
-                _repo.Save(number);
-                return Result.Success;
-            }
-
-            private static bool ValidNormalLicensePlate(string number) => Regex.IsMatch(number, GetValidPlateRegexPattern());
-
-            /*
-             First two letters: country code
-             Three numbers: the embassy's serial number 
-             Last letter: the ambassadors rank
-            */
-            private static bool ValidDiplomatLicencePlate(string number) => Regex.IsMatch(number, "[A-Z]{2} \\d\\d\\d [A-Z]");
-
-            private static bool PlateIsReservedForTaxi(string number) => number.EndsWith("T");
-
-            private static string GetValidPlateRegexPattern()
-            {
-                var allSwedishLetters = "ABCDEFGHIJKLMNOPQRSTWXYZÅÄÖ";
-                var invalidLetters = "IQVÅÄÖ";
-                var validLetters = ExcludeLetters(allSwedishLetters, invalidLetters); 
-                var validLastCharacter = validLetters + "0123456789";
-                return "[" + validLetters + "]{3} [0-9][0-9][" + validLastCharacter + "]";
-            }
-
-            private static string ExcludeLetters(string letters, string lettersToRemove) => string.Join("", letters.Where(c => !lettersToRemove.Contains(c)));
-
-        }
-
-        interface ILicensePlateRepository
-        {
-            bool IsAvailable(string number);
-            void Save(string number);
-            int CountRegisteredPlates();
-        }
-
-        class RepositoryException : Exception { };
-
-        class FakeLicensePlateRepository : ILicensePlateRepository
-        {
-            private readonly List<string> _registered = new List<string>();
-
-            public int CountRegisteredPlates() => _registered.Count;
-
-            public bool IsAvailable(string number)
-            {
-                // Simulation of database error is some cases
-                if (number == "XXX 666")
-                    throw new RepositoryException();
-
-                return !_registered.Contains(number);
-            }
-
-            public void Save(string number)
-            {
-                // Simulation of database error is some cases
-                if (number == "YYY 666")
-                    throw new RepositoryException();
-
-                _registered.Add(number);
-            }
-        }
-
-        public enum CustomerType
-        {
-            Normal, Advertisment, Taxi, Diplomat
-        }
     }
 }
