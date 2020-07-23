@@ -4,6 +4,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace DesignPatterns.FactoryMethod
@@ -14,19 +15,26 @@ namespace DesignPatterns.FactoryMethod
         [TestMethod]
         public void Ex1()
         {
-            Client.Run("dev");
+            Client.Run("dev", new LogConfig 
+            { 
+                FilePath="c:\\log.txt",
+                Rolling=true
+            });
 
             CollectionAssert.AreEqual(new[] {
-                "Trace:A (DevelopmentLogger)",
-                "Warning:B (DevelopmentLogger)",
+                $"Trace:A (FileLogger,Filepath:c:\\log.txt,RollingFiles:True)",
+                $"Warning:B (FileLogger,Filepath:c:\\log.txt,RollingFiles:True)",
             }, _events);
 
             _events.Clear();
 
-            Client.Run("prod");
+            Client.Run("prod", new LogConfig
+            {
+                ConnectionString="CS"
+            });
 
             CollectionAssert.AreEqual(new[] {
-                "Warning:B (ProductionLogger)",
+                $"Warning:B (DatabaseLogger,ConnectionString:CS)",
             }, _events);
         }
 
@@ -38,20 +46,36 @@ namespace DesignPatterns.FactoryMethod
             public abstract void Warning(string message);
         }
 
-        class DevelopmentLogger : Logger
+        class FileLogger : Logger
         {
+            private string _filepath;
+            private bool _rollingFiles;
+
+            public FileLogger(string filepath, bool rollingFiles)
+            {
+                _filepath = filepath;
+                _rollingFiles = rollingFiles;
+            }
+
             public override void Trace(string message)
             {
-                _events.Add($"Trace:{message} (DevelopmentLogger)");
+                _events.Add($"Trace:{message} (FileLogger,Filepath:{_filepath},RollingFiles:{_rollingFiles})");
             }
 
             public override void Warning(string message)
             {
-                _events.Add($"Warning:{message} (DevelopmentLogger)");
+                _events.Add($"Warning:{message} (FileLogger,Filepath:{_filepath},RollingFiles:{_rollingFiles})");
             }
         }
-        class ProductionLogger : Logger
+        class DatabaseLogger : Logger
         {
+            private string _connectionString;
+
+            public DatabaseLogger(string connectionString)
+            {
+                _connectionString = connectionString;
+            }
+
             public override void Trace(string message)
             {
                 // Nothing traced in production
@@ -59,31 +83,39 @@ namespace DesignPatterns.FactoryMethod
 
             public override void Warning(string message)
             {
-                _events.Add($"Warning:{message} (ProductionLogger)");
+                _events.Add($"Warning:{message} (DatabaseLogger,ConnectionString:{_connectionString})");
             }
         }
 
+        class LogConfig
+        {
+            public string ConnectionString { get; set; }
+            public string FilePath { get; set; }
+            public bool Rolling { get; set; }
+        }
 
         // Exercise: create the code below (Client and LogCreator)
 
         class LogCreator
         {
-            private readonly string _factoryname;
+            private readonly string _environment;
+            private readonly LogConfig _config;
 
-            public LogCreator(string factoryname)
+            public LogCreator(string environment, LogConfig config)
             {
-                _factoryname = factoryname;
+                _environment = environment;
+                _config = config;
             }
             internal Logger GetLogger()
             {
-                switch (_factoryname)
+                switch (_environment)
                 {
                     case "dev":
-                        return new DevelopmentLogger();
+                        return new FileLogger(_config.FilePath, _config.Rolling);
 
                     case "prod":
 
-                        return new ProductionLogger();
+                        return new DatabaseLogger(_config.ConnectionString);
 
                     default: throw new ArgumentException();
                 }
@@ -92,9 +124,9 @@ namespace DesignPatterns.FactoryMethod
 
         class Client
         {
-            internal static void Run(string environment)
+            internal static void Run(string environment, LogConfig config)
             {
-                Logger logger = new LogCreator(environment).GetLogger();
+                Logger logger = new LogCreator(environment, config).GetLogger();
                 logger.Trace("A");
                 logger.Warning("B");
             }

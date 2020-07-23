@@ -3,6 +3,9 @@
 - Decorator (Weathers)
 - Fascade (Calculators)
 - State (Traffic light)
-- Factory Method (Shapes) academic
+
+# Academic examples...
+- Abstract factory (Furnitures)
+- Factory Method (Shapes) 
 
 

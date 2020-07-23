@@ -1,7 +1,7 @@
 ﻿/*
+Academic examples...
 
-ABSTRACT FACTORY - https://refactoring.guru/design-patterns/abstract-factory/csharp/example
-(Written as a test)
+Idea from refactoring guru
 
  */
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace DesignPatterns.AbstractFactory
 {
     [TestClass]
-    public class GuruConceptual
+    public class Furnitures
     {
         [TestMethod]
         public void Ex2()
