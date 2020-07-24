@@ -16,13 +16,8 @@ namespace DesignPatterns.LicensePlates.NoPattern
 
         private static bool PlateIsReservedForAdvertisment(string number) => number.StartsWith("MLB");
 
-        private static bool ValidNormalLicensePlate(string number) => Regex.IsMatch(number, GetValidPlateRegexPattern());
+        private static bool IsNormalPlate(string number) => Regex.IsMatch(number, GetValidPlateRegexPattern());
 
-        /*
-         First two letters: country code
-         Three numbers: the embassy's serial number 
-         Last letter: the ambassadors rank
-        */
         private static bool ValidDiplomatLicencePlate(string number) => Regex.IsMatch(number, "[A-Z]{2} \\d\\d\\d [A-Z]");
 
         private static bool PlateIsReservedForTaxi(string number) => number.EndsWith("T");
@@ -40,21 +35,19 @@ namespace DesignPatterns.LicensePlates.NoPattern
 
         public Result AddLicensePlate(string number, CustomerType customer)
         {
-            if (customer == CustomerType.Diplomat)
+            if (customer == CustomerType.Diplomat && !ValidDiplomatLicencePlate(number))
+                return Result.InvalidFormat;
+
+            if (customer != CustomerType.Diplomat)
             {
-                if (!ValidDiplomatLicencePlate(number))
-                    return Result.InvalidFormat;
-            }
-            else
-            {
-                if (!ValidNormalLicensePlate(number))
+                if (!IsNormalPlate(number))
                     return Result.InvalidFormat;
 
                 if (PlateIsReservedForTaxi(number) && customer != CustomerType.Taxi)
-                    return Result.OnlyForTaxi;
+                    return Result.InvalidFormat;
 
                 if (PlateIsReservedForAdvertisment(number) && customer != CustomerType.Advertisment)
-                    return Result.OnlyForAdvertisment;
+                    return Result.InvalidFormat;
             }
 
             if (!_repo.IsAvailable(number))

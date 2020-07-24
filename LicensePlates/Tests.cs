@@ -10,7 +10,8 @@
     Note: doesn't use chain of responsibility yet
 
  */
-using DesignPatterns.LicensePlates.NoPattern;
+//using DesignPatterns.LicensePlates.NoPattern;
+using DesignPatterns.LicensePlates.Factory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DesignPatterns.LicensePlates
@@ -53,7 +54,7 @@ namespace DesignPatterns.LicensePlates
         public void return_OnlyForAdvertisment_when_non_advertisment_try_register_plate_starting_with_MLB(string plate)
         {
             var result = _service.AddLicensePlate(plate, CustomerType.Normal);
-            Assert.AreEqual(Result.OnlyForAdvertisment, result);
+            Assert.AreEqual(Result.InvalidFormat, result);
         }
 
         [TestMethod]
@@ -62,7 +63,7 @@ namespace DesignPatterns.LicensePlates
         public void return_OnlyForTaxi_when_plate_ends_with_T_and_customer_isnot_taxi(string plate)
         {
             var result = _service.AddLicensePlate(plate, CustomerType.Normal);
-            Assert.AreEqual(Result.OnlyForTaxi, result);
+            Assert.AreEqual(Result.InvalidFormat, result);
         }
 
         [TestMethod]
@@ -122,6 +123,12 @@ namespace DesignPatterns.LicensePlates
         }
 
         // DIPLOMAT
+
+        /*
+            First two letters: country code
+            Three numbers: the embassy's serial number 
+            Last letter: the ambassadors rank
+        */
 
         [TestMethod]
         [DataRow("AA 111 A")]

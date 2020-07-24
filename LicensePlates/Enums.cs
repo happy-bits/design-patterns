@@ -2,7 +2,7 @@
 {
     enum Result
     {
-        Success, InvalidFormat, OnlyForAdvertisment, OnlyForTaxi, NotAvailable
+        Success, InvalidFormat, NotAvailable
     }
 
     enum CustomerType
