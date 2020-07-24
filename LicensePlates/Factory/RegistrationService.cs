@@ -22,9 +22,9 @@ namespace DesignPatterns.LicensePlates.Factory
         bool IsValid(string plate);
     }
 
-    internal class Helper
+    class Helper
     {
-        public static bool IsValid(string plate)
+        public static bool IsNormalPlate(string plate)
         {
             var allSwedishLetters = "ABCDEFGHIJKLMNOPQRSTWXYZÅÄÖ";
             var invalidLetters = "IQVÅÄÖ";
@@ -41,24 +41,24 @@ namespace DesignPatterns.LicensePlates.Factory
         private static string ExcludeLetters(string letters, string lettersToRemove) => string.Join("", letters.Where(c => !lettersToRemove.Contains(c)));
     }
 
-    internal class TaxiValidator: IValidator
+    class TaxiValidator: IValidator
     {
-        public bool IsValid(string plate) => Helper.IsValid(plate) && !Helper.ReserveredForAdvertisments(plate);
+        public bool IsValid(string plate) => Helper.IsNormalPlate(plate) && !Helper.ReserveredForAdvertisments(plate);
     }
 
-    internal class NormalValidator : IValidator
+    class NormalValidator : IValidator
     {
-        public bool IsValid(string plate) => Helper.IsValid(plate) && !Helper.ReserveredForAdvertisments(plate) && !Helper.ReserveredForTaxi(plate);
+        public bool IsValid(string plate) => Helper.IsNormalPlate(plate) && !Helper.ReserveredForAdvertisments(plate) && !Helper.ReserveredForTaxi(plate);
     }
 
-    internal class DiplomatValidator : IValidator
+    class DiplomatValidator : IValidator
     {
         public bool IsValid(string plate) => Regex.IsMatch(plate, "[A-Z]{2} \\d\\d\\d [A-Z]");
     }
 
-    internal class AdvertismentValidator : IValidator
+    class AdvertismentValidator : IValidator
     {
-        public bool IsValid(string plate) => Helper.IsValid(plate) && !Helper.ReserveredForTaxi(plate);
+        public bool IsValid(string plate) => Helper.IsNormalPlate(plate) && !Helper.ReserveredForTaxi(plate);
     }
 
     class RegistrationService
