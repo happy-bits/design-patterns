@@ -14,14 +14,12 @@
  - Fördel: slipper bindning mellan den som skickar och den som tar emot requestet. Klientkoden kan bestämma ordningen hur requesten hanteras
  */
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace DesignPatterns.ChainOfResponsibility
+namespace DesignPatterns.ChainOfResponsibility.Approvers
 {
     [TestClass]
-    public class Approvers
+    public partial class Approvers
     {
         static List<string> _logger = new List<string>();
 
@@ -64,6 +62,8 @@ namespace DesignPatterns.ChainOfResponsibility
 
         #region solution
 
+        // "Client"
+
         class Client
         {
             private Approver _firstApprover;
@@ -75,7 +75,7 @@ namespace DesignPatterns.ChainOfResponsibility
 
             internal void SetupChain(params Approver[] approvers)
             {
-                for (int i = 0; i < approvers.Length-1; i++)
+                for (int i = 0; i < approvers.Length - 1; i++)
                 {
                     approvers[i].SetSuccessor(approvers[i + 1]);
                 }
@@ -104,7 +104,7 @@ namespace DesignPatterns.ChainOfResponsibility
                     _logger.Add($"No one can handle request :(");
                 }
                 else
-                { 
+                {
                     successor.ProcessRequest(purchase);
                 }
             }
@@ -127,8 +127,6 @@ namespace DesignPatterns.ChainOfResponsibility
                 {
                     Next(purchase);
                 }
-
-
             }
         }
 
@@ -166,22 +164,6 @@ namespace DesignPatterns.ChainOfResponsibility
                 }
 
             }
-        }
-
-        // Simple class holding request details
-
-        class Purchase
-        {
-            public Purchase(int number, double amount, string purpose)
-            {
-                Number = number;
-                Amount = amount;
-                Purpose = purpose;
-            }
-
-            public int Number { get; }
-            public double Amount { get; }
-            public string Purpose { get; }
         }
 
         #endregion

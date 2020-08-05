@@ -1,10 +1,7 @@
-﻿
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace DesignPatterns.ChainOfResponsibility
+namespace DesignPatterns.ChainOfResponsibility.Approvers
 {
     [TestClass]
     public class Approvers_NoPattern
@@ -28,8 +25,8 @@ namespace DesignPatterns.ChainOfResponsibility
 
             client.SetupChain(larry, sam, tammy);
 
-            client.ProcessPurchase(new Purchase(1, 50, "Assets"));      
-            client.ProcessPurchase(new Purchase(2, 12000, "Project X"));  
+            client.ProcessPurchase(new Purchase(1, 50, "Assets"));
+            client.ProcessPurchase(new Purchase(2, 12000, "Project X"));
             client.ProcessPurchase(new Purchase(3, 75000, "Project Y"));
             client.ProcessPurchase(new Purchase(4, 2000000, "Project Z"));
 
@@ -40,7 +37,7 @@ namespace DesignPatterns.ChainOfResponsibility
             "President approved request 3",
             "No one can handle request :(",
 
-            }, 
+            },
             _logger);
         }
 
@@ -115,22 +112,6 @@ namespace DesignPatterns.ChainOfResponsibility
             {
                 _logger.Add($"President approved request {p.Number}");
             }
-        }
-
-        // Simple class holding request details
-
-        class Purchase
-        {
-            public Purchase(int number, double amount, string purpose)
-            {
-                Number = number;
-                Amount = amount;
-                Purpose = purpose;
-            }
-
-            public int Number { get; }
-            public double Amount { get; }
-            public string Purpose { get; }
         }
 
         #endregion
