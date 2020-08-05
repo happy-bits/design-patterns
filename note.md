@@ -5,8 +5,8 @@
 - State (Traffic light)
 
 # Okej akademiska exempel
-- Abstract factory (Furnitures)
-- Factory Method (Shapes) 
-- Chain of resp (Approvers)
+- Abstract factory (Furnitures) VILA
+- Factory Method (Shapes)   VILA
+- Chain of resp (Approvers) VILA
 
 
