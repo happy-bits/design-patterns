@@ -15,7 +15,7 @@ namespace DesignPatterns.IoC
     public class Minimal_01
     {
         [TestMethod]
-        public void swedish()
+        public void choose_SwedishGreeter_for_IGreeter()
         {
             var container = new MinimalContainer();
             container.Register<IGreeter, SwedishGreeter>();
@@ -27,7 +27,7 @@ namespace DesignPatterns.IoC
         }
 
         [TestMethod]
-        public void english()
+        public void choose_EnglishGreeter_for_IGreeter()
         {
             var container = new MinimalContainer();
             container.Register<IGreeter, EnglishGreeter>();
@@ -38,7 +38,7 @@ namespace DesignPatterns.IoC
             Assert.AreEqual("Hello!", result);
         }
 
-        public void test()
+        private void test()
         {
             var container = new MinimalContainer();
             //container.Register<IOtherInterface, EnglishGreeter>(); <--- doesn't work (good)
@@ -73,6 +73,9 @@ namespace DesignPatterns.IoC
         {
             readonly Dictionary<Type, Type> _types = new Dictionary<Type, Type>();
 
+            // Hämta klass utifrån interfacet "T". 
+            // Returnera instans av klassen
+
             internal T Create<T>()
             {
                 var concreteType =  _types[typeof(T)];
@@ -80,6 +83,7 @@ namespace DesignPatterns.IoC
                 return (T)defaultConstructor.Invoke(null); 
             }
             
+            // Lägg till typerna i "_types"
             internal void Register<TInterface, TImplementation>() where TImplementation: TInterface  
             {
                 _types[typeof(TInterface)] = typeof(TImplementation);

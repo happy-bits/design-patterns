@@ -122,7 +122,7 @@ namespace DesignPatterns.IoC
                 //Verify if the default constructor requires params
                 var defaultParams = defaultConstructor.GetParameters();
 
-                //Instantiate all constructor parameters using recursion
+                //Instansiate all constructor parameters using recursion
                 var parameters = defaultParams.Select(param => Create(param.ParameterType)).ToArray();
 
                 return defaultConstructor.Invoke(parameters);

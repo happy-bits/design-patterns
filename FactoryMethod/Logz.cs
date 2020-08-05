@@ -1,6 +1,5 @@
 ﻿
-// todo: Lägg till mer logik i LogCreator så det blir mer intressant
-
+// Denna är sämre än no pattern...
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -10,7 +9,7 @@ using System.Linq;
 namespace DesignPatterns.FactoryMethod
 {
     [TestClass]
-    public class Logz_NoPattern
+    public class Logz
     {
         [TestMethod]
         public void Ex1()
@@ -96,31 +95,31 @@ namespace DesignPatterns.FactoryMethod
             public bool IsOn { get; set; }
         }
 
-        // Exercise: create the code below (Client and LogCreator)
+        // "Creator"
 
-        class LogCreator
+        abstract class LogCreator
         {
-            private readonly string _environment;
-            private readonly LogConfig _config;
+            // "Factory method"
+            public abstract Logger Create(LogConfig config);
+        }
 
-            public LogCreator(string environment, LogConfig config)
+        // "Concrete creator"
+
+        class FileLoggerCreator : LogCreator
+        {
+            public override Logger Create(LogConfig config)
             {
-                _environment = environment;
-                _config = config;
+                return new FileLogger(config.FilePath, config.Rolling);
             }
-            internal Logger GetLogger()
+        }
+
+        // "Concrete creator"
+
+        class DatabaseLoggerCreator : LogCreator
+        {
+            public override Logger Create(LogConfig config)
             {
-                switch (_environment)
-                {
-                    case "dev":
-                        return new FileLogger(_config.FilePath, _config.Rolling);
-
-                    case "prod":
-
-                        return new DatabaseLogger(_config.ConnectionString);
-
-                    default: throw new ArgumentException();
-                }
+                return new DatabaseLogger(config.ConnectionString);
             }
         }
 
@@ -128,11 +127,25 @@ namespace DesignPatterns.FactoryMethod
         {
             internal static void Run(string environment, LogConfig config)
             {
-                Logger logger = new LogCreator(environment, config).GetLogger();
+                LogCreator logCreator = GetLoggCreator(environment);
+                Logger logger = logCreator.Create(config);
                 logger.Trace("A");
                 logger.Warning("B");
             }
 
+            private static LogCreator GetLoggCreator(string environment)
+            {
+                switch (environment)
+                {
+                    case "dev":
+                        return new FileLoggerCreator();
+
+                    case "prod":
+                        return new DatabaseLoggerCreator();
+
+                    default: throw new ArgumentException();
+                }
+            }
         }
     }
 }
