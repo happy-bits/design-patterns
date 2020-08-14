@@ -7,9 +7,15 @@ namespace DesignPatterns.FactoryMethod.Shapes.After
 {
     class Client: IClient
     {
+        readonly Dictionary<string, ShapeFactory> _factories = new Dictionary<string, ShapeFactory>
+        {
+            ["SquareCircle"] = new SquareCircleFactory(),
+            ["TriangleTriangleCircle"] = new TriangleTriangleCircleFactory()
+        };
+
         public IEnumerable<Shape> Run(int num, string factoryname)
         {
-            ShapeFactory factory = SelectFactoryByName(factoryname);
+            ShapeFactory factory = _factories[factoryname]; // alternativ: SelectFactoryByName(factoryname);
 
             var result = new List<Shape>();
 
@@ -20,10 +26,11 @@ namespace DesignPatterns.FactoryMethod.Shapes.After
             return result;
         }
 
+        // Det blir fortfarande en switch sats, men den är enklare, och omvandlar bara från en sträng till en fabrik
         private static ShapeFactory SelectFactoryByName(string factoryname) => factoryname switch
         {
-            "SC" => new SquareCircleFactory(),
-            "TTC" => new TriangleTriangleCircleFactory(),
+            "SquareCircle" => new SquareCircleFactory(),
+            "TriangleTriangleCircle" => new TriangleTriangleCircleFactory(),
             _ => throw new ArgumentException()
         };
     }

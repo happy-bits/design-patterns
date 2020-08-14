@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using System.Linq;
+using static DesignPatterns.TestUtilities;
 
 namespace DesignPatterns.FactoryMethod.Shapes
 {
@@ -14,7 +14,7 @@ namespace DesignPatterns.FactoryMethod.Shapes
         {
             foreach(var client in AllClients())
             {
-                IEnumerable<Shape> shapes = client.Run(4, "SC");
+                IEnumerable<Shape> shapes = client.Run(4, "SquareCircle");
 
                 CollectionAssert.AreEqual(new[] {
                     "Square",
@@ -31,7 +31,7 @@ namespace DesignPatterns.FactoryMethod.Shapes
             foreach (var client in AllClients())
             {
 
-                IEnumerable<Shape> shapes = client.Run(6, "TTC");
+                IEnumerable<Shape> shapes = client.Run(6, "TriangleTriangleCircle");
 
                 CollectionAssert.AreEqual(new[] {
                 "Triangle",
@@ -44,8 +44,6 @@ namespace DesignPatterns.FactoryMethod.Shapes
             }, ClassNames(shapes));
             }
         }
-
-        private static string[] ClassNames(IEnumerable<object> shapes) => shapes.Select(s => s.GetType().Name).ToArray();
     }
 
 

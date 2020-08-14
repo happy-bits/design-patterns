@@ -1,32 +1,34 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DesignPatterns
 {
-    public class TestUtilities
+    public static class TestUtilities
     {
-        List<string> _log = new List<string>();
+        public static string[] ClassNames(IEnumerable<object> objects) => objects.Select(s => s.GetType().Name).ToArray();
 
-        internal void AssertAndClearLog(string[] messages)
-        {
-            CollectionAssert.AreEqual(messages, _log);
-            ClearLog();
-        }
+        //List<string> _log = new List<string>();
 
-        private void ClearLog()
-        {
-            _log = new List<string>();
-        }
+        //internal void AssertAndClearLog(string[] messages)
+        //{
+        //    CollectionAssert.AreEqual(messages, _log);
+        //    ClearLog();
+        //}
 
-        internal void AssertAndClearLog(string message)
-        {
-            AssertAndClearLog(new[] { message });
-        }
+        //private void ClearLog()
+        //{
+        //    _log = new List<string>();
+        //}
 
-        internal void Log(string message)
-        {
-            _log.Add(message);
-        }
+        //internal void AssertAndClearLog(string message)
+        //{
+        //    AssertAndClearLog(new[] { message });
+        //}
+
+        //internal void Log(string message)
+        //{
+        //    _log.Add(message);
+        //}
     }
 }

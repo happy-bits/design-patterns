@@ -10,7 +10,7 @@ namespace DesignPatterns.FactoryMethod.Shapes.After
         [TestMethod]
         public void test_SquareCircleFactory()
         {
-            var factory = new SquareCircleFactory(); // istället för new Creator("SC");
+            var factory = new SquareCircleFactory(); // istället för new Creator("SquareCircle");
 
             Assert.IsTrue(factory.GetShape() is Square);
             Assert.IsTrue(factory.GetShape() is Circle);

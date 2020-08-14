@@ -8,7 +8,7 @@ namespace DesignPatterns.FactoryMethod.Shapes.Before
         [TestMethod]
         public void test_SquareCircleFactory()
         {
-            var factory = new Creator("SC");
+            var factory = new Factory("SquareCircle");
 
             Assert.IsTrue(factory.GetShape() is Square);
             Assert.IsTrue(factory.GetShape() is Circle);
@@ -19,7 +19,7 @@ namespace DesignPatterns.FactoryMethod.Shapes.Before
         [TestMethod]
         public void test_TriangleTriangleCircleFactory()
         {
-            var factory = new Creator("TTC");
+            var factory = new Factory("TriangleTriangleCircle");
 
             Assert.IsTrue(factory.GetShape() is Triangle);
             Assert.IsTrue(factory.GetShape() is Triangle);

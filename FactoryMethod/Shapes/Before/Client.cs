@@ -11,11 +11,11 @@ namespace DesignPatterns.FactoryMethod.Shapes.Before
         {
             var result = new List<Shape>();
 
-            var creator = new Creator(factoryname);
+            var factory = new Factory(factoryname);
 
             for (int i = 0; i < num; i++)
             {
-                result.Add(creator.GetShape());
+                result.Add(factory.GetShape());
             }
             return result;
         }
@@ -24,9 +24,9 @@ namespace DesignPatterns.FactoryMethod.Shapes.Before
 
     // Nackdel: klassen behöver uppdateras och kommer växa när nya sorters fabriker behövs
 
-    // Nackdel: ex DividibleByThree behövs bara i fallet "TTC".
+    // Nackdel: det kommer dyka upp metoder och fält som bara är intressanta för vissa fabriker, t.ex "DividibleByThree" behövs här bara i fallet "TriangleTriangleCircle".
 
-    class Creator
+    class Factory
     {
         private readonly string _factoryname;
         private int _counter = 0;
@@ -34,7 +34,7 @@ namespace DesignPatterns.FactoryMethod.Shapes.Before
         private static bool IsEven(int number) => number % 2 == 0;
         private static bool DividableByThree(int number) => number % 3 == 0;
 
-        public Creator(string factoryname)
+        public Factory(string factoryname)
         {
             _factoryname = factoryname;
         }
@@ -43,14 +43,14 @@ namespace DesignPatterns.FactoryMethod.Shapes.Before
             _counter++;
             switch (_factoryname)
             {
-                case "SC":
+                case "SquareCircle":
 
                     if (IsEven(_counter))
                         return new Circle();
                     else
                         return new Square();
 
-                case "TTC":
+                case "TriangleTriangleCircle":
 
                     if (DividableByThree(_counter))
                         return new Circle();
