@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace DesignPatterns.FactoryMethod
 {
     [TestClass]
-    public class Lab
+    public class Dices
     {
         [TestMethod]
         public void not_all_rolls_should_be_the_same()
