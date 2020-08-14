@@ -53,7 +53,7 @@ namespace DesignPatterns.FactoryMethod
             public bool Ascending { get; set; } = true;   // extra egenskaper
             public string Delimiter { get; set; } = "\n"; // extra egenskaper
 
-            internal abstract IEnumerable<Element> Create(string header, string body);
+            protected abstract IEnumerable<Element> Create(string header, string body);
 
             internal string Render(string header, string body) // extra logik
             {
@@ -70,7 +70,7 @@ namespace DesignPatterns.FactoryMethod
         // "Concrete Creator" 
         class HtmlCreator : DocumentCreator
         {
-            internal override IEnumerable<Element> Create(string header, string body)
+            protected override IEnumerable<Element> Create(string header, string body)
             {
                 yield return new HtmlHeader(header);
                 yield return new HtmlBody(body);
@@ -80,7 +80,7 @@ namespace DesignPatterns.FactoryMethod
         // "Concrete Creator" 
         class MarkdownCreator : DocumentCreator
         {
-            internal override IEnumerable<Element> Create(string header, string body)
+            protected override IEnumerable<Element> Create(string header, string body)
             {
                 yield return new MarkdownHeader(header);
                 yield return new MarkdownBody(body);

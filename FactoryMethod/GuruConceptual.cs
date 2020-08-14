@@ -45,8 +45,8 @@ namespace DesignPatterns.FactoryMethod
          */
         abstract class Creator
         {
-            // Får även ge default implementation av "factory method" (ej i detta fall)
-            public abstract IProduct FactoryMethod();
+            // Får även ge default implementation av "factory method" (ej i detta fall) (jag ändrade denna till "protected")
+            protected abstract IProduct FactoryMethod();
 
             /*
              Creator är inte främst ansvarig för att skapa produkter (även om det låter så)
@@ -69,7 +69,7 @@ namespace DesignPatterns.FactoryMethod
         class ConcreteCreator1 : Creator
         {
             // Skapar en konkret produkt. Samtidigt är Creatorn inte beroende av någon konkret produkt (bara IProduct)
-            public override IProduct FactoryMethod()
+            protected override IProduct FactoryMethod()
             {
                 return new ConcreteProduct1();
             }
@@ -77,7 +77,7 @@ namespace DesignPatterns.FactoryMethod
 
         class ConcreteCreator2 : Creator
         {
-            public override IProduct FactoryMethod()
+            protected override IProduct FactoryMethod()
             {
                 return new ConcreteProduct2();
             }
