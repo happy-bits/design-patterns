@@ -7,7 +7,7 @@ using System.Linq;
 namespace DesignPatterns.FactoryMethod
 {
     [TestClass]
-    public class Shapes
+    public class ShapesOld
     {
         [TestMethod]
         public void Ex1()

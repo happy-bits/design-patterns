@@ -96,7 +96,7 @@ namespace DesignPatterns.FactoryMethod
         }
 
         // "Creator"
-
+        // Denna klass behöver nog göra något mer för att det ska bli intressant
         abstract class LogCreator
         {
             // "Factory method"

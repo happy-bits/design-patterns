@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DesignPatterns.FactoryMethod
 {
     [TestClass]
-    public class Shapes_NoPattern
+    public class Shapes_NoPatternOld
     {
         [TestMethod]
         public void Ex1()
