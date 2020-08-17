@@ -49,7 +49,7 @@ namespace DesignPatterns.FactoryMethod.Documents.After
 
         public List<Page> Pages { get; } = new List<Page>();
 
-        // Factory Method
+        // Factory Method (även om den inte skapar Document, utan dess beståndsdelar)
 
         public abstract void CreatePages();
     }

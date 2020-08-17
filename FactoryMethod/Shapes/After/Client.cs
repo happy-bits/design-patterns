@@ -50,6 +50,8 @@ namespace DesignPatterns.FactoryMethod.Shapes.After
         abstract protected Shape CreateShape();
     }
 
+    // Denna klass är kortare än "Factory" och kommer inte växa när fler fabriker behövs (bra)
+    // Denna klass innehåller bara det som är relevant, inte t.ex DividableByThree (bra)
     class SquareCircleFactory : ShapeFactory
     {
         private static bool IsEven(int number) => number % 2 == 0;
