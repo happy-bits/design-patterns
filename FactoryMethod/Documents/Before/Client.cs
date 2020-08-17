@@ -1,66 +1,81 @@
-﻿//// No pattern
+﻿// Factory method
 
-//using System;
-//using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 
-//namespace DesignPatterns.FactoryMethod.Documents.Before
-//{
-//    class Client : IClient
-//    {
-//        public IEnumerable<Shape> Run(int num, string factoryname)
-//        {
-//            var result = new List<Shape>();
+namespace DesignPatterns.FactoryMethod.Documents.Before
+{
+    class Client : IClient
+    {
 
-//            var factory = new Factory(factoryname);
+        public List<string> CreateResumeAndRenderDocument()
+        {
+            var resume = new Resume();
+            var result = RenderDocument(resume);
+            return result;
+        }
 
-//            for (int i = 0; i < num; i++)
-//            {
-//                result.Add(factory.GetShape());
-//            }
-//            return result;
-//        }
+        public List<string> CreateReportAndRenderDocument()
+        {
+            var report = new Report();
+            var result = RenderDocument(report);
+            return result;
+        }
 
-//    }
+        private static List<string> RenderDocument(Document resume)
+        {
+            var result = new List<string>();
 
-//    // Nackdel: klassen behöver uppdateras och kommer växa när nya sorters fabriker behövs
+            result.Add(resume.GetType().Name);
+            foreach (Page page in resume.Pages)
+            {
+                result.Add("---" + page.GetType().Name);
+            }
 
-//    // Nackdel: det kommer dyka upp metoder och fält som bara är intressanta för vissa fabriker, t.ex "DividibleByThree" behövs här bara i fallet "TriangleTriangleCircle".
+            return result;
+        }
+    }
 
-//    class Factory
-//    {
-//        private readonly string _factoryname;
-//        private int _counter = 0;
+    abstract class Document
+    {
+        public List<Page> Pages { get; } = new List<Page>();
+    }
 
-//        private static bool IsEven(int number) => number % 2 == 0;
-//        private static bool DividableByThree(int number) => number % 3 == 0;
+    // Nackdel: måste komma ihåg att skapa metoden CreatePages
 
-//        public Factory(string factoryname)
-//        {
-//            _factoryname = factoryname;
-//        }
-//        internal Shape GetShape()
-//        {
-//            _counter++;
-//            switch (_factoryname)
-//            {
-//                case "SquareCircle":
+    class Resume : Document
+    {
+        public Resume()
+        {
+            CreatePages();
+        }
 
-//                    if (IsEven(_counter))
-//                        return new Circle();
-//                    else
-//                        return new Square();
+        private void CreatePages()
+        {
+            Pages.Add(new SkillsPage());
+            Pages.Add(new EducationPage());
+            Pages.Add(new ExperiencePage());
+        }
+    }
 
-//                case "TriangleTriangleCircle":
+    /// A 'ConcreteCreator' class
 
-//                    if (DividableByThree(_counter))
-//                        return new Circle();
-//                    else
-//                        return new Triangle();
+    class Report : Document
+    {
+        public Report()
+        {
+            CreatePages();
+        }
 
-//                default: throw new ArgumentException();
-//            }
-//        }
-//    }
+        private void CreatePages()
+        {
+            Pages.Add(new IntroductionPage());
+            Pages.Add(new ResultsPage());
+            Pages.Add(new ConclusionPage());
+            Pages.Add(new SummaryPage());
+            Pages.Add(new BibliographyPage());
+        }
+    }
+}
 
 
-//}

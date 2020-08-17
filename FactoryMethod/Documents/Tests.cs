@@ -1,5 +1,4 @@
-﻿using DesignPatterns.FactoryMethod.Documents.After;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
 namespace DesignPatterns.FactoryMethod.Documents
@@ -7,8 +6,8 @@ namespace DesignPatterns.FactoryMethod.Documents
     [TestClass]
     public class Tests
     {
-        private IEnumerable<IClient> AllClients() => new Client[] { 
-            //new Before.Client(), 
+        private IEnumerable<IClient> AllClients() => new IClient[] { 
+            new Before.Client(), 
             new After.Client() 
         };
 
