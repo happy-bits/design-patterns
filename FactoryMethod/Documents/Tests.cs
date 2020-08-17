@@ -1,52 +1,42 @@
 ﻿using DesignPatterns.FactoryMethod.Documents.After;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using static DesignPatterns.TestUtilities;
 
 namespace DesignPatterns.FactoryMethod.Documents
 {
     [TestClass]
     public class Tests
     {
-        private IEnumerable<After.Client> AllClients() => new Client[] { 
+        private IEnumerable<IClient> AllClients() => new Client[] { 
             //new Before.Client(), 
             new After.Client() 
         };
 
-        //[TestMethod]
-        //public void Ex1()
-        //{
-        //    foreach(var client in AllClients())
-        //    {
-        //        Document[] documents = new Document[] {
-        //            new Resume(),
-        //            new Report()
-        //        };
 
-        //        List<string> result = client.Run(documents);
+        [TestMethod]
+        public void Ex1()
+        {
+            foreach (var client in AllClients())
+            {
+                var result = client.CreateReportAndRenderDocument();
 
-        //        CollectionAssert.AreEqual(new[] {
-        //            "Resume",
-        //            "---SkillsPage",
-        //            "---EducationPage",
-        //            "---ExperiencePage",
-        //            "Report",
-        //            "---IntroductionPage",
-        //            "---ResultsPage",
-        //            "---ConclusionPage",
-        //            "---SummaryPage",
-        //            "---BibliographyPage",
-        //        }, result);
-        //    }
-        //}
+                CollectionAssert.AreEqual(new[] {
+                    "Report",
+                    "---IntroductionPage",
+                    "---ResultsPage",
+                    "---ConclusionPage",
+                    "---SummaryPage",
+                    "---BibliographyPage",
+                }, result);
+            }
+        }
 
         [TestMethod]
         public void Ex2()
         {
             foreach (var client in AllClients())
             {
-                var resume = client.CreateResume();
-                var result = client.RenderDocument(resume);
+                var result = client.CreateResumeAndRenderDocument();
 
                 CollectionAssert.AreEqual(new[] {
                     "Resume",

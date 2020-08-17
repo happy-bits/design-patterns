@@ -1,42 +1,32 @@
 ﻿// Factory method
 
-using System;
 using System.Collections.Generic;
 
 namespace DesignPatterns.FactoryMethod.Documents.After
 {
-    class Client
+    class Client : IClient
     {
 
-        //public List<string> Run(IEnumerable<Document> documents )
-        //{
-        //    var result = new List<string>();
-
-        //    foreach (Document document in documents)
-        //    {
-        //        result.Add(document.GetType().Name);
-        //        foreach (Page page in document.Pages)
-        //        {
-        //            result.Add("---" + page.GetType().Name);
-        //        }
-        //    }
-
-        //    return result;
-        //}
-
-        internal Document CreateResume()
+        public List<string> CreateResumeAndRenderDocument()
         {
-            return new Resume();
+            var resume = new Resume();
+            var result = RenderDocument(resume);
+            return result;
         }
 
-        // Följande metod behöver inte veta vilka typer av dokument det finns (ex Resume)
+        public List<string> CreateReportAndRenderDocument()
+        {
+            var report = new Report();
+            var result = RenderDocument(report);
+            return result;
+        }
 
-        internal List<string> RenderDocument(Document document)
+        private static List<string> RenderDocument(Document resume)
         {
             var result = new List<string>();
 
-            result.Add(document.GetType().Name);
-            foreach (Page page in document.Pages)
+            result.Add(resume.GetType().Name);
+            foreach (Page page in resume.Pages)
             {
                 result.Add("---" + page.GetType().Name);
             }
