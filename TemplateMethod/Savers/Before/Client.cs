@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace DesignPatterns.TemplateMethod.Distances.Before
+namespace DesignPatterns.TemplateMethod.Savers.Before
 {
     class Client : IClient
     {

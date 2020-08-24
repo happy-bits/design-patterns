@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace DesignPatterns.TemplateMethod.Distances.After
+namespace DesignPatterns.TemplateMethod.Savers.After
 {
     class Client : IClient
     {

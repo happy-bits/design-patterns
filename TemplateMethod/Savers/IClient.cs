@@ -1,5 +1,5 @@
 ﻿
-namespace DesignPatterns.TemplateMethod.Distances
+namespace DesignPatterns.TemplateMethod.Savers
 {
     interface IClient
     {

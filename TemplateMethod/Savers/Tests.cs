@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
-namespace DesignPatterns.TemplateMethod.Distances
+namespace DesignPatterns.TemplateMethod.Savers
 {
     [TestClass]
     public class Tests
