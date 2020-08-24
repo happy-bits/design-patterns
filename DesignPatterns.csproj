@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -13,16 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Template\Distances\After\Client.cs" />
-    <Compile Remove="Template\Distances\Before\Client.cs" />
     <Compile Remove="Template\Distances\IClient.cs" />
+    <Compile Remove="Template\Distances\Before\Client.cs" />
     <Compile Remove="Template\Distances\Tests.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Template\Distances\Before\Client.cs" />
-    <None Include="Template\Distances\IClient.cs" />
-    <None Include="Template\Distances\Tests.cs" />
+    <Compile Remove="Template\Distances\After\Client.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,8 +32,5 @@
     <Folder Include="StateDesignPattern\Bookings\NoPattern\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="Template\Distances\After\Client.cs" />
-  </ItemGroup>
 
 </Project>
