@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+ 
+https://refactoring.guru/design-patterns/template-method
+
+Template Method is based on inheritance: it lets you alter parts of an algorithm by extending those parts in subclasses. Strategy is based on composition: you can alter parts of the object’s behavior by supplying it with different strategies that correspond to that behavior. Template Method works at the class level, so it’s static. Strategy works on the object level, letting you switch behaviors at runtime.
+
+ */
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DesignPatterns.TemplateMethod
@@ -45,7 +52,7 @@ namespace DesignPatterns.TemplateMethod
             /*
                 Denna metod är synlig och är ingången (klienten anropar denna)
                 
-                Här definieras skelettet av en algoritm
+                Här definieras skelettet av en algoritm. De operationer som alltid ska göras och det som delegeras ner till underklasserna
 
                 Ingen (underklass) ska pilla på denna metod
             */
