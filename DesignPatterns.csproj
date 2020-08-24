@@ -13,6 +13,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Template\Distances\After\Client.cs" />
+    <Compile Remove="Template\Distances\Before\Client.cs" />
+    <Compile Remove="Template\Distances\IClient.cs" />
+    <Compile Remove="Template\Distances\Tests.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Template\Distances\Before\Client.cs" />
+    <None Include="Template\Distances\IClient.cs" />
+    <None Include="Template\Distances\Tests.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.5" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.0.0" />
@@ -23,6 +36,10 @@
   <ItemGroup>
     <Folder Include="FactoryMethod\Old\" />
     <Folder Include="StateDesignPattern\Bookings\NoPattern\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Template\Distances\After\Client.cs" />
   </ItemGroup>
 
 </Project>
