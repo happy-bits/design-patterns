@@ -1,115 +1,87 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System.Text.RegularExpressions;
 
 namespace DesignPatterns.TemplateMethod.Distances.After
 {
     class Client : IClient
     {
-        public IEnumerable<double> Calculate()
+        public Result License(string licensnumber)
         {
-            ClientCode(new ConcreteClass1());
-
-            ClientCode(new ConcreteClass2());
-
-            return null;
+            var saver = new LicensePlateService();
+            return saver.TrySave(licensnumber);
         }
 
-        /*
-            Klientkoden kallar template-metoden för att utföra algoritmen
-            Klienten behöver veta vilken konkret klass som används
-        */
-
-        public static void ClientCode(AbstractClass abstractClass)
+        public Result Product(string productname)
         {
-            // ...
-            abstractClass.TemplateMethod(); // Denna metod ligger den enda som är synlig utåt och sitter på den abstrakta basklassen
-            // ...
+            var saver = new ProductService();
+            return saver.TrySave(productname);
         }
 
-        public abstract class AbstractClass
+        public abstract class SaveService
         {
-            /*
-                Denna metod är synlig och är ingången (klienten anropar denna)
-                
-                Här definieras skelettet av en algoritm
-
-                Ingen (underklass) ska pilla på denna metod
-            */
-            public void TemplateMethod()
+            public Result TrySave(string name)
             {
-                BaseOperation1();
-                RequiredOperations1();
-                BaseOperation2();
-                Hook1();
-                RequiredOperation2();
-                BaseOperation3();
-                Hook2();
+                name = CleanBase(name);
+                name = Clean(name);
+
+                if (!IsValidBase(name) || !IsValid(name))
+                {
+                    return Result.Invalid;
+                }
+
+                bool success = Save(name);
+
+                return success ? Result.Success : Result.SaveError;
             }
 
-            private void BaseOperation1()
-            {
-                Console.WriteLine("AbstractClass says: I am doing the bulk of the work");
-            }
+            // Subclasses have to implement "Save"
 
-            private void BaseOperation2()
-            {
-                Console.WriteLine("AbstractClass says: But I let subclasses override some operations");
-            }
+            public abstract bool Save(string name);
 
-            private void BaseOperation3()
-            {
-                Console.WriteLine("AbstractClass says: But I am doing the bulk of the work anyway");
-            }
+            // "Hooks"
 
-            // Dessa (primitiva) operationer måste implementeras av underklasserna
+            protected virtual string Clean(string name) => name;
+            protected virtual bool IsValid(string name) => true;
 
-            protected abstract void RequiredOperations1();
-            protected abstract void RequiredOperation2();
+            // Methods that "TrySave" always will call
 
-            /*
-             Här finns "hooks". Underklasser kan implementera dem men kan strunta i det
+            private static string CleanBase(string name) => name.Trim();
+            private static bool IsValidBase(string name) => !string.IsNullOrEmpty(name);
 
-             Det gör det möjligt att haka in i algoritmen
-            */
-
-            protected virtual void Hook1() { }
-
-            protected virtual void Hook2() { }
         }
 
-        class ConcreteClass1 : AbstractClass
+        class LicensePlateService : SaveService
         {
-            protected override void RequiredOperations1()
+            public override bool Save(string name)
             {
-                Console.WriteLine("ConcreteClass1 says: Implemented Operation1");
+                // Simulate error when name is 666
+                if (name == "AAA 666")
+                    return false;
+
+                // Save licenseplate to database
+                return true;
             }
 
-            protected override void RequiredOperation2()
-            {
-                Console.WriteLine("ConcreteClass1 says: Implemented Operation2");
-            }
+            protected override string Clean(string name) => Regex.Replace(name, " {2,}", " "); // Replace two spaces with one
+
+            protected override bool IsValid(string name) => Regex.IsMatch(name, "[A-Z]{3} [0-9]{3}");
         }
 
-        // Normalt så overridear den konkreta klassen bara en del av basklassen
-        class ConcreteClass2 : AbstractClass
+        class ProductService : SaveService
         {
-            protected override void RequiredOperations1()
+            public override bool Save(string name)
             {
-                Console.WriteLine("ConcreteClass2 says: Implemented Operation1");
+                // Simulate error when name is 666
+                if (name == "666666")
+                    return false;
+
+                // Save product to text file
+                return true;
             }
 
-            protected override void RequiredOperation2()
-            {
-                Console.WriteLine("ConcreteClass2 says: Implemented Operation2");
-            }
+            // (struntar i att implementer Clean i detta fall)
 
-            protected override void Hook1()
-            {
-                Console.WriteLine("ConcreteClass2 says: Overridden Hook1");
-            }
+            protected override bool IsValid(string name) => Regex.IsMatch(name, "[0-9]{6}");
 
-            // Hooks2 struntar vi
         }
 
     }
