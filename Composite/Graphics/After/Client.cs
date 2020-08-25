@@ -6,21 +6,19 @@ namespace DesignPatterns.Composite.Graphics.After
 {
     class Client : IClient
     {
-        private static Queue<string> _events = new Queue<string>();
 
-        public Queue<string> DrawStuff()
+        public IEnumerable<string> DrawStuff()
         {
-            var dot = new Dot(3,4);
-            dot.Draw();
+            List<string> _events = new List<string>();
 
-            var circle = new Circle(5, 6, 100);
-            circle.Move(20, 30);
-            circle.Draw();
-
+            void AddToEventLog(object sender, string e)
+            {
+                _events.Add(e);
+            }
 
             /*
-            
-             root________________
+
+             compound0___________
              |                   |     
              compound1__         compound2_____
              |          |        |             |
@@ -28,10 +26,15 @@ namespace DesignPatterns.Composite.Graphics.After
                                  |
                                  circle2
              */
-            var dot2 = new Dot(0, 0);
 
+            // Setup
+
+            var dot = new Dot(3, 4);
+            var dot2 = new Dot(0, 0);
+            var circle = new Circle(5, 6, 100);
             var circle2 = new Circle(55, 66, 77);
 
+            var compound0 = new CompoundGraphic();
             var compound1 = new CompoundGraphic();
             var compound2 = new CompoundGraphic();
             var compound3 = new CompoundGraphic();
@@ -39,61 +42,28 @@ namespace DesignPatterns.Composite.Graphics.After
             compound1.Add(dot, circle);
             compound2.Add(compound3, dot2);
             compound3.Add(circle2);
+            compound0.Add(compound1, compound2);
 
-            var root = new CompoundGraphic();
-            root.Add(compound1, compound2);
+            dot.OnDraw += AddToEventLog;
+            dot2.OnDraw += AddToEventLog;
+            circle.OnDraw += AddToEventLog;
+            circle2.OnDraw += AddToEventLog;
 
-            root.Move(500, 600);
-            root.Draw();
+            // Action
+
+            dot.Draw();
+            circle.Move(20, 30);
+            circle.Draw();
+
+            compound0.Move(500, 600);
+            compound0.Draw();
+
             return _events;
         }
 
-        abstract class Graphic
-        {
-            public double X { get; protected set; }
-            public double Y { get; protected set; }
+        
 
-            public virtual void Move(double x, double y)
-            {
-                X = x;
-                Y = y;
-            }
-            public abstract void Draw();
-        }
-
-
-        class Dot: Graphic
-        {
-            public Dot(double x, double y)
-            {
-                X = x;
-                Y = y;
-            }
-
-            public override void Draw()
-            {
-                _events.Enqueue($"Drawing dot on position ({X},{Y})");
-            }
-        }
-
-        class Circle: Graphic
-        {
-            public Circle(double x, double y, double radius)
-            {
-                X = x;
-                Y = y;
-                Radius = radius;
-            }
-
-            public double Radius { get; }
-
-            public override void Draw()
-            {
-                _events.Enqueue($"Drawing circle with radius {Radius} on position ({X},{Y})");
-            }
-        }
-
-        class CompoundGraphic: Graphic
+        class CompoundGraphic : Graphic
         {
             List<Graphic> _children = new List<Graphic>();
 

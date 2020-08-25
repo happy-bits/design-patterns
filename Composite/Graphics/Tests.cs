@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using static DesignPatterns.TestUtilities;
 
@@ -9,7 +10,7 @@ namespace DesignPatterns.Composite.Graphics
     {
         private IEnumerable<IClient> AllClients() => new IClient[] { 
         //    new Before.Client(), 
-            new After.Client() 
+            new After.Client()
         };
 
         [TestMethod]
@@ -32,4 +33,56 @@ namespace DesignPatterns.Composite.Graphics
             }
         }
     }
+
+    abstract class Graphic
+    {
+        public double X { get; protected set; }
+        public double Y { get; protected set; }
+
+        public virtual void Move(double x, double y)
+        {
+            X = x;
+            Y = y;
+        }
+        public abstract void Draw();
+    }
+
+
+    class Dot : Graphic
+    {
+        public EventHandler<string> OnDraw { get; set; }
+
+        public Dot(double x, double y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        public override void Draw()
+        {
+            OnDraw?.Invoke(this, $"Drawing dot on position ({X},{Y})");
+        }
+    }
+
+    class Circle : Graphic
+    {
+        public EventHandler<string> OnDraw { get; set; }
+
+
+        public Circle(double x, double y, double radius)
+        {
+            X = x;
+            Y = y;
+            Radius = radius;
+        }
+
+        public double Radius { get; }
+
+        public override void Draw()
+        {
+            OnDraw?.Invoke(this, $"Drawing circle with radius {Radius} on position ({X},{Y})");
+        }
+    }
+
+
 }

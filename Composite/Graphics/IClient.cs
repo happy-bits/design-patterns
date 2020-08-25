@@ -4,6 +4,6 @@ namespace DesignPatterns.Composite.Graphics
 {
     interface IClient
     {
-        Queue<string> DrawStuff();
+        IEnumerable<string> DrawStuff();
     }
 }

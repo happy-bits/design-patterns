@@ -6,7 +6,7 @@ namespace DesignPatterns.Composite.Graphics.Before
 {
     class Client : IClient
     {
-        public Queue<string> DrawStuff()
+        IEnumerable<string> IClient.DrawStuff()
         {
             throw new NotImplementedException();
         }
