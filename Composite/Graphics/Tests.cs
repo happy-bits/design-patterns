@@ -9,7 +9,7 @@ namespace DesignPatterns.Composite.Graphics
     public class Tests
     {
         private IEnumerable<IClient> AllClients() => new IClient[] { 
-        //    new Before.Client(), 
+            new Before.Client(), 
             new After.Client()
         };
 
@@ -83,6 +83,9 @@ namespace DesignPatterns.Composite.Graphics
             OnDraw?.Invoke(this, $"Drawing circle with radius {Radius} on position ({X},{Y})");
         }
     }
+
+
+
 
 
 }

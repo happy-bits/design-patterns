@@ -61,8 +61,6 @@ namespace DesignPatterns.Composite.Graphics.After
             return _events;
         }
 
-        
-
         class CompoundGraphic : Graphic
         {
             List<Graphic> _children = new List<Graphic>();
