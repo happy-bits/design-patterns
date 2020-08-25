@@ -101,7 +101,7 @@ namespace DesignPatterns.Composite
         */
         class Composite : Component
         {
-            protected List<Component> _children = new List<Component>();
+            private readonly List<Component> _children = new List<Component>();
 
             public override void Add(Component component)
             {
