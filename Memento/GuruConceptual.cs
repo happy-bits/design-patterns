@@ -11,14 +11,14 @@ namespace DesignPatterns.Memento
     {
 
         [TestMethod]
-        public void MyTestMethod()
+        public void Ex1()
         {
-            // Client code.
-            Originator originator = new Originator("Super-duper-super-puper-super.");
+            Originator originator = new Originator("Super-duper-super-puper-super."); // Originator: My initial state is: Super-duper-super-puper-super.
             Caretaker caretaker = new Caretaker(originator);
 
-            caretaker.Backup();
-            originator.DoSomething();
+            caretaker.Backup();         // Caretaker: Saving Originator's state...
+            originator.DoSomething();   // Originator: I'm doing something important.
+                                        // Originator: and my state has changed to: bGADLfCcXnurOPNEtRbahJvpPWWZrC
 
             caretaker.Backup();
             originator.DoSomething();
@@ -27,10 +27,14 @@ namespace DesignPatterns.Memento
             originator.DoSomething();
 
             Console.WriteLine();
-            caretaker.ShowHistory();
+            caretaker.ShowHistory();  // Caretaker: Here's the list of mementos:
+                                      // 8/25/2020 1:38:49 PM / (Super-dup)...
+                                      // 8/25/2020 1:38:49 PM / (bGADLfCcX)...
+                                      // 8/25/2020 1:38:50 PM / (CdTxgFhLe)...
 
             Console.WriteLine("\nClient: Now, let's rollback!\n");
-            caretaker.Undo();
+            caretaker.Undo(); // Caretaker: Restoring state to: 8 / 25 / 2020 1:38:50 PM / (CdTxgFhLe)...
+                              // Originator: My state has changed to: CdTxgFhLesthaUGiAuPRzcmnOdWWzA
 
             Console.WriteLine("\n\nClient: Once more!\n");
             caretaker.Undo();
@@ -69,14 +73,13 @@ namespace DesignPatterns.Memento
     Originator: My state has changed to: bGADLfCcXnurOPNEtRbahJvpPWWZrC 
     */
 
-    // The Originator holds some important state that may change over time. It
-    // also defines a method for saving the state inside a memento and another
-    // method for restoring the state from it.
-    class Originator
+    /*
+        "Originator" (upphovsmannen) håller ett viktigt state som kan ändras över tid.
+    */
+
+    class Originator 
     {
-        // For the sake of simplicity, the originator's state is stored inside a
-        // single variable.
-        private string _state;
+        private string _state; // för enkelhets skull så är statet bara en sträng
 
         public Originator(string state)
         {
@@ -84,9 +87,13 @@ namespace DesignPatterns.Memento
             Console.WriteLine("Originator: My initial state is: " + state);
         }
 
-        // The Originator's business logic may affect its internal state.
-        // Therefore, the client should backup the state before launching
-        // methods of the business logic via the save() method.
+        /* Detta är affärslogik
+          
+           Här kan state't ändras
+           
+           Klienten behöver göra en backup av statet innan detta utförs
+          
+         */
         public void DoSomething()
         {
             Console.WriteLine("Originator: I'm doing something important.");
@@ -130,9 +137,8 @@ namespace DesignPatterns.Memento
         }
     }
 
-    // The Memento interface provides a way to retrieve the memento's metadata,
-    // such as creation date or name. However, it doesn't expose the
-    // Originator's state.
+    // Fördel: vi gömmer Originatorns state
+
     public interface IMemento
     {
         string GetName();
@@ -142,8 +148,7 @@ namespace DesignPatterns.Memento
         DateTime GetDate();
     }
 
-    // The Concrete Memento contains the infrastructure for storing the
-    // Originator's state.
+    // Sparar statet ett viss ögonblick
     class ConcreteMemento : IMemento
     {
         private string _state;
@@ -156,14 +161,13 @@ namespace DesignPatterns.Memento
             _date = DateTime.Now;
         }
 
-        // The Originator uses this method when restoring its state.
+        // När Originator vill återställa ett state
         public string GetState()
         {
             return _state;
         }
 
-        // The rest of the methods are used by the Caretaker to display
-        // metadata.
+        // Skriver ut metadata om state't (används av Caretaker)
         public string GetName()
         {
             return $"{_date} / ({_state.Substring(0, 9)})...";
@@ -175,9 +179,9 @@ namespace DesignPatterns.Memento
         }
     }
 
-    // The Caretaker doesn't depend on the Concrete Memento class. Therefore, it
-    // doesn't have access to the originator's state, stored inside the memento.
-    // It works with all mementos via the base Memento interface.
+    /*
+     Caretaker har inte tillgång till Originatorn's state (pga att den är gömd i den konkreta Mementon)
+         */
     class Caretaker
     {
         private List<IMemento> _mementos = new List<IMemento>();
@@ -209,6 +213,8 @@ namespace DesignPatterns.Memento
 
             try
             {
+                // Återställ statet
+
                 _originator.Restore(memento);
             }
             catch (Exception)
