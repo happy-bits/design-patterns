@@ -73,6 +73,7 @@ namespace DesignPatterns.Composite.Graphics.Before
             {
                 foreach (var child in _children)
                 {
+                    // Nackdel: avancerad logik
                     switch (child)
                     {
                         case Graphic graphic: 
@@ -93,6 +94,7 @@ namespace DesignPatterns.Composite.Graphics.Before
             {
                 foreach (var child in _children)
                 {
+                    // Nackdel: avancerad logik
                     switch (child)
                     {
                         case Graphic graphic:
