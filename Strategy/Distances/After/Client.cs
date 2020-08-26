@@ -54,12 +54,12 @@ namespace DesignPatterns.Strategy.Distances.After
             _strategy = strategy;
         }
 
-        internal double CalculateDistance(Point p1, Point p2)
+        public double CalculateDistance(Point p1, Point p2)
         {
             return _strategy.Distance(p1, p2);
         }
 
-        internal void ChangeStrategy(IStrategy strategy)
+        public void ChangeStrategy(IStrategy strategy)
         {
             _strategy = strategy;
         }

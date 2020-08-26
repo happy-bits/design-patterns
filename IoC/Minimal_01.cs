@@ -76,7 +76,7 @@ namespace DesignPatterns.IoC
             // Hämta klass utifrån interfacet "T". 
             // Returnera instans av klassen
 
-            internal T Create<T>()
+            public T Create<T>()
             {
                 var concreteType =  _types[typeof(T)];
                 var defaultConstructor = concreteType.GetConstructors()[0];
@@ -84,7 +84,7 @@ namespace DesignPatterns.IoC
             }
             
             // Lägg till typerna i "_types"
-            internal void Register<TInterface, TImplementation>() where TImplementation: TInterface  
+            public void Register<TInterface, TImplementation>() where TImplementation: TInterface  
             {
                 _types[typeof(TInterface)] = typeof(TImplementation);
             }

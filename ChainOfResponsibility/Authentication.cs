@@ -50,7 +50,7 @@ namespace DesignPatterns.ChainOfResponsibility
             public bool IsAuthenticated { get; set; }
             public string Name { get; set; }
 
-            internal bool IsInRole(string rolename)
+            public bool IsInRole(string rolename)
             {
                 return Roles.Contains(rolename);
             }

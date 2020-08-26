@@ -109,7 +109,7 @@ namespace DesignPatterns.StateDesignPattern
                 _state.Publish();
             }
 
-            internal void ReOpen()
+            public void ReOpen()
             {
                 _state.ReOpen();
             }
@@ -126,7 +126,7 @@ namespace DesignPatterns.StateDesignPattern
 
             public abstract void Publish();
 
-            internal void SendToTrash()
+            public void SendToTrash()
             {
                 if (this is Trash)
                 {
@@ -136,7 +136,7 @@ namespace DesignPatterns.StateDesignPattern
                 _context.TransitionTo(new Trash());
             }
 
-            internal void ReOpen()
+            public void ReOpen()
             {
                 if (this is Draft)
                 {

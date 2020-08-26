@@ -47,7 +47,7 @@ namespace DesignPatterns.ChainOfResponsibility.Approvers
         {
             private Approver[] _approvers;
 
-            internal void ProcessPurchase(Purchase p)
+            public void ProcessPurchase(Purchase p)
             {
                 foreach (var approver in _approvers)
                 {
@@ -61,7 +61,7 @@ namespace DesignPatterns.ChainOfResponsibility.Approvers
                 _logger.Add("No one can handle request :(");
             }
 
-            internal void SetupChain(params Approver[] approvers)
+            public void SetupChain(params Approver[] approvers)
             {
                 _approvers = approvers;
             }
@@ -70,18 +70,18 @@ namespace DesignPatterns.ChainOfResponsibility.Approvers
 
         abstract class Approver
         {
-            abstract internal bool CanProcessRequest(Purchase p);
-            abstract internal void ProcessRequest(Purchase p);
+            abstract public bool CanProcessRequest(Purchase p);
+            abstract public void ProcessRequest(Purchase p);
         }
 
         class Director : Approver
         {
-            internal override bool CanProcessRequest(Purchase p)
+            public override bool CanProcessRequest(Purchase p)
             {
                 return p.Amount < 10000;
             }
 
-            internal override void ProcessRequest(Purchase p)
+            public override void ProcessRequest(Purchase p)
             {
                 _logger.Add($"Director approved request {p.Number}");
             }
@@ -89,12 +89,12 @@ namespace DesignPatterns.ChainOfResponsibility.Approvers
 
         class VicePresident : Approver
         {
-            internal override bool CanProcessRequest(Purchase p)
+            public override bool CanProcessRequest(Purchase p)
             {
                 return p.Amount < 25000;
             }
 
-            internal override void ProcessRequest(Purchase p)
+            public override void ProcessRequest(Purchase p)
             {
                 _logger.Add($"VicePresident approved request {p.Number}");
             }
@@ -103,12 +103,12 @@ namespace DesignPatterns.ChainOfResponsibility.Approvers
 
         class President : Approver
         {
-            internal override bool CanProcessRequest(Purchase p)
+            public override bool CanProcessRequest(Purchase p)
             {
                 return p.Amount < 100000;
             }
 
-            internal override void ProcessRequest(Purchase p)
+            public override void ProcessRequest(Purchase p)
             {
                 _logger.Add($"President approved request {p.Number}");
             }

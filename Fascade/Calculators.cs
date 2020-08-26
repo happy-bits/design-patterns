@@ -35,9 +35,9 @@ namespace DesignPatterns.Fascade
 
             public double Value => _mud.DoStuff5();
 
-            internal void Decrease() => _mud.RemoveFromXx();
+            public void Decrease() => _mud.RemoveFromXx();
 
-            internal void Increase() => _mud.PushMyNumberUp();
+            public void Increase() => _mud.PushMyNumberUp();
         }
 
         // The following two classes is written by somebody else. 

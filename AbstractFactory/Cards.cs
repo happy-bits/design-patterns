@@ -69,7 +69,7 @@ namespace DesignPatterns.AbstractFactory
                 // norwegian shuffle
             }
 
-            internal Card PickTopCard()
+            public Card PickTopCard()
             {
                 return _cards.Dequeue();
             }

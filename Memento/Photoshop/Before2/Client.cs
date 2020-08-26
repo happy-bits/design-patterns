@@ -85,14 +85,14 @@ namespace DesignPatterns.Memento.Photoshop.Before2
         {
             private readonly Stack<List<Graphic>> _backup = new Stack<List<Graphic>>();
 
-            internal void Backup(IEnumerable<Graphic> clonedState)
+            public void Backup(IEnumerable<Graphic> clonedState)
             {
                 _backup.Push(clonedState.ToList());
             }
 
-            internal bool IsEmpty() => !_backup.Any();
+            public bool IsEmpty() => !_backup.Any();
 
-            internal List<Graphic> Undo() => _backup.Pop();
+            public List<Graphic> Undo() => _backup.Pop();
         }
     }
 }

@@ -68,12 +68,12 @@ namespace DesignPatterns.ChainOfResponsibility.Approvers
         {
             private Approver _firstApprover;
 
-            internal void ProcessPurchase(Purchase purchase)
+            public void ProcessPurchase(Purchase purchase)
             {
                 _firstApprover.ProcessRequest(purchase);
             }
 
-            internal void SetupChain(params Approver[] approvers)
+            public void SetupChain(params Approver[] approvers)
             {
                 for (int i = 0; i < approvers.Length - 1; i++)
                 {

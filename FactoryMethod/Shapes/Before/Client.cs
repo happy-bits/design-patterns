@@ -38,7 +38,7 @@ namespace DesignPatterns.FactoryMethod.Shapes.Before
         {
             _factoryname = factoryname;
         }
-        internal Shape GetShape()
+        public Shape GetShape()
         {
             _counter++;
             switch (_factoryname)
