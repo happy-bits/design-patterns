@@ -1,18 +1,18 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿// EJ KLAR
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace DesignPatterns.Memento
-{
-    [TestClass]
-    public class GuruConceptual
-    {
 
-        [TestMethod]
-        public void Ex1()
+namespace DesignPatterns.Memento.Distances.After
+{
+    class Client : IClient
+    {
+        public IEnumerable<double> Calculate()
         {
+
             Originator originator = new Originator("Super-duper-super-puper-super."); // Originator: My initial state is: Super-duper-super-puper-super.
             Caretaker caretaker = new Caretaker(originator);
 
@@ -40,37 +40,10 @@ namespace DesignPatterns.Memento
             caretaker.Undo();
 
             Console.WriteLine();
+            return null;
         }
-        /*
-        Originator: My initial state is: Super-duper-super-puper-super.
 
-        Caretaker: Saving Originator's state...
-        Originator: I'm doing something important.
-        Originator: and my state has changed to: bGADLfCcXnurOPNEtRbahJvpPWWZrC
 
-        Caretaker: Saving Originator's state...
-        Originator: I'm doing something important.
-        Originator: and my state has changed to: CdTxgFhLesthaUGiAuPRzcmnOdWWzA
-
-        Caretaker: Saving Originator's state...
-        Originator: I'm doing something important.
-        Originator: and my state has changed to: VpxgwdjcuUitzutLvmushnWlOlCsuO
-
-        Caretaker: Here's the list of mementos:
-        8/25/2020 1:38:49 PM / (Super-dup)...
-        8/25/2020 1:38:49 PM / (bGADLfCcX)...
-        8/25/2020 1:38:50 PM / (CdTxgFhLe)...
-
-        Client: Now, let's rollback!
-
-        Caretaker: Restoring state to: 8/25/2020 1:38:50 PM / (CdTxgFhLe)...
-        Originator: My state has changed to: CdTxgFhLesthaUGiAuPRzcmnOdWWzA
-
-        Client: Once more!
-
-        Caretaker: Restoring state to: 8/25/2020 1:38:49 PM / (bGADLfCcX)...
-        Originator: My state has changed to: bGADLfCcXnurOPNEtRbahJvpPWWZrC 
-        */
 
         /*
             "Originator" (upphovsmannen) håller ett viktigt state (dolt) som kan ändras över tid.
