@@ -115,7 +115,7 @@ namespace DesignPatterns.Memento.Photoshop.After
 
         class Caretaker
         {
-            private readonly List<IMemento> _mementos = new List<IMemento>();
+            private readonly Stack<IMemento> _mementos = new Stack<IMemento>();
 
             private readonly Originator _originator = null;
 
@@ -126,16 +126,17 @@ namespace DesignPatterns.Memento.Photoshop.After
 
             public void Backup()
             {
-                _mementos.Add(_originator.CreateMemento());
+                _mementos.Push(_originator.CreateMemento());
             }
+
+            public bool IsEmpty() => !_mementos.Any();
 
             public void Undo()
             {
-                if (_mementos.Count == 0)
+                if (IsEmpty())
                     return;
 
-                var memento = _mementos.Last();
-                _mementos.Remove(memento);
+                var memento = _mementos.Pop();
 
                 _originator.Restore(memento);
             }

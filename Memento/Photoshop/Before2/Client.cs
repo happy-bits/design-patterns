@@ -1,5 +1,6 @@
 ﻿
 // Variant med en klass till: "TimeMachine"
+// Varför är denna sämre än After?
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
