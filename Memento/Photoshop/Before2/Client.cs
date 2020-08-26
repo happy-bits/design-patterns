@@ -65,16 +65,12 @@ namespace DesignPatterns.Memento.Photoshop.Before2
 
             public void Backup()
             {
-                var clonedState = _state.ToList();
-                _timeMachine.Backup(clonedState);
+                _timeMachine.Backup(_state);
             }
 
             public void Undo()
             {
-                if (_timeMachine.IsEmpty() )
-                    return;
-
-                _state = _timeMachine.Undo();
+                _state = _timeMachine.Undo(_state);
             }
 
             public string StateInfo => string.Join(" ", _state.Select(s => s.ToString()));
@@ -85,14 +81,21 @@ namespace DesignPatterns.Memento.Photoshop.Before2
         {
             private readonly Stack<List<Graphic>> _backup = new Stack<List<Graphic>>();
 
-            public void Backup(IEnumerable<Graphic> clonedState)
+            public void Backup(IEnumerable<Graphic> state)
             {
-                _backup.Push(clonedState.ToList());
+                var clonedState = state.ToList();
+                _backup.Push(clonedState);
             }
 
             public bool IsEmpty() => !_backup.Any();
 
-            public List<Graphic> Undo() => _backup.Pop();
+            public List<Graphic> Undo(List<Graphic> _state)
+            {
+                if (IsEmpty())
+                    return _state;
+
+                return _backup.Pop();
+            }
         }
     }
 }

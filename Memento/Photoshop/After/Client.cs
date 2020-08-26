@@ -137,16 +137,7 @@ namespace DesignPatterns.Memento.Photoshop.After
                 var memento = _mementos.Last();
                 _mementos.Remove(memento);
 
-                // Funkar denna try-catch?
-
-                try
-                {
-                    _originator.Restore(memento);
-                }
-                catch
-                {
-                    Undo();
-                }
+                _originator.Restore(memento);
             }
         }
 
