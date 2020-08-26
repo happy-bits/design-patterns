@@ -46,9 +46,15 @@ namespace DesignPatterns.Memento.Photoshop.Before
             Assert.AreEqual("Circle(0,0,2)", originator.StateInfo);
         }
 
+        /*
+         Fördel: kortare och enklare kod än memento-lösning
+         Nackdel: kod för att hantera backup och undo är här (så denna klass är ansvarig för två saker istället för en)
+        */
         class Originator
         {
             private List<Graphic> _state;
+
+            // Nackdel: kod för sparande av gamla state är här "_backup"
             private readonly Stack<List<Graphic>> _backup = new Stack<List<Graphic>>();
 
             public Originator(params Graphic[] state)
@@ -63,14 +69,19 @@ namespace DesignPatterns.Memento.Photoshop.Before
             
             public void RemoveAllCircles() => _state.RemoveAll(g => g is Circle);
 
+            // Nackdel: kod för backup är här
             public void Backup()
             {
                 var clonedState = _state.ToList();
                 _backup.Push(clonedState);
             }
 
+            // Nackdel: kod för undo är här
             public void Undo()
             {
+                if (_backup.Count == 0)
+                    return;
+
                 _state = _backup.Pop();
             }
 

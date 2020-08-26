@@ -48,6 +48,15 @@ namespace DesignPatterns.Memento.Photoshop.After
             Assert.AreEqual("Circle(0,0,2)", originator.StateInfo);
         }
 
+        /*
+         Fördel: Originator har (nästan) bara ansvar för att lägga till och ta bort grafik. Sparandet sköts av Caretaker. Vi kan skapa tester för Caretaker separat.
+
+         Nackdel: mer avancerad uppsättning av kod än before (det är en engånggrej iofs)
+
+         Liten nackdel: "CreateMemento" och "Restore" behöver vara i klassen
+             
+             */
+
         class Originator
         {
             private List<Graphic> _state;
@@ -62,6 +71,7 @@ namespace DesignPatterns.Memento.Photoshop.After
                 _state.Add(graphic);
             }
 
+            // En del av mönstret: snappshotet skapas av ägaren av state't (originator). Ägaren har full access till statet
             public IMemento CreateMemento()
             {
                 return new ConcreteMemento(_state);
@@ -69,11 +79,6 @@ namespace DesignPatterns.Memento.Photoshop.After
 
             public void Restore(IMemento memento)
             {
-                if (!(memento is ConcreteMemento))
-                {
-                    throw new Exception("Unknown memento class " + memento.ToString());
-                }
-
                 _state = memento.GetState().ToList();
             }
 
@@ -85,20 +90,33 @@ namespace DesignPatterns.Memento.Photoshop.After
 
         public interface IMemento
         {
-            List<Graphic> GetState();
+            IEnumerable<Graphic> GetState();
         }
+
+        /*
+            I "mementon" sparas en kopia av statet.
+            Någon utifrån kan komma åt metadata med inte original-statet
+        */
 
         class ConcreteMemento : IMemento
         {
-            private readonly List<Graphic> _state;
+            private readonly IEnumerable<Graphic> _state; // innehållet är dolt (bra)
 
             public ConcreteMemento(IEnumerable<Graphic> state)
             {
-                _state = state.ToList(); // måste ha "ToList" här
+                var clonedState = state.ToList();
+                _state = clonedState;
             }
 
-            public List<Graphic> GetState() => _state;
+            public IEnumerable<Graphic> GetState() => _state;
         }
+
+        /*
+            Caretakers sparar flera mementos
+
+            Caretaker kan inte av misstag pilla på statet innuti mementot (bra)
+
+        */
 
         class Caretaker
         {
@@ -119,9 +137,7 @@ namespace DesignPatterns.Memento.Photoshop.After
             public void Undo()
             {
                 if (_mementos.Count == 0)
-                {
                     return;
-                }
 
                 var memento = _mementos.Last();
                 _mementos.Remove(memento);
@@ -132,7 +148,7 @@ namespace DesignPatterns.Memento.Photoshop.After
                 {
                     _originator.Restore(memento);
                 }
-                catch (Exception)
+                catch
                 {
                     Undo();
                 }
