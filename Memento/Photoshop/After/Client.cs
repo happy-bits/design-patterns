@@ -19,32 +19,35 @@ namespace DesignPatterns.Memento.Photoshop.After
             var dot1 = new Dot(77, 88);
 
 
-
-            Originator originator = new Originator(circle1); // Originator: My initial state is: Super-duper-super-puper-super.
+            Originator originator = new Originator();
             Caretaker caretaker = new Caretaker(originator);
 
+            originator.AddGraphic(circle1);
+            Assert.AreEqual("Circle(0,0,2)", originator.StateInfo);
+            caretaker.Backup();         
+
+            originator.AddGraphic(circle2);
+            Assert.AreEqual("Circle(0,0,2) Circle(5,5,10)", originator.StateInfo);
+
+            caretaker.Undo();
             Assert.AreEqual("Circle(0,0,2)", originator.StateInfo);
 
-            caretaker.Backup();         
-            originator.AddGraphic(circle2); 
+            //caretaker.Backup();
 
-            caretaker.Backup();
-            originator.AddGraphic(circle3);
+            //originator.AddGraphic(circle3);
+            //Assert.AreEqual("Circle(0,0,2) Circle(5,5,10) Circle(200,300,100)", originator.StateInfo);
+            //caretaker.Backup();
 
-            caretaker.Backup();
-            originator.AddGraphic(dot1);
+            //originator.AddGraphic(dot1);
+            //Assert.AreEqual("Circle(0,0,2) Circle(5,5,10) Circle(200,300,100) Dot(77,88)", originator.StateInfo);
 
-            //            caretaker.ShowHistory(); 
+            //// Undoing
 
-                                     
+            //caretaker.Undo();
+            //Assert.AreEqual("Circle(0,0,2) Circle(5,5,10) Circle(200,300,100)", originator.StateInfo);
 
-            caretaker.Undo(); // Caretaker: Restoring state to: 8 / 25 / 2020 1:38:50 PM / (CdTxgFhLe)...
-                              // Originator: My state has changed to: CdTxgFhLesthaUGiAuPRzcmnOdWWzA
-
-            Console.WriteLine("\n\nClient: Once more!\n");
-            caretaker.Undo();
-
-            Console.WriteLine();
+            //caretaker.Undo();
+            //Assert.AreEqual("Circle(0,0,2) Circle(5,5,10)", originator.StateInfo);
         }
 
 
@@ -77,7 +80,7 @@ namespace DesignPatterns.Memento.Photoshop.After
             }
 
             /*
-             Sparar state't i ett "mememento" (minne)
+             Sparar state't i ett "memento" (minne)
 
              Egentligen sparas inget här utan vi returnerar vi bara ett konkret memento. Denna metod används av "Caretaker" som sparar minnet hos sig
             */
@@ -98,7 +101,7 @@ namespace DesignPatterns.Memento.Photoshop.After
                 _state = memento.GetState().ToList();
             }
 
-            internal string StateInfo => string.Join(" ", _state.Select(s => s.ToString()));
+            public string StateInfo => string.Join(" ", _state.Select(s => s.ToString()));
 
         }
 
@@ -106,38 +109,29 @@ namespace DesignPatterns.Memento.Photoshop.After
 
         public interface IMemento
         {
-            //string GetStateInfo();
-
-            IEnumerable<Graphic> GetState();
-
-            DateTime GetDate();
+            List<Graphic> GetState();
         }
 
         // Sparar statet ett viss ögonblick
         class ConcreteMemento : IMemento
         {
-            private readonly IEnumerable<Graphic> _state;
+            private readonly List<Graphic> _state;
 
             private readonly DateTime _date;
 
             public ConcreteMemento(IEnumerable<Graphic> state)
             {
-                _state = state;
+                _state = state.ToList(); // måste ha "ToList" här
                 _date = DateTime.Now;
             }
 
             // När "Originator" vill återställa ett state
-            public IEnumerable<Graphic> GetState()
+            public List<Graphic> GetState()
             {
                 return _state;
             }
 
            // public string GetStateInfo() => string.Join(" ", _state.Select(s => s.ToString()));
-
-            public DateTime GetDate()
-            {
-                return _date;
-            }
         }
 
         /*
@@ -158,7 +152,6 @@ namespace DesignPatterns.Memento.Photoshop.After
 
             public void Backup()
             {
-                Console.WriteLine("\nCaretaker: Saving Originator's state...");
                 _mementos.Add(_originator.Save());
             }
 
