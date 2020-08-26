@@ -59,12 +59,7 @@ namespace DesignPatterns.Memento.Photoshop.After
 
         class Originator
         {
-            private List<Graphic> _state;
-
-            public Originator(params Graphic[] state)
-            {
-                _state = state.ToList();
-            }
+            private List<Graphic> _state = new List<Graphic>();
 
             public void AddGraphic(Graphic graphic)
             {

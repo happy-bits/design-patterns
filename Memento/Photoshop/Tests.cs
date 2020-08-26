@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using static DesignPatterns.TestUtilities;
 
 namespace DesignPatterns.Memento.Photoshop
 {
@@ -9,6 +8,7 @@ namespace DesignPatterns.Memento.Photoshop
     {
         private IEnumerable<IClient> AllClients() => new IClient[] { 
             new Before.Client(), 
+            new Before2.Client(), 
             new After.Client() 
         };
 

@@ -1,9 +1,12 @@
 ﻿
+// Variant med en klass till: "TimeMachine"
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DesignPatterns.Memento.Photoshop.Before
+namespace DesignPatterns.Memento.Photoshop.Before2
 {
     class Client : IClient
     {
@@ -46,18 +49,12 @@ namespace DesignPatterns.Memento.Photoshop.Before
             Assert.AreEqual("Circle(0,0,2)", originator.StateInfo);
         }
 
-        /*
-         En klass för allt 
-         
-         Fördel: kortare och enklare kod än memento-lösning
-         Nackdel: kod för att hantera backup och undo är här (så denna klass är ansvarig för två saker istället för en)
-        */
         class Originator
         {
             private List<Graphic> _state = new List<Graphic>();
 
-            // Nackdel: kod för sparande av gamla state är här "_backup"
-            private readonly Stack<List<Graphic>> _backup = new Stack<List<Graphic>>();
+            // Nackdel: detta fält behövs
+            private readonly TimeMachine _timeMachine = new TimeMachine();
 
             public void AddGraphic(Graphic graphic)
             {
@@ -66,24 +63,36 @@ namespace DesignPatterns.Memento.Photoshop.Before
             
             public void RemoveAllCircles() => _state.RemoveAll(g => g is Circle);
 
-            // Nackdel: kod för backup är här
             public void Backup()
             {
                 var clonedState = _state.ToList();
-                _backup.Push(clonedState);
+                _timeMachine.Backup(clonedState);
             }
 
-            // Nackdel: kod för undo är här
             public void Undo()
             {
-                if (_backup.Count == 0)
+                if (_timeMachine.IsEmpty() )
                     return;
 
-                _state = _backup.Pop();
+                _state = _timeMachine.Undo();
             }
 
             public string StateInfo => string.Join(" ", _state.Select(s => s.ToString()));
 
+        }
+
+        class TimeMachine
+        {
+            private readonly Stack<List<Graphic>> _backup = new Stack<List<Graphic>>();
+
+            internal void Backup(IEnumerable<Graphic> clonedState)
+            {
+                _backup.Push(clonedState.ToList());
+            }
+
+            internal bool IsEmpty() => !_backup.Any();
+
+            internal List<Graphic> Undo() => _backup.Pop();
         }
     }
 }
