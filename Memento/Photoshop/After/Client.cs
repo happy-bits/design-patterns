@@ -1,5 +1,6 @@
 ﻿// EJ KLAR
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,27 +13,31 @@ namespace DesignPatterns.Memento.Photoshop.After
     {
         public void DoStuff()
         {
+            var circle1 = new Circle(0, 0, 2);
+            var circle2 = new Circle(5, 5, 10);
+            var circle3 = new Circle(200, 300, 100);
+            var dot1 = new Dot(77, 88);
 
-            Originator originator = new Originator("Super-duper-super-puper-super."); // Originator: My initial state is: Super-duper-super-puper-super.
+
+
+            Originator originator = new Originator(circle1); // Originator: My initial state is: Super-duper-super-puper-super.
             Caretaker caretaker = new Caretaker(originator);
 
-            caretaker.Backup();         // Caretaker: Saving Originator's state...
-            originator.DoSomething();   // Originator: I'm doing something important.
-                                        // Originator: and my state has changed to: bGADLfCcXnurOPNEtRbahJvpPWWZrC
+            Assert.AreEqual("Circle(0,0,2)", originator.StateInfo);
+
+            caretaker.Backup();         
+            originator.AddGraphic(circle2); 
 
             caretaker.Backup();
-            originator.DoSomething();
+            originator.AddGraphic(circle3);
 
             caretaker.Backup();
-            originator.DoSomething();
+            originator.AddGraphic(dot1);
 
-            Console.WriteLine();
-            caretaker.ShowHistory();  // Caretaker: Here's the list of mementos:
-                                      // 8/25/2020 1:38:49 PM / (Super-dup)...
-                                      // 8/25/2020 1:38:49 PM / (bGADLfCcX)...
-                                      // 8/25/2020 1:38:50 PM / (CdTxgFhLe)...
+            //            caretaker.ShowHistory(); 
 
-            Console.WriteLine("\nClient: Now, let's rollback!\n");
+                                     
+
             caretaker.Undo(); // Caretaker: Restoring state to: 8 / 25 / 2020 1:38:50 PM / (CdTxgFhLe)...
                               // Originator: My state has changed to: CdTxgFhLesthaUGiAuPRzcmnOdWWzA
 
@@ -52,12 +57,11 @@ namespace DesignPatterns.Memento.Photoshop.After
 
         class Originator
         {
-            private string _state; // för enkelhets skull så är statet bara en sträng
+            private List<Graphic> _state;
 
-            public Originator(string state)
+            public Originator(params Graphic[] state)
             {
-                _state = state;
-                Console.WriteLine("Originator: My initial state is: " + state);
+                _state = state.ToList();
             }
 
             /* Detta är affärslogik
@@ -67,28 +71,9 @@ namespace DesignPatterns.Memento.Photoshop.After
                Klienten behöver göra en backup av statet innan detta utförs
 
              */
-            public void DoSomething()
+            public void AddGraphic(Graphic graphic)
             {
-                Console.WriteLine("Originator: I'm doing something important.");
-                _state = GenerateRandomString(30);
-                Console.WriteLine($"Originator: and my state has changed to: {_state}");
-            }
-
-            private string GenerateRandomString(int length = 10)
-            {
-                string allowedSymbols = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                string result = string.Empty;
-
-                while (length > 0)
-                {
-                    result += allowedSymbols[new Random().Next(0, allowedSymbols.Length)];
-
-                    Thread.Sleep(12);
-
-                    length--;
-                }
-
-                return result;
+                _state.Add(graphic);
             }
 
             /*
@@ -110,18 +95,20 @@ namespace DesignPatterns.Memento.Photoshop.After
                     throw new Exception("Unknown memento class " + memento.ToString());
                 }
 
-                _state = memento.GetState();
-                Console.Write($"Originator: My state has changed to: {_state}");
+                _state = memento.GetState().ToList();
             }
+
+            internal string StateInfo => string.Join(" ", _state.Select(s => s.ToString()));
+
         }
 
         // Fördel: vi gömmer Originatorns state
 
         public interface IMemento
         {
-            string GetName();
+            //string GetStateInfo();
 
-            string GetState();
+            IEnumerable<Graphic> GetState();
 
             DateTime GetDate();
         }
@@ -129,27 +116,23 @@ namespace DesignPatterns.Memento.Photoshop.After
         // Sparar statet ett viss ögonblick
         class ConcreteMemento : IMemento
         {
-            private readonly string _state;
+            private readonly IEnumerable<Graphic> _state;
 
             private readonly DateTime _date;
 
-            public ConcreteMemento(string state)
+            public ConcreteMemento(IEnumerable<Graphic> state)
             {
                 _state = state;
                 _date = DateTime.Now;
             }
 
             // När "Originator" vill återställa ett state
-            public string GetState()
+            public IEnumerable<Graphic> GetState()
             {
                 return _state;
             }
 
-            // Skriver ut lite info om state't (används av Caretaker)
-            public string GetName()
-            {
-                return $"{_date} / ({_state.Substring(0, 9)})...";
-            }
+           // public string GetStateInfo() => string.Join(" ", _state.Select(s => s.ToString()));
 
             public DateTime GetDate()
             {
@@ -189,7 +172,6 @@ namespace DesignPatterns.Memento.Photoshop.After
                 var memento = _mementos.Last();
                 _mementos.Remove(memento);
 
-                Console.WriteLine("Caretaker: Restoring state to: " + memento.GetName());
 
                 try
                 {
@@ -203,15 +185,17 @@ namespace DesignPatterns.Memento.Photoshop.After
                 }
             }
 
-            public void ShowHistory()
-            {
-                Console.WriteLine("Caretaker: Here's the list of mementos:");
 
-                foreach (var memento in _mementos)
-                {
-                    Console.WriteLine(memento.GetName());
-                }
-            }
+
+            //public void ShowHistory()
+            //{
+            //    Console.WriteLine("Caretaker: Here's the list of mementos:");
+
+            //    foreach (var memento in _mementos)
+            //    {
+            //        Console.WriteLine(memento.GetName());
+            //    }
+            //}
         }
 
     }

@@ -39,6 +39,10 @@ namespace DesignPatterns.Memento.Photoshop
             X = x;
             Y = y;
         }
+        public override string ToString()
+        {
+            return $"Dot({X},{Y})";
+        }
     }
 
     class Circle : Graphic
@@ -52,6 +56,10 @@ namespace DesignPatterns.Memento.Photoshop
 
         public double Radius { get; }
 
+        public override string ToString()
+        {
+            return $"Circle({X},{Y},{Radius})";
+        }
     }
 
 }
