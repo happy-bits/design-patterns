@@ -6,11 +6,11 @@ using System.Linq;
 using System.Threading;
 
 
-namespace DesignPatterns.Memento.Distances.After
+namespace DesignPatterns.Memento.Photoshop.After
 {
     class Client : IClient
     {
-        public IEnumerable<double> Calculate()
+        public void DoStuff()
         {
 
             Originator originator = new Originator("Super-duper-super-puper-super."); // Originator: My initial state is: Super-duper-super-puper-super.
@@ -40,7 +40,6 @@ namespace DesignPatterns.Memento.Distances.After
             caretaker.Undo();
 
             Console.WriteLine();
-            return null;
         }
 
 

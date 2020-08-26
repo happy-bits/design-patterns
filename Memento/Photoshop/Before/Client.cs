@@ -2,11 +2,11 @@
 using System;
 using System.Collections.Generic;
 
-namespace DesignPatterns.Memento.Distances.Before
+namespace DesignPatterns.Memento.Photoshop.Before
 {
     class Client : IClient
     {
-        public IEnumerable<double> Calculate()
+        public void DoStuff()
         {
             throw new NotImplementedException();
         }

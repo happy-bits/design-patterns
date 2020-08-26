@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using static DesignPatterns.TestUtilities;
 
-namespace DesignPatterns.Memento.Distances
+namespace DesignPatterns.Memento.Photoshop
 {
     [TestClass]
     public class Tests
@@ -17,7 +17,7 @@ namespace DesignPatterns.Memento.Distances
         {
             foreach (var client in AllClients())
             {
-                client.Calculate();
+                client.DoStuff();
             }
         }
 
