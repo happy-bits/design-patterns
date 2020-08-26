@@ -1,11 +1,8 @@
-﻿// EJ KLAR
-
+﻿
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-
 
 namespace DesignPatterns.Memento.Photoshop.After
 {
@@ -18,7 +15,6 @@ namespace DesignPatterns.Memento.Photoshop.After
             var circle3 = new Circle(200, 300, 100);
             var dot1 = new Dot(77, 88);
 
-
             Originator originator = new Originator();
             Caretaker caretaker = new Caretaker(originator);
 
@@ -28,35 +24,29 @@ namespace DesignPatterns.Memento.Photoshop.After
 
             originator.AddGraphic(circle2);
             Assert.AreEqual("Circle(0,0,2) Circle(5,5,10)", originator.StateInfo);
+            caretaker.Backup();
+
+            originator.AddGraphic(circle3);
+            Assert.AreEqual("Circle(0,0,2) Circle(5,5,10) Circle(200,300,100)", originator.StateInfo);
+            caretaker.Backup();
+
+            originator.AddGraphic(dot1);
+            Assert.AreEqual("Circle(0,0,2) Circle(5,5,10) Circle(200,300,100) Dot(77,88)", originator.StateInfo);
+            caretaker.Backup();
+
+            originator.RemoveAllCircles();
+            Assert.AreEqual("Dot(77,88)", originator.StateInfo);
+
+            // Undoing
 
             caretaker.Undo();
+            Assert.AreEqual("Circle(0,0,2) Circle(5,5,10) Circle(200,300,100) Dot(77,88)", originator.StateInfo);
+
+            caretaker.Undo();
+            caretaker.Undo();
+            caretaker.Undo();
             Assert.AreEqual("Circle(0,0,2)", originator.StateInfo);
-
-            //caretaker.Backup();
-
-            //originator.AddGraphic(circle3);
-            //Assert.AreEqual("Circle(0,0,2) Circle(5,5,10) Circle(200,300,100)", originator.StateInfo);
-            //caretaker.Backup();
-
-            //originator.AddGraphic(dot1);
-            //Assert.AreEqual("Circle(0,0,2) Circle(5,5,10) Circle(200,300,100) Dot(77,88)", originator.StateInfo);
-
-            //// Undoing
-
-            //caretaker.Undo();
-            //Assert.AreEqual("Circle(0,0,2) Circle(5,5,10) Circle(200,300,100)", originator.StateInfo);
-
-            //caretaker.Undo();
-            //Assert.AreEqual("Circle(0,0,2) Circle(5,5,10)", originator.StateInfo);
         }
-
-
-
-        /*
-            "Originator" (upphovsmannen) håller ett viktigt state (dolt) som kan ändras över tid.
-
-
-        */
 
         class Originator
         {
@@ -67,29 +57,15 @@ namespace DesignPatterns.Memento.Photoshop.After
                 _state = state.ToList();
             }
 
-            /* Detta är affärslogik
-
-               Här kan state't ändras
-
-               Klienten behöver göra en backup av statet innan detta utförs
-
-             */
             public void AddGraphic(Graphic graphic)
             {
                 _state.Add(graphic);
             }
 
-            /*
-             Sparar state't i ett "memento" (minne)
-
-             Egentligen sparas inget här utan vi returnerar vi bara ett konkret memento. Denna metod används av "Caretaker" som sparar minnet hos sig
-            */
-            public IMemento Save()
+            public IMemento CreateMemento()
             {
                 return new ConcreteMemento(_state);
             }
-
-            // Återställ ett minne
 
             public void Restore(IMemento memento)
             {
@@ -101,43 +77,28 @@ namespace DesignPatterns.Memento.Photoshop.After
                 _state = memento.GetState().ToList();
             }
 
+            public void RemoveAllCircles() => _state.RemoveAll(g => g is Circle);
+
             public string StateInfo => string.Join(" ", _state.Select(s => s.ToString()));
 
         }
-
-        // Fördel: vi gömmer Originatorns state
 
         public interface IMemento
         {
             List<Graphic> GetState();
         }
 
-        // Sparar statet ett viss ögonblick
         class ConcreteMemento : IMemento
         {
             private readonly List<Graphic> _state;
 
-            private readonly DateTime _date;
-
             public ConcreteMemento(IEnumerable<Graphic> state)
             {
                 _state = state.ToList(); // måste ha "ToList" här
-                _date = DateTime.Now;
             }
 
-            // När "Originator" vill återställa ett state
-            public List<Graphic> GetState()
-            {
-                return _state;
-            }
-
-           // public string GetStateInfo() => string.Join(" ", _state.Select(s => s.ToString()));
+            public List<Graphic> GetState() => _state;
         }
-
-        /*
-         Caretaker (portvakt) har inte tillgång till Originatorn's state (pga att den är gömd i den konkreta Mementon)
-         ...men har en referens till upphovsmannen så den kan ta hand om "backup" och "undo"
-        */
 
         class Caretaker
         {
@@ -152,7 +113,7 @@ namespace DesignPatterns.Memento.Photoshop.After
 
             public void Backup()
             {
-                _mementos.Add(_originator.Save());
+                _mementos.Add(_originator.CreateMemento());
             }
 
             public void Undo()
@@ -165,11 +126,10 @@ namespace DesignPatterns.Memento.Photoshop.After
                 var memento = _mementos.Last();
                 _mementos.Remove(memento);
 
+                // Funkar denna try-catch?
 
                 try
                 {
-                    // Återställ statet
-
                     _originator.Restore(memento);
                 }
                 catch (Exception)
@@ -177,18 +137,6 @@ namespace DesignPatterns.Memento.Photoshop.After
                     Undo();
                 }
             }
-
-
-
-            //public void ShowHistory()
-            //{
-            //    Console.WriteLine("Caretaker: Here's the list of mementos:");
-
-            //    foreach (var memento in _mementos)
-            //    {
-            //        Console.WriteLine(memento.GetName());
-            //    }
-            //}
         }
 
     }
