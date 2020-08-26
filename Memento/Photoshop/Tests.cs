@@ -8,7 +8,7 @@ namespace DesignPatterns.Memento.Photoshop
     public class Tests
     {
         private IEnumerable<IClient> AllClients() => new IClient[] { 
-            //new Before.Client(), 
+            new Before.Client(), 
             new After.Client() 
         };
 
