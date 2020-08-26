@@ -1,12 +1,11 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace DesignPatterns.Strategy.Distances.Before
+namespace DesignPatterns.Template.Xxx.Before
 {
     class Client : IClient
     {
-        public IEnumerable<double> Calculate()
+        public void DoStuff()
         {
             throw new NotImplementedException();
         }

@@ -8,15 +8,11 @@
 
   <ItemGroup>
     <Compile Remove="FactoryMethod\Old\**" />
+    <Compile Remove="Template\**" />
     <EmbeddedResource Remove="FactoryMethod\Old\**" />
+    <EmbeddedResource Remove="Template\**" />
     <None Remove="FactoryMethod\Old\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Template\Distances\IClient.cs" />
-    <Compile Remove="Template\Distances\Before\Client.cs" />
-    <Compile Remove="Template\Distances\Tests.cs" />
-    <Compile Remove="Template\Distances\After\Client.cs" />
+    <None Remove="Template\**" />
   </ItemGroup>
 
   <ItemGroup>
