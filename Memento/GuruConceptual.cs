@@ -74,7 +74,9 @@ namespace DesignPatterns.Memento
     */
 
     /*
-        "Originator" (upphovsmannen) håller ett viktigt state som kan ändras över tid.
+        "Originator" (upphovsmannen) håller ett viktigt state (dolt) som kan ändras över tid.
+
+
     */
 
     class Originator 
@@ -118,13 +120,18 @@ namespace DesignPatterns.Memento
             return result;
         }
 
-        // Saves the current state inside a memento.
+        /*
+         Sparar state't i ett "mememento" (minne)
+
+         Egentligen sparas inget här utan vi returnerar vi bara ett konkret memento. Denna metod används av "Caretaker" som sparar minnet hos sig
+        */
         public IMemento Save()
         {
             return new ConcreteMemento(_state);
         }
 
-        // Restores the Originator's state from a memento object.
+        // Återställ ett minne
+
         public void Restore(IMemento memento)
         {
             if (!(memento is ConcreteMemento))
@@ -151,9 +158,9 @@ namespace DesignPatterns.Memento
     // Sparar statet ett viss ögonblick
     class ConcreteMemento : IMemento
     {
-        private string _state;
+        private readonly string _state;
 
-        private DateTime _date;
+        private readonly DateTime _date;
 
         public ConcreteMemento(string state)
         {
@@ -161,13 +168,13 @@ namespace DesignPatterns.Memento
             _date = DateTime.Now;
         }
 
-        // När Originator vill återställa ett state
+        // När "Originator" vill återställa ett state
         public string GetState()
         {
             return _state;
         }
 
-        // Skriver ut metadata om state't (används av Caretaker)
+        // Skriver ut lite info om state't (används av Caretaker)
         public string GetName()
         {
             return $"{_date} / ({_state.Substring(0, 9)})...";
@@ -180,13 +187,15 @@ namespace DesignPatterns.Memento
     }
 
     /*
-     Caretaker har inte tillgång till Originatorn's state (pga att den är gömd i den konkreta Mementon)
-         */
+     Caretaker (portvakt) har inte tillgång till Originatorn's state (pga att den är gömd i den konkreta Mementon)
+     ...men har en referens till upphovsmannen så den kan ta hand om "backup" och "undo"
+    */
+
     class Caretaker
     {
-        private List<IMemento> _mementos = new List<IMemento>();
+        private readonly List<IMemento> _mementos = new List<IMemento>();
 
-        private Originator _originator = null;
+        private readonly Originator _originator = null;
 
         public Caretaker(Originator originator)
         {
