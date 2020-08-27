@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using static DesignPatterns.TestUtilities;
 
-namespace DesignPatterns.Template.Xxx
+namespace DesignPatterns.Template.Dialogs
 {
     [TestClass]
     public class Tests
     {
         private IEnumerable<IClient> AllClients() => new IClient[] { 
+            new Before.Client(),
             new After.Client(),
         };
 
