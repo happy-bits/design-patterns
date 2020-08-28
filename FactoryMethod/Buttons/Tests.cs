@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DesignPatterns.Template.Buttons
+namespace DesignPatterns.FactoryMethod.Buttons
 {
     [TestClass]
     public class Tests

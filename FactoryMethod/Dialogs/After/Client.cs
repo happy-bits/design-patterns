@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DesignPatterns.Template.Dialogs.After
+namespace DesignPatterns.FactoryMethod.Dialogs.After
 {
     class Client : IClient
     {

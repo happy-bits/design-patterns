@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DesignPatterns.Template.Buttons.Before
+namespace DesignPatterns.FactoryMethod.Buttons.Before
 {
     class Client : IClient
     {

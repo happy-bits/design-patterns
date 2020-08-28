@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DesignPatterns.Template.Dialogs
+namespace DesignPatterns.FactoryMethod.Dialogs
 {
     interface IClient
     {

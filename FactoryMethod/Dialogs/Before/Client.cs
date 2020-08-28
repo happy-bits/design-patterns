@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DesignPatterns.Template.Dialogs.Before
+namespace DesignPatterns.FactoryMethod.Dialogs.Before
 {
     class Client : IClient
     {

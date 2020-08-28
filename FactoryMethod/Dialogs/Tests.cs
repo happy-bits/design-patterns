@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using static DesignPatterns.TestUtilities;
 
-namespace DesignPatterns.Template.Dialogs
+namespace DesignPatterns.FactoryMethod.Dialogs
 {
     [TestClass]
     public class Tests

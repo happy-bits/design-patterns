@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DesignPatterns.Template.Buttons
+namespace DesignPatterns.FactoryMethod.Buttons
 {
     interface IClient
     {
