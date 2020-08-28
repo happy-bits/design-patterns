@@ -8,7 +8,7 @@ namespace DesignPatterns.FactoryMethod.Xxx
     public class Tests
     {
         private IEnumerable<IClient> AllClients() => new IClient[] { 
-            new Before.Client(), 
+            //new Before.Client(), 
             new After.Client(), 
         };
 
@@ -17,7 +17,15 @@ namespace DesignPatterns.FactoryMethod.Xxx
         {
             foreach (var client in AllClients())
             {
-                client.DoStuff();
+                {
+                    var result = client.RenderAlphaMenu();
+                    Assert.AreEqual("A) BANANA\nB) APPLE", result);
+                }
+                {
+                    var result = client.RenderNumericMenu();
+                    Assert.AreEqual("1) BANANA\n2) APPLE", result);
+                }
+
             }
         }
     }

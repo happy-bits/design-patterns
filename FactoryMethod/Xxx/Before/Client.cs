@@ -1,12 +1,20 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 
 namespace DesignPatterns.FactoryMethod.Xxx.Before
 {
     class Client : IClient
     {
-        public void DoStuff()
+        public string RenderAlphaMenu()
         {
+            throw new NotImplementedException();
+        }
+
+        public string RenderNumericMenu()
+        {
+            throw new NotImplementedException();
         }
     }
 }
+

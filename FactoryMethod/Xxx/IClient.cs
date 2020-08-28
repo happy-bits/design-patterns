@@ -4,6 +4,7 @@ namespace DesignPatterns.FactoryMethod.Xxx
 {
     interface IClient
     {
-        void DoStuff();
+        string RenderAlphaMenu();
+        string RenderNumericMenu();
     }
 }
