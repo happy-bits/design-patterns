@@ -9,6 +9,7 @@ namespace DesignPatterns.Template.Pages
         private IEnumerable<IClient> AllClients() => new IClient[] { 
             new Before.Client(), 
             new Before2.Client(), 
+            new Before3.Client(), 
             new After.Client(), 
         };
 

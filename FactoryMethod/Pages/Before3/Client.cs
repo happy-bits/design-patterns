@@ -1,7 +1,8 @@
 ﻿
+using System;
 using System.Collections.Generic;
 
-namespace DesignPatterns.Template.Pages.After
+namespace DesignPatterns.Template.Pages.Before3
 {
     class Client : IClient
     {
@@ -20,51 +21,43 @@ namespace DesignPatterns.Template.Pages.After
             return result;
         }
 
-        // Creator 
-
         abstract class Page
         {
-            public string[] Render(string header, string body)
+            // Nackdel: okej lösning men känns lite onaturlig
+            protected static string[] Render(Box headerBox, Box bodyBox)
             {
-                Box headerBox = CreateBox(header);
-
-                Box bodyBox = CreateBox(body);
-
                 var result = new List<string>();
-
                 result.AddRange(headerBox.Render());
                 result.Add("");
                 result.Add("");
                 result.AddRange(bodyBox.Render());
-
                 return result.ToArray();
             }
 
-            // Factory method
-
-            protected abstract Box CreateBox(string text);
+            abstract public string[] Render(string header, string body);
         }
 
-        // Concreate creator
-
-        class StarPage : Page
+        class StarPage: Page
         {
-            protected override Box CreateBox(string text)
+            public override string[] Render(string header, string body)
             {
-                return new StarBox(text);
+                // Nackdel: en viss upprepning (behöver ange att det är typen StarBox båda gångerna)
+                Box headerBox = new StarBox(header);
+                Box bodyBox = new StarBox(body);
+                return Render(headerBox, bodyBox);
             }
+
         }
 
-        // Concreate creator
-
-        class DashedPage : Page
+        class DashedPage: Page
         {
-            protected override Box CreateBox(string text)
+            public override string[] Render(string header, string body)
             {
-                return new DashedBox(text);
+                Box headerBox = new DashedBox(header);
+                Box bodyBox = new DashedBox(body);
+                return Render(headerBox, bodyBox);
             }
+
         }
-
-
     }
 }

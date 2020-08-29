@@ -1,6 +1,6 @@
 ﻿# Bra exempel
 
-- Factory Method (Dialogs, Shapes)  
+- Factory Method (Pages, Shapes)  
 - Decorator (Weathers)
 - Fascade (Calculators)
 - State (Traffic light)
