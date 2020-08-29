@@ -1,11 +1,5 @@
 ﻿
-/*
- FACTORY METHOD - https://refactoring.guru/design-patterns/factory-method/csharp/example
- (Written as a test)
- 
- */
 using System.Collections.Generic;
-using System.Text;
 
 namespace DesignPatterns.FactoryMethod.Xxx.After
 {
