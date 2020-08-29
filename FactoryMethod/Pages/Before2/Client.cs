@@ -2,28 +2,28 @@
 using System;
 using System.Collections.Generic;
 
-namespace DesignPatterns.Template.Xxx.Before
+namespace DesignPatterns.Template.Pages.Before2
 {
     class Client : IClient
     {
         public string[] RenderStarPage(string header, string body)
         {
-            var creator = new StarPage();
-            string[] result = creator.RenderPage(header, body);
+            var page = new StarPage();
+            string[] result = page.Render(header, body);
 
             return result;
         }
 
         public string[] RenderDashedPage(string header, string body)
         {
-            var creator = new DashedPage();
-            string[] result = creator.RenderPage(header, body);
+            var page = new DashedPage();
+            string[] result = page.Render(header, body);
             return result;
         }
 
         class StarPage
         {
-            public string[] RenderPage(string header, string body)
+            public string[] Render(string header, string body)
             {
                 // nackdel: upprepning av kod (det enda som skiljer är vilken "produkt" som skapas)
                 Box headerBox = new StarBox(header);
@@ -43,7 +43,7 @@ namespace DesignPatterns.Template.Xxx.Before
 
         class DashedPage
         {
-            public string[] RenderPage(string header, string body)
+            public string[] Render(string header, string body)
             {
                 Box headerBox = new DashedBox(header);
 

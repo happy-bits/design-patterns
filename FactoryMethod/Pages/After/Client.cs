@@ -1,29 +1,28 @@
 ﻿
-using System;
 using System.Collections.Generic;
 
-namespace DesignPatterns.Template.Xxx.After
+namespace DesignPatterns.Template.Pages.After
 {
     class Client : IClient
     {
         public string[] RenderStarPage(string header, string body)
         {
-            var creator = new StarPage();
-            string[] result = creator.RenderPage(header, body);
+            var page = new StarPage();
+            string[] result = page.Render(header, body);
 
             return result;
         }
 
         public string[] RenderDashedPage(string header, string body)
         {
-            var creator = new DashedPage();
-            string[] result = creator.RenderPage(header, body);
+            var page = new DashedPage();
+            string[] result = page.Render(header, body);
             return result;
         }
 
         abstract class Page
         {
-            public string[] RenderPage(string header, string body)
+            public string[] Render(string header, string body)
             {
                 Box headerBox = CreateBox(header);
 

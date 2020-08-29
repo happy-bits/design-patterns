@@ -1,14 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using static DesignPatterns.TestUtilities;
 
-namespace DesignPatterns.Template.Xxx
+namespace DesignPatterns.Template.Pages
 {
     [TestClass]
     public class Tests
     {
         private IEnumerable<IClient> AllClients() => new IClient[] { 
             new Before.Client(), 
+            new Before2.Client(), 
             new After.Client(), 
         };
 
