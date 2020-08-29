@@ -6,17 +6,19 @@ namespace DesignPatterns.Template.Xxx.After
 {
     class Client : IClient
     {
-        public void DoStuff()
+        public string[] RenderStarPage(string header, string body)
         {
-            {
-                var creator = new StarPage();
-                string[] result = creator.RenderPage("header", "body");
-            }
+            var creator = new StarPage();
+            string[] result = creator.RenderPage(header, body);
 
-            {
-                var creator = new DashedPage();
-                string[] result = creator.RenderPage("header", "body");
-            }
+            return result;
+        }
+
+        public string[] RenderDashedPage(string header, string body)
+        {
+            var creator = new DashedPage();
+            string[] result = creator.RenderPage(header, body);
+            return result;
         }
 
         abstract class Page
@@ -57,37 +59,6 @@ namespace DesignPatterns.Template.Xxx.After
             }
         }
 
-        abstract class Box
-        {
-            public Box(string text) => Text = text;
 
-            public string Text { get; }
-
-            public abstract string[] Render();
-        }
-
-        class StarBox : Box
-        {
-            public StarBox(string text) : base(text)
-            {
-            }
-
-            public override string[] Render()
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        class DashedBox : Box
-        {
-            public DashedBox(string text) : base(text)
-            {
-            }
-
-            public override string[] Render()
-            {
-                throw new NotImplementedException();
-            }
-        }
     }
 }

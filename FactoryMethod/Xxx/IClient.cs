@@ -4,6 +4,7 @@ namespace DesignPatterns.Template.Xxx
 {
     interface IClient
     {
-        void DoStuff();
+        string[] RenderDashedPage(string header, string body);
+        string[] RenderStarPage(string header, string body);
     }
 }
