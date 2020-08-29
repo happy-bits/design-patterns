@@ -1,66 +1,46 @@
-﻿
+﻿// Tyvärr är denna bättre eller lika bra som After
+
+using System;
 using System.Collections.Generic;
 
-namespace DesignPatterns.FactoryMethod.Xxx.Before
+namespace DesignPatterns.FactoryMethod.Menus.Before2
 {
     class Client : IClient
     {
 
         public string RenderAlphaMenu()
         {
-            var creator = new AlphaMenuCreator();
-            Menu menu = creator.CreateMenu("  Banana   ", " Apple   ");
+            var menu = new AlphaMenu("  Banana   ", " Apple   ");
             return menu.Render();
         }
 
         public string RenderNumericMenu()
         {
-            var creator = new NumericMenuCreator();
-            Menu menu = creator.CreateMenu("  Banana   ", " Apple   ");
+            var menu = new NumericMenu("  Banana   ", " Apple   ");
             return menu.Render();
         }
 
-        class AlphaMenuCreator
-        {
-            public Menu CreateMenu(params string[] choices)
-            {
-                var menu = new AlphaMenu();
-
-                // Nackdel: upprepning av kod (foreach)
-                foreach (var choice in choices)
-                    menu.Add(choice.Trim().ToUpper());
-
-                return menu;
-            }
-        }
-
-        class NumericMenuCreator
-        {
-            public Menu CreateMenu(params string[] choices)
-            {
-                var menu = new NumericMenu();
-
-                // Nackdel: upprepning av kod (foreach)
-                foreach (var choice in choices)
-                    menu.Add(choice.Trim().ToUpper());
-
-                return menu;
-            }
-        }
 
         abstract class Menu
         {
+            public Menu(params string[] choices)
+            {
+                foreach (var choice in choices)
+                    _choices.Add(choice.Trim().ToUpper());
+            }
+
             protected List<string> _choices = new List<string>();
 
-            public void Add(string choice)
-            {
-                _choices.Add(choice);
-            }
             public abstract string Render();
+
         }
 
         class AlphaMenu : Menu
         {
+            public AlphaMenu(params string[] choices):base(choices)
+            {
+            }
+
             public override string Render()
             {
                 var list = new List<string>();
@@ -76,6 +56,10 @@ namespace DesignPatterns.FactoryMethod.Xxx.Before
 
         class NumericMenu : Menu
         {
+            public NumericMenu(params string[] choices) : base(choices)
+            {
+            }
+
             public override string Render()
             {
                 var list = new List<string>();

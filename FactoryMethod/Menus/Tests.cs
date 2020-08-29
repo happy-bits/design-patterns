@@ -1,13 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
-namespace DesignPatterns.FactoryMethod.Xxx
+namespace DesignPatterns.FactoryMethod.Menus
 {
     [TestClass]
     public class Tests
     {
         private IEnumerable<IClient> AllClients() => new IClient[] { 
             new Before.Client(), 
+            new Before2.Client(), 
             new After.Client(), 
         };
 

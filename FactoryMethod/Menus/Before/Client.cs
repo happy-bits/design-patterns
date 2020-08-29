@@ -1,7 +1,7 @@
 ﻿
 using System.Collections.Generic;
 
-namespace DesignPatterns.FactoryMethod.Xxx.After
+namespace DesignPatterns.FactoryMethod.Menus.Before
 {
     class Client : IClient
     {
@@ -20,33 +20,31 @@ namespace DesignPatterns.FactoryMethod.Xxx.After
             return menu.Render();
         }
 
-        abstract class MenuCreator
+        class AlphaMenuCreator
         {
-            protected abstract Menu CreateMenu();
-
             public Menu CreateMenu(params string[] choices)
             {
-                var menu = CreateMenu();
+                var menu = new AlphaMenu();
 
+                // Nackdel: upprepning av kod (foreach)
                 foreach (var choice in choices)
                     menu.Add(choice.Trim().ToUpper());
 
                 return menu;
             }
         }
-        class AlphaMenuCreator : MenuCreator
-        {
-            protected override Menu CreateMenu()
-            {
-                return new AlphaMenu();
-            }
-        }
 
-        class NumericMenuCreator : MenuCreator
+        class NumericMenuCreator
         {
-            protected override Menu CreateMenu()
+            public Menu CreateMenu(params string[] choices)
             {
-                return new NumericMenu();
+                var menu = new NumericMenu();
+
+                // Nackdel: upprepning av kod (foreach)
+                foreach (var choice in choices)
+                    menu.Add(choice.Trim().ToUpper());
+
+                return menu;
             }
         }
 

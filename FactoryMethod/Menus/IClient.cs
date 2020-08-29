@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DesignPatterns.FactoryMethod.Xxx
+namespace DesignPatterns.FactoryMethod.Menus
 {
     interface IClient
     {
