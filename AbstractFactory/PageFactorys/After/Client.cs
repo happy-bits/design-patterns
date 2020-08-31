@@ -11,14 +11,12 @@ namespace DesignPatterns.AbstractFactory.PageFactorys.After
         {
             {
                 var factory = new RoundFactory();
-                var result = ClientMethod(factory, "header", "lorem ipsum dolor");
+                var result = ClientMethod(factory, "Header", "Lorem ipsum dolor");
                 CollectionAssert.AreEqual(new[] {
                     "╭────────╮",
                     "│ HEADER │",
                     "╰────────╯",
-                    "╭───────────────────╮",
-                    "│ lorem ipsum dolor │",
-                    "╰───────────────────╯"
+                    "Lorem ipsum dolor",
                 }
                 , result);
 
@@ -26,10 +24,10 @@ namespace DesignPatterns.AbstractFactory.PageFactorys.After
 
             {
                 var factory = new HtmlFactory();
-                var result = ClientMethod(factory, "header", "lorem ipsum dolor");
+                var result = ClientMethod(factory, "Header", "Lorem ipsum dolor");
                 CollectionAssert.AreEqual(new[] {
-                    "<h1>header</h1>",
-                    "<p>lorem ipsum dolor</p>"
+                    "<h1>Header</h1>",
+                    "<p>Lorem ipsum dolor</p>"
                 }
                 , result);
             }
@@ -141,15 +139,7 @@ namespace DesignPatterns.AbstractFactory.PageFactorys.After
 
             public override string[] Render()
             {
-                var lines = new string('─', Text.Length + 2);
-                var result = new List<string>
-                {
-                    $"╭{lines}╮",
-                    $"│ {Text} │",
-                    $"╰{lines}╯",
-                };
-
-                return result.ToArray();
+                return new[] { Text };
             }
         }
 
