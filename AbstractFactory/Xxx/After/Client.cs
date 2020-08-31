@@ -1,6 +1,7 @@
-﻿
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DesignPatterns.AbstractFactory.Xxx.After
 {
@@ -8,30 +9,50 @@ namespace DesignPatterns.AbstractFactory.Xxx.After
     {
         public void DoStuff()
         {
-            // The client code can work with any concrete factory class.
-            Console.WriteLine("Client: Testing client code with the first factory type...");
-            ClientMethod(new ConcreteFactory1());
-            Console.WriteLine();
+            {
+                var factory = new RoundFactory();
+                factory.Width = 15;
+                var result = ClientMethod(factory, "header", "lorem ipsum dolor");
+                CollectionAssert.AreEqual(new[] {
+                    "╭─────────────╮",
+                    "│ HEADER      │",
+                    "╰─────────────╯",
+                    "╭─────────────╮",
+                    "│ lorem ipsum │",
+                    "│ dolor       │",
+                    "╰─────────────╯"
+                }
+                , result);
+            }
 
-            Console.WriteLine("Client: Testing the same client code with the second factory type...");
-            ClientMethod(new ConcreteFactory2());
+            {
+                var factory = new HtmlFactory();
+                var result = ClientMethod(factory, "header", "lorem ipsum dolor");
+                CollectionAssert.AreEqual(new[] {
+                    "<h1>header</h1>",
+                    "<p>lorem ispum dolor</p>"
+                }
+                , result);
+            }
+
         }
 
-        public void ClientMethod(IAbstractFactory factory)
+        string[] ClientMethod(IPageFactory factory, string headerText, string introText)
         {
-            var productA = factory.CreateProductA();
-            var productB = factory.CreateProductB();
+            var header = factory.CreateHeader(headerText);
+            var intro = factory.CreateIntro(introText);
 
-            Console.WriteLine(productB.UsefulFunctionB());
-            Console.WriteLine(productB.AnotherUsefulFunctionB(productA));
+            string[] a = header.Render();
+            string[] b = intro.Render();
+
+            return a.ToList().Concat(b).ToArray();
         }
 
-
-
-        public interface IAbstractFactory
+        abstract class IPageFactory
         {
-            IAbstractProductA CreateProductA();
-            IAbstractProductB CreateProductB();
+            public abstract IHeader CreateHeader(string text);
+            public abstract IIntro CreateIntro(string text);
+            public int Width { get; set; }
         }
 
         /*
@@ -43,18 +64,19 @@ namespace DesignPatterns.AbstractFactory.Xxx.After
 
            "Viktoriansk fabrik"
         */
-        class ConcreteFactory1 : IAbstractFactory
+        class RoundFactory : IPageFactory
         {
+
             // "Viktoriansk stol"
-            public IAbstractProductA CreateProductA()
+            public override IHeader CreateHeader(string text)
             {
-                return new ConcreteProductA1();
+                return new RoundHeader();
             }
 
             // "Viktorianskt bord"
-            public IAbstractProductB CreateProductB()
+            public override IIntro CreateIntro(string text)
             {
-                return new ConcreteProductB1();
+                return new RoundIntro();
             }
         }
 
@@ -62,79 +84,79 @@ namespace DesignPatterns.AbstractFactory.Xxx.After
            En till fabrik (som t.ex tillverkar moderna möbler eller art-deco-möbler
            "Art-deco fabrik"
         */
-        class ConcreteFactory2 : IAbstractFactory
+        class HtmlFactory : IPageFactory
         {
             // "Art-deco stol"
-            public IAbstractProductA CreateProductA()
+            public override IHeader CreateHeader(string text)
             {
-                return new ConcreteProductA2();
+                return new HtmlHeader();
             }
 
             // "Art-deco bord"
-            public IAbstractProductB CreateProductB()
+            public override IIntro CreateIntro(string text)
             {
-                return new ConcreteProductB2();
+                return new HtmlIntro();
             }
         }
 
         // En förmåga som alla stolar har
-        public interface IAbstractProductA
+        interface IHeader
         {
-            string UsefulFunctionA();
+            string[] Render();
         }
 
-        class ConcreteProductA1 : IAbstractProductA
+        class RoundHeader : IHeader
         {
-            public string UsefulFunctionA()
+            public string[] Render()
             {
-                return "The result of the product A1.";
+                throw new NotImplementedException();
             }
         }
 
-        class ConcreteProductA2 : IAbstractProductA
+        class HtmlHeader : IHeader
         {
-            public string UsefulFunctionA()
+            public string[] Render()
             {
-                return "The result of the product A2.";
+                throw new NotImplementedException();
             }
         }
 
         // En förmåga som alla bord har (de kan också samarbeta med stolarna)
-        public interface IAbstractProductB
+        interface IIntro
         {
             // Product B kan gör sin egen grej
-            string UsefulFunctionB();
+            string[] Render();
 
             // ...men den kan också samarbeta med ProductA.
 
-            string AnotherUsefulFunctionB(IAbstractProductA collaborator);
+            string AnotherUsefulFunctionB(IHeader collaborator);
         }
 
-        class ConcreteProductB1 : IAbstractProductB
+        class RoundIntro : IIntro
         {
-            public string UsefulFunctionB()
+            public string[] Render()
             {
-                return "The result of the product B1.";
+                throw new NotImplementedException();
             }
 
-            public string AnotherUsefulFunctionB(IAbstractProductA collaborator)
+            public string AnotherUsefulFunctionB(IHeader collaborator)
             {
-                var result = collaborator.UsefulFunctionA();
+                var result = collaborator.Render();
 
                 return $"The result of the B1 collaborating with the ({result})";
             }
         }
 
-        class ConcreteProductB2 : IAbstractProductB
+        class HtmlIntro : IIntro
         {
-            public string UsefulFunctionB()
+            public string[] Render()
             {
-                return "The result of the product B2.";
+                throw new NotImplementedException();
             }
 
-            public string AnotherUsefulFunctionB(IAbstractProductA collaborator)
+            public string AnotherUsefulFunctionB(IHeader collaborator)
             {
-                var result = collaborator.UsefulFunctionA();
+                var result = collaborator.Render();
 
                 return $"The result of the B2 collaborating with the ({result})";
             }
