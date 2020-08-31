@@ -11,18 +11,17 @@ namespace DesignPatterns.AbstractFactory.Xxx.After
         {
             {
                 var factory = new RoundFactory();
-                factory.Width = 15;
                 var result = ClientMethod(factory, "header", "lorem ipsum dolor");
                 CollectionAssert.AreEqual(new[] {
-                    "╭─────────────╮",
-                    "│ HEADER      │",
-                    "╰─────────────╯",
-                    "╭─────────────╮",
-                    "│ lorem ipsum │",
-                    "│ dolor       │",
-                    "╰─────────────╯"
+                    "╭────────╮",
+                    "│ HEADER │",
+                    "╰────────╯",
+                    "╭───────────────────╮",
+                    "│ lorem ipsum dolor │",
+                    "╰───────────────────╯"
                 }
                 , result);
+
             }
 
             {
@@ -30,14 +29,14 @@ namespace DesignPatterns.AbstractFactory.Xxx.After
                 var result = ClientMethod(factory, "header", "lorem ipsum dolor");
                 CollectionAssert.AreEqual(new[] {
                     "<h1>header</h1>",
-                    "<p>lorem ispum dolor</p>"
+                    "<p>lorem ipsum dolor</p>"
                 }
                 , result);
             }
 
         }
 
-        string[] ClientMethod(IPageFactory factory, string headerText, string introText)
+        string[] ClientMethod(PageFactory factory, string headerText, string introText)
         {
             var header = factory.CreateHeader(headerText);
             var intro = factory.CreateIntro(introText);
@@ -48,117 +47,121 @@ namespace DesignPatterns.AbstractFactory.Xxx.After
             return a.ToList().Concat(b).ToArray();
         }
 
-        abstract class IPageFactory
+        abstract class PageFactory
         {
-            public abstract IHeader CreateHeader(string text);
-            public abstract IIntro CreateIntro(string text);
-            public int Width { get; set; }
+            public abstract Header CreateHeader(string text);
+            public abstract Intro CreateIntro(string text);
         }
 
-        /*
-
-           Konkreta factories producerar en familj av produkter. En familj kan ha flera varianter, 
-           men produkterna av en familj är inte kompatibla med produkter i andra familjer
-
-           IAbstractProductA kan vara en stol och ConcreteProductA1 en viktoriansk stol
-
-           "Viktoriansk fabrik"
-        */
-        class RoundFactory : IPageFactory
+        class RoundFactory : PageFactory
         {
-
-            // "Viktoriansk stol"
-            public override IHeader CreateHeader(string text)
+            public override Header CreateHeader(string text)
             {
-                return new RoundHeader();
+                return new RoundHeader(text);
             }
-
-            // "Viktorianskt bord"
-            public override IIntro CreateIntro(string text)
+            public override Intro CreateIntro(string text)
             {
-                return new RoundIntro();
+                return new RoundIntro(text);
             }
         }
 
-        /*
-           En till fabrik (som t.ex tillverkar moderna möbler eller art-deco-möbler
-           "Art-deco fabrik"
-        */
-        class HtmlFactory : IPageFactory
+        class HtmlFactory : PageFactory
         {
-            // "Art-deco stol"
-            public override IHeader CreateHeader(string text)
+            public override Header CreateHeader(string text)
             {
-                return new HtmlHeader();
+                return new HtmlHeader(text);
             }
 
-            // "Art-deco bord"
-            public override IIntro CreateIntro(string text)
+            public override Intro CreateIntro(string text)
             {
-                return new HtmlIntro();
+                return new HtmlIntro(text);
             }
         }
 
-        // En förmåga som alla stolar har
-        interface IHeader
+        abstract class Header
         {
-            string[] Render();
+            public Header(string text)
+            {
+                Text = text;
+            }
+
+            public string Text { get; }
+
+            public abstract string[] Render();
         }
 
-        class RoundHeader : IHeader
+        class RoundHeader : Header
         {
-            public string[] Render()
+            public RoundHeader(string text) : base(text)
             {
-                throw new NotImplementedException();
+            }
+            public override string[] Render()
+            {
+                var lines = new string('─', Text.Length + 2);
+                var result = new List<string>
+                {
+                    $"╭{lines}╮",
+                    $"│ {Text.ToUpper()} │",
+                    $"╰{lines}╯",
+                };
+
+                return result.ToArray();
             }
         }
 
-        class HtmlHeader : IHeader
+        class HtmlHeader : Header
         {
-            public string[] Render()
+            public HtmlHeader(string text) : base(text)
             {
-                throw new NotImplementedException();
+            }
+
+            public override string[] Render()
+            {
+                return new[] { $"<h1>{Text}</h1>" };
             }
         }
 
-        // En förmåga som alla bord har (de kan också samarbeta med stolarna)
-        interface IIntro
+        abstract class Intro
         {
-            // Product B kan gör sin egen grej
-            string[] Render();
+            public Intro(string text)
+            {
+                Text = text;
+            }
 
-            // ...men den kan också samarbeta med ProductA.
+            public string Text { get; }
 
-            string AnotherUsefulFunctionB(IHeader collaborator);
+            public abstract string[] Render();
         }
 
-        class RoundIntro : IIntro
+        class RoundIntro : Intro
         {
-            public string[] Render()
+            public RoundIntro(string text) : base(text)
             {
-                throw new NotImplementedException();
             }
 
-            public string AnotherUsefulFunctionB(IHeader collaborator)
+            public override string[] Render()
             {
-                var result = collaborator.Render();
+                var lines = new string('─', Text.Length + 2);
+                var result = new List<string>
+                {
+                    $"╭{lines}╮",
+                    $"│ {Text} │",
+                    $"╰{lines}╯",
+                };
 
-                return $"The result of the B1 collaborating with the ({result})";
+                return result.ToArray();
             }
         }
 
-        class HtmlIntro : IIntro
+        class HtmlIntro : Intro
         {
-            public string[] Render()
+            public HtmlIntro(string text) : base(text)
             {
-                throw new NotImplementedException();
             }
 
-            public string AnotherUsefulFunctionB(IHeader collaborator)
+            public override string[] Render()
             {
-                var result = collaborator.Render();
-
-                return $"The result of the B2 collaborating with the ({result})";
+                return new[] { $"<p>{Text}</p>" };
             }
         }
     }
