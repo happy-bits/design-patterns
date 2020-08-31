@@ -1,26 +1,31 @@
-﻿/*
-Academic examples...
-
-Idea from refactoring guru
-
- */
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DesignPatterns.AbstractFactory
+namespace DesignPatterns.AbstractFactory.Xxx.After
 {
-    [TestClass]
-    public class Furnitures
+    class Client : IClient
     {
-        [TestMethod]
-        public void Ex2()
+        public void DoStuff()
         {
-            new Client().Main();
+            // The client code can work with any concrete factory class.
+            Console.WriteLine("Client: Testing client code with the first factory type...");
+            ClientMethod(new ConcreteFactory1());
+            Console.WriteLine();
+
+            Console.WriteLine("Client: Testing the same client code with the second factory type...");
+            ClientMethod(new ConcreteFactory2());
         }
+
+        public void ClientMethod(IAbstractFactory factory)
+        {
+            var productA = factory.CreateProductA();
+            var productB = factory.CreateProductB();
+
+            Console.WriteLine(productB.UsefulFunctionB());
+            Console.WriteLine(productB.AnotherUsefulFunctionB(productA));
+        }
+
 
 
         public interface IAbstractFactory
@@ -101,7 +106,7 @@ namespace DesignPatterns.AbstractFactory
             string UsefulFunctionB();
 
             // ...men den kan också samarbeta med ProductA.
-            
+
             string AnotherUsefulFunctionB(IAbstractProductA collaborator);
         }
 
@@ -132,38 +137,6 @@ namespace DesignPatterns.AbstractFactory
                 var result = collaborator.UsefulFunctionA();
 
                 return $"The result of the B2 collaborating with the ({result})";
-            }
-        }
-
-        /*
-         Klienten kan enbart jobba med factories och produkter genom abstrakta typer:
-         - AbstractFactory
-         - AbstractProduct
-
-        Fördel: du kan skicka in vilken factory o product (underklass) som du vill utan att behöva ändra klientkoden
-
-        Du kan t.ex vid uppstart bestämma vilken factory att använda
-             */
-        class Client
-        {
-            public void Main()
-            {
-                // The client code can work with any concrete factory class.
-                Console.WriteLine("Client: Testing client code with the first factory type...");
-                ClientMethod(new ConcreteFactory1());
-                Console.WriteLine();
-
-                Console.WriteLine("Client: Testing the same client code with the second factory type...");
-                ClientMethod(new ConcreteFactory2());
-            }
-
-            public void ClientMethod(IAbstractFactory factory)
-            {
-                var productA = factory.CreateProductA();
-                var productB = factory.CreateProductB();
-
-                Console.WriteLine(productB.UsefulFunctionB());
-                Console.WriteLine(productB.AnotherUsefulFunctionB(productA));
             }
         }
     }
