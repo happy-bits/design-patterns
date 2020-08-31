@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DesignPatterns.AbstractFactory.Xxx.Before
+namespace DesignPatterns.AbstractFactory.PageFactorys.Before
 {
     class Client : IClient
     {

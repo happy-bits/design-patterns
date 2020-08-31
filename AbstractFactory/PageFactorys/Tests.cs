@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using static DesignPatterns.TestUtilities;
 
-namespace DesignPatterns.AbstractFactory.Xxx
+namespace DesignPatterns.AbstractFactory.PageFactorys
 {
     [TestClass]
     public class Tests

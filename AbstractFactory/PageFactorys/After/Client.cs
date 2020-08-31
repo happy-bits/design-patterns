@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DesignPatterns.AbstractFactory.Xxx.After
+namespace DesignPatterns.AbstractFactory.PageFactorys.After
 {
     class Client : IClient
     {

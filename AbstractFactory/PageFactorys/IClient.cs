@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DesignPatterns.AbstractFactory.Xxx
+namespace DesignPatterns.AbstractFactory.PageFactorys
 {
     interface IClient
     {
