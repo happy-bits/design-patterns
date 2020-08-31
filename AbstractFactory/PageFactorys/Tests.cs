@@ -9,7 +9,7 @@ namespace DesignPatterns.AbstractFactory.PageFactorys
     {
         private IEnumerable<IClient> AllClients() => new IClient[] { 
             //new Before.Client(), 
-            new After.Client(), 
+            new After.Client(),
         };
 
         [TestMethod]
@@ -17,7 +17,31 @@ namespace DesignPatterns.AbstractFactory.PageFactorys
         {
             foreach (var client in AllClients())
             {
-                client.DoStuff();
+                {
+                    client.SetFactory("Round");
+                    var result = client.RenderPage("Header", "Lorem ipsum dolor");
+
+                    CollectionAssert.AreEqual(new[] {
+                        "╭────────╮",
+                        "│ HEADER │",
+                        "╰────────╯",
+                        "Lorem ipsum dolor",
+                    }
+                    , result);
+                }
+                {
+                    client.SetFactory("Html");
+                    var result = client.RenderPage("Header", "Lorem ipsum dolor");
+
+                    CollectionAssert.AreEqual(new[] {
+                        "<h1>Header</h1>",
+                        "<p>Lorem ipsum dolor</p>"
+                    }
+                    , result);
+                }
+
+                client.SetFactory("Html");
+                var result2 = client.RenderPage("Header", "Lorem ipsum dolor");
             }
         }
     }

@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,37 +6,22 @@ namespace DesignPatterns.AbstractFactory.PageFactorys.After
 {
     class Client : IClient
     {
-        public void DoStuff()
+        PageFactory _factory;
+
+        public void SetFactory(string factoryname)
         {
+            _factory = factoryname switch
             {
-                var factory = new RoundFactory();
-                var result = ClientMethod(factory, "Header", "Lorem ipsum dolor");
-                CollectionAssert.AreEqual(new[] {
-                    "╭────────╮",
-                    "│ HEADER │",
-                    "╰────────╯",
-                    "Lorem ipsum dolor",
-                }
-                , result);
-
-            }
-
-            {
-                var factory = new HtmlFactory();
-                var result = ClientMethod(factory, "Header", "Lorem ipsum dolor");
-                CollectionAssert.AreEqual(new[] {
-                    "<h1>Header</h1>",
-                    "<p>Lorem ipsum dolor</p>"
-                }
-                , result);
-            }
-
+                "Round" => new RoundFactory(),
+                "Html" => new HtmlFactory(),
+                _ => throw new Exception()
+            };
         }
 
-        string[] ClientMethod(PageFactory factory, string headerText, string introText)
+        public string[] RenderPage(string headerText, string introText)
         {
-            var header = factory.CreateHeader(headerText);
-            var intro = factory.CreateIntro(introText);
+            var header = _factory.CreateHeader(headerText);
+            var intro = _factory.CreateIntro(introText);
 
             string[] a = header.Render();
             string[] b = intro.Render();

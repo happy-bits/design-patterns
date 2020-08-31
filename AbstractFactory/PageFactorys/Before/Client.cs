@@ -1,11 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace DesignPatterns.AbstractFactory.PageFactorys.Before
 {
     class Client : IClient
     {
-        public void DoStuff()
+        public string[] RenderPage(string header, string intro)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetFactory(string factoryname)
         {
             throw new NotImplementedException();
         }
