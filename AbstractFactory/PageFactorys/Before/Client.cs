@@ -5,22 +5,42 @@ namespace DesignPatterns.AbstractFactory.PageFactorys.Before
 {
     class Client : IClient
     {
+        enum PageFactory 
+        { 
+            Round, Html 
+        }
+
         PageFactory _factory;
 
         public void SetFactory(string factoryname)
         {
             _factory = factoryname switch
             {
-                "Round" => new RoundFactory(),
-                "Html" => new HtmlFactory(),
+                "Round" => PageFactory.Round,
+                "Html" => PageFactory.Html,
                 _ => throw new Exception()
             };
         }
 
         public string[] RenderPage(string headerText, string introText)
         {
-            var header = _factory.CreateHeader(headerText);
-            var intro = _factory.CreateIntro(introText);
+
+            // Nackdel: komplex kod (lätt att råka skriva Round istället för Html)
+            // Nackdel: om det tillkommer en till sort (ex RoundButton) så behövs kod uppdateras på många ställen
+            Header header = _factory switch
+            {
+                PageFactory.Round => new RoundHeader(headerText),
+                PageFactory.Html => new HtmlHeader(headerText),
+                _ => throw new Exception()
+            };
+
+            // Nackdel: komplex kod
+            Intro intro = _factory switch
+            {
+                PageFactory.Round => new RoundIntro(introText),
+                PageFactory.Html => new HtmlIntro(introText),
+                _ => throw new Exception()
+            };
 
             string[] a = header.Render();
             string[] b = intro.Render();
@@ -28,35 +48,5 @@ namespace DesignPatterns.AbstractFactory.PageFactorys.Before
             return a.ToList().Concat(b).ToArray();
         }
 
-        abstract class PageFactory
-        {
-            public abstract Header CreateHeader(string text);
-            public abstract Intro CreateIntro(string text);
-        }
-
-        class RoundFactory : PageFactory
-        {
-            public override Header CreateHeader(string text)
-            {
-                return new RoundHeader(text);
-            }
-            public override Intro CreateIntro(string text)
-            {
-                return new RoundIntro(text);
-            }
-        }
-
-        class HtmlFactory : PageFactory
-        {
-            public override Header CreateHeader(string text)
-            {
-                return new HtmlHeader(text);
-            }
-
-            public override Intro CreateIntro(string text)
-            {
-                return new HtmlIntro(text);
-            }
-        }
     }
 }

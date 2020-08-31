@@ -8,9 +8,7 @@
 
   <ItemGroup>
     <Compile Remove="FactoryMethod\Old\**" />
-
     <Compile Remove="Template\**" />
-
   </ItemGroup>
 
   <ItemGroup>

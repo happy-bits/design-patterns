@@ -1,5 +1,6 @@
 ﻿# Bra exempel
 
+- Abstract factory (PageFactory)
 - Factory Method (Pages, Shapes)  
 - Decorator (Weathers)
 - Fascade (Calculators)
@@ -10,7 +11,6 @@
 - Memento (Photoshop) okej exempel
 
 # Okej akademiska exempel
-- Abstract factory (Furnitures) VILA
 - Chain of resp (Approvers) VILA
 
 

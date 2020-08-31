@@ -19,6 +19,7 @@ namespace DesignPatterns.AbstractFactory.PageFactorys.After
 
         public string[] RenderPage(string headerText, string introText)
         {
+            // Fördel: enklare kod (+ denna kod behöver inte ändras om det tillkommer fler sorter)
             var header = _factory.CreateHeader(headerText);
             var intro = _factory.CreateIntro(introText);
 
