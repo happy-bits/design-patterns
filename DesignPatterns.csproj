@@ -7,8 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="AbstractFactory\Old\**" />
+    <Compile Remove="ChainOfResponsibility\Old\**" />
     <Compile Remove="FactoryMethod\Old\**" />
     <Compile Remove="Template\**" />
+    <EmbeddedResource Remove="AbstractFactory\Old\**" />
+    <EmbeddedResource Remove="ChainOfResponsibility\Old\**" />
+    <None Remove="AbstractFactory\Old\**" />
+    <None Remove="ChainOfResponsibility\Old\**" />
   </ItemGroup>
 
   <ItemGroup>

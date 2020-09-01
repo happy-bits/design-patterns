@@ -15,7 +15,6 @@ namespace DesignPatterns.ChainOfResponsibility
         [TestMethod]
         public void monkey_squirrel_dog()
         {
-            // The other part of the client code constructs the actual chain.
             var monkey = new MonkeyHandler();
             var squirrel = new SquirrelHandler();
             var dog = new DogHandler();
@@ -40,7 +39,7 @@ namespace DesignPatterns.ChainOfResponsibility
                 _logger);
 
             // Send a meatball through the chain
-            _logger = new List<string>();
+            _logger.Clear();
 
             Client.ClientCode(monkey, new[] { "MeatBall" });
 
@@ -54,7 +53,7 @@ namespace DesignPatterns.ChainOfResponsibility
             // Client can send a request to the middle of the chain
             // Here a banana is sent to the chain, but after the monkey, so no-one will handle it
 
-            _logger = new List<string>();
+            _logger.Clear();
 
             Client.ClientCode(squirrel, new[] { "Banana" });
 
@@ -111,7 +110,7 @@ namespace DesignPatterns.ChainOfResponsibility
         {
             public override string Handle(string request)
             {
-                if ((request as string) == "Banana")
+                if (request == "Banana")
                 {
                     // This will end the chain
                     return $"Monkey: I'll eat the {request.ToString()}";
@@ -129,7 +128,7 @@ namespace DesignPatterns.ChainOfResponsibility
         {
             public override string Handle(string request)
             {
-                if (request.ToString() == "Nut")
+                if (request == "Nut")
                 {
                     return $"Squirrel: I'll eat the {request.ToString()}";
                 }
@@ -144,7 +143,7 @@ namespace DesignPatterns.ChainOfResponsibility
         {
             public override string Handle(string request)
             {
-                if (request.ToString() == "MeatBall")
+                if (request == "MeatBall")
                 {
                     return $"Dog: I'll eat the {request.ToString()}";
                 }
