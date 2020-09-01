@@ -1,87 +1,118 @@
-﻿namespace DesignPatterns.Template.Requests.After
+﻿
+namespace DesignPatterns.ChainOfResponsibility.Requests.After
 {
     class Client : IClient
     {
-        private AdminRoleHandler _firstHandlerInChain;
+        private AdminGetFullAccess _firstHandlerInChain;
 
         public void SetupChain()
         {
-            var adminRoleHandler = new AdminRoleHandler();
-            var boboHandler = new BoboHandler();
+            var adminRoleHandler = new AdminGetFullAccess();
+            var demandEditorRole = new DemandEditorRole();
+            var loadPage = new LoadPage();
+            var correctRoleGivesAccess = new CorrectRoleGivesAccess();
 
-            adminRoleHandler.SetNext(boboHandler);
+            adminRoleHandler
+                .SetNext(demandEditorRole)
+                .SetNext(loadPage)
+                .SetNext(correctRoleGivesAccess);
 
             _firstHandlerInChain = adminRoleHandler;
         }
 
-        public Response Authenticate(Request request)
+        public Response GetPage(Request request)
         {
-            var response = _firstHandlerInChain.Handle(request);
+            var response = new Response();
+            _firstHandlerInChain.Handle(request, response);
 
             return response;
         }
 
-        interface IHandler
+        abstract class AbstractHandler 
         {
-            IHandler SetNext(IHandler handler);
+            private AbstractHandler _nextHandler;
 
-            Response Handle(Request request);
-        }
-
-        abstract class AbstractHandler : IHandler
-        {
-            private IHandler _nextHandler;
-
-            public IHandler SetNext(IHandler handler)
+            public AbstractHandler SetNext(AbstractHandler handler)
             {
                 _nextHandler = handler;
                 return handler;
             }
 
-            public virtual Response Handle(Request request)
+            public (Request, Response) Next(Request request, Response response)
             {
                 if (_nextHandler != null)
                 {
-                    return _nextHandler.Handle(request);
+                    return _nextHandler.Handle(request, response);
                 }
                 else
                 {
-                    return new Response(false);
+                    return (request, response);
                 }
             }
+
+            public abstract (Request, Response) Handle(Request request, Response response);
         }
 
-        class AdminRoleHandler : AbstractHandler
+        class AdminGetFullAccess : AbstractHandler
         {
-            public override Response Handle(Request request)
+            PageRepository _pageRepository = new PageRepository();
+
+            public override (Request, Response) Handle(Request request, Response response)
             {
-                if (request.User.IsInRole("Administrator"))
+                if (request.User.IsInRole("Administrator") || request.User.Name == "bobo")
                 {
-                    return new Response(true);
+                    response.Authorized = true;
+                    response.Page = _pageRepository.GetPageById(request.PageId);
+                    return (request, response);
                 }
-                else
-                {
-                    return base.Handle(request);
-                }
+
+                return Next(request, response);
             }
         }
 
-        class BoboHandler : AbstractHandler
+        class DemandEditorRole : AbstractHandler
         {
-            public override Response Handle(Request request)
+            public override (Request, Response) Handle(Request request, Response response)
             {
-                if (request.User.Name=="bobo")
+
+                if (!request.User.IsInRole("Editor"))
                 {
-                    return new Response(true);
+                    response.Authorized = false;
+                    return (request, response);
                 }
-                else
-                {
-                    return base.Handle(request);
-                }
+                return Next(request, response);
             }
         }
 
+        class LoadPage : AbstractHandler
+        {
+            PageRepository _pageRepository = new PageRepository();
 
+            public override (Request, Response) Handle(Request request, Response response)
+            {
+                response.Page = _pageRepository.GetPageById(request.PageId);
+
+                return Next(request, response);
+            }
+        }
+
+        class CorrectRoleGivesAccess : AbstractHandler
+        {
+            public override (Request, Response) Handle(Request request, Response response)
+            {
+                if (response.Page.PageType == PageType.Politics && request.User.IsInRole("PoliticsEditor"))
+                {
+                    response.Authorized = true;
+                }
+                else
+                {
+                    response.Authorized = false;
+                    return (request, response); 
+                }
+
+                return Next(request, response);
+            }
+        }
     }
 }
 

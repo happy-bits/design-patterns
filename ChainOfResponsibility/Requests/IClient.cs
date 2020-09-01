@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace DesignPatterns.Template.Requests
+namespace DesignPatterns.ChainOfResponsibility.Requests
 {
     interface IClient
     {
-        Response Authenticate(Request request);
+        Response GetPage(Request request);
         void SetupChain();
     }
 }
