@@ -21,6 +21,12 @@
             if (request.User.Name=="bobo")
                 response.Authenticated = true;
 
+            if (response.Request.PageId == 100)
+                response.PageType = PageType.Politics;
+
+            if (response.PageType == PageType.Politics && response.Request.User.IsInRole("PoliticsEditor"))
+                response.Authenticated = true;
+
             return response;
         }
 

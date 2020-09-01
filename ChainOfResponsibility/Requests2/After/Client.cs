@@ -8,8 +8,13 @@
         {
             var adminRoleHandler = new AdminRoleHandler();
             var boboHandler = new BoboHandler();
+            var setPageTypeHandler = new SetPageTypeHandler();
+            var pageTypeAuthenticationHandler = new PageTypeAuthenticationHandler();
 
-            adminRoleHandler.SetNext(boboHandler);
+            adminRoleHandler
+                .SetNext(boboHandler)
+                .SetNext(setPageTypeHandler)
+                .SetNext(pageTypeAuthenticationHandler);
 
             _firstHandlerInChain = adminRoleHandler;
         }
@@ -74,6 +79,28 @@
                 {
                     response.Authenticated = true;
                 }
+                return base.Handle(response);
+            }
+        }
+
+        class SetPageTypeHandler : AbstractHandler
+        {
+            public override Response Handle(Response response)
+            {
+                if (response.Request.PageId == 100)
+                    response.PageType = PageType.Politics;
+
+                return base.Handle(response);
+            }
+        }
+
+        class PageTypeAuthenticationHandler : AbstractHandler
+        {
+            public override Response Handle(Response response)
+            {
+                if (response.PageType == PageType.Politics && response.Request.User.IsInRole("PoliticsEditor"))
+                    response.Authenticated = true;
+
                 return base.Handle(response);
             }
         }

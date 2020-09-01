@@ -8,7 +8,7 @@ namespace DesignPatterns.Template.Requests2
     public class Tests
     {
         private IEnumerable<IClient> AllClients() => new IClient[] { 
-            new Before.Client(), 
+            //new Before.Client(), 
             new After.Client(), 
         };
 
@@ -20,10 +20,16 @@ namespace DesignPatterns.Template.Requests2
                 client.SetupChain();
 
                 {
-                    var request = new Request { User = new User { 
-                        Roles = new[] { "Administrator" } } };
+                    var request = new Request { 
+                        User = new User 
+                        { 
+                            Roles = new[] { "Administrator" },
+                        },
+                        PageId=100
+                    };
                     var response = client.Authenticate(request);
                     Assert.IsTrue(response.Authenticated);
+                    Assert.AreEqual(PageType.Politics, response.PageType);
                 }
 
                 {
@@ -32,10 +38,12 @@ namespace DesignPatterns.Template.Requests2
                         User = new User
                         {
                             Roles = new[] { "AAAAA" }
-                        }
+                        },
+                        PageId = 100
                     };
                     var response = client.Authenticate(request);
                     Assert.IsFalse(response.Authenticated);
+                    Assert.AreEqual(PageType.Politics, response.PageType);
                 }
 
                 {
@@ -45,10 +53,27 @@ namespace DesignPatterns.Template.Requests2
                         {
                             Name="bobo",
                             Roles = new[] { "AAAAA" }
-                        }
+                        },
+                        PageId = 100
                     };
                     var response = client.Authenticate(request);
                     Assert.IsTrue(response.Authenticated);
+                    Assert.AreEqual(PageType.Politics, response.PageType);
+                }
+
+
+                {
+                    var request = new Request
+                    {
+                        User = new User
+                        {
+                            Roles = new[] { "PoliticsEditor" }
+                        },
+                        PageId = 100
+                    };
+                    var response = client.Authenticate(request);
+                    Assert.IsTrue(response.Authenticated);
+                    Assert.AreEqual(PageType.Politics, response.PageType);
                 }
             }
         }
@@ -56,12 +81,19 @@ namespace DesignPatterns.Template.Requests2
     class Request
     {
         public User User { get; set; }
+        public int PageId { get; set; }
     }
 
     class Response
     {
         public bool Authenticated { get; set; }
         public Request Request { get; set; }
+        public PageType PageType { get; set; }
+    }
+
+    enum PageType
+    {
+        Unknown, Sports, News, Politics
     }
 
     class User
