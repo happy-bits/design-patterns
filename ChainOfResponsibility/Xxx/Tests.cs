@@ -9,7 +9,7 @@ namespace DesignPatterns.Template.Xxx
     {
         private IEnumerable<IClient> AllClients() => new IClient[] { 
             //new Before.Client(), 
-            //new After.Client(), 
+            new After.Client(), 
         };
 
         [TestMethod]
