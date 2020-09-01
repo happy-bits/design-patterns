@@ -4,6 +4,7 @@ namespace DesignPatterns.Template.Xxx
 {
     interface IClient
     {
-        void DoStuff();
+        Response Authenticate(Request request);
+        void SetupChain();
     }
 }

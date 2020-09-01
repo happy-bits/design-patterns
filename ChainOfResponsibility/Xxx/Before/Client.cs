@@ -5,7 +5,12 @@ namespace DesignPatterns.Template.Xxx.Before
 {
     class Client : IClient
     {
-        public void DoStuff()
+        public Response Authenticate(Request request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetupChain()
         {
             throw new NotImplementedException();
         }
