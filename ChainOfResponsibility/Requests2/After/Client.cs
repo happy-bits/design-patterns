@@ -1,4 +1,6 @@
-﻿namespace DesignPatterns.Template.Requests2.After
+﻿using System;
+
+namespace DesignPatterns.Template.Requests2.After
 {
     class Client : IClient
     {
@@ -29,24 +31,17 @@
             return response;
         }
 
-        interface IHandler
+        abstract class AbstractHandler 
         {
-            IHandler SetNext(IHandler handler);
+            private AbstractHandler _nextHandler;
 
-            Response Handle(Response request);
-        }
-
-        abstract class AbstractHandler : IHandler
-        {
-            private IHandler _nextHandler;
-
-            public IHandler SetNext(IHandler handler)
+            public AbstractHandler SetNext(AbstractHandler handler)
             {
                 _nextHandler = handler;
                 return handler;
             }
 
-            public virtual Response Handle(Response response)
+            public Response Next(Response response)
             {
                 if (_nextHandler != null)
                 {
@@ -57,6 +52,8 @@
                     return response;
                 }
             }
+
+            public abstract Response Handle(Response request);
         }
 
         class AdminRoleHandler : AbstractHandler
@@ -67,7 +64,7 @@
                 {
                     response.Authenticated = true;
                 }
-                return base.Handle(response);
+                return Next(response);
             }
         }
 
@@ -79,7 +76,7 @@
                 {
                     response.Authenticated = true;
                 }
-                return base.Handle(response);
+                return Next(response);
             }
         }
 
@@ -90,7 +87,7 @@
                 if (response.Request.PageId == 100)
                     response.PageType = PageType.Politics;
 
-                return base.Handle(response);
+                return Next(response);
             }
         }
 
@@ -101,7 +98,7 @@
                 if (response.PageType == PageType.Politics && response.Request.User.IsInRole("PoliticsEditor"))
                     response.Authenticated = true;
 
-                return base.Handle(response);
+                return Next(response);
             }
         }
     }
