@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DesignPatterns.Template.Xxx.Before
+namespace DesignPatterns.Template.Requests.Before
 {
     class Client : IClient
     {

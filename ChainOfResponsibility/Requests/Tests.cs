@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DesignPatterns.Template.Xxx
+namespace DesignPatterns.Template.Requests
 {
     [TestClass]
     public class Tests

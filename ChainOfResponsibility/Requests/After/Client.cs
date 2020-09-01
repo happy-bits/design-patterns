@@ -1,4 +1,4 @@
-﻿namespace DesignPatterns.Template.Xxx.After
+﻿namespace DesignPatterns.Template.Requests.After
 {
     class Client : IClient
     {
