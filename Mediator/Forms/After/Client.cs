@@ -45,14 +45,9 @@ namespace DesignPatterns.Mediator.Forms.After
 
     public interface IMediator
     {
-        void Notify(object sender, string ev);
+        void Notify(object ev);
     }
 
-    /*
-     "Concrete Mediator"
-
-     Koordinerar ett par komponenter
-    */
     class Dialog : IMediator
     {
         public TextField Text1 { get; }
@@ -66,44 +61,43 @@ namespace DesignPatterns.Mediator.Forms.After
         public Dialog(TextField text1, TextField text2, ClearButton clear, SubmitButton button)
         {
             Text1 = text1;
-            Text1.SetMediator(this);
-
             Text2 = text2;
-            Text2.SetMediator(this);
-
             ClearButton = clear;
-            ClearButton.SetMediator(this);
-
             SubmitButton = button;
-            SubmitButton.SetMediator(this);
 
             _allComponents = new BaseComponent[] { text1, text2, clear, button };
+
+            // Alla komponenter vet att de hör till denna dialogen
+
+            _allComponents.ToList().ForEach(c => c.SetMediator(this));
         }
 
-        public void Notify(object sender, string ev)
+        // Nackdel: denna metod kommer växa när fler händelser läggs till
+        // Nackdel: "ev" är inte hårt typat
+
+        public void Notify(object ev)
         {
-
-            if (sender is SubmitButton && ev == "Click")
+            switch (ev)
             {
-                if (AllFieldsAreValid)
-                {
-                    Events.Add("Form submitted");
+                case "SubmitButtonClicked":
+                    if (AllFieldsAreValid)
+                    {
+                        Events.Add("Form submitted");
+                        Events.Add($"text1={Text1.Value} text2={Text2.Value}");
+                    }
+                    else
+                    {
+                        Events.Add("Tried submit form, but not all fields are valid");
+                    }
+                    break;
+
+                case "ClearButtonClicked":
+                    ClearForm();
+                    Events.Add("Form cleared");
                     Events.Add($"text1={Text1.Value} text2={Text2.Value}");
-                }
-                else
-                {
-                    Events.Add("Tried submit form, but not all fields are valid");
-                }
+                    break;
+                default: throw new Exception();
             }
-
-            if (sender is ClearButton && ev == "Click")
-            {
-                ClearForm();
-                Events.Add("Form cleared");
-                Events.Add($"text1={Text1.Value} text2={Text2.Value}");
-
-            }
-
         }
 
         private void ClearForm()
@@ -115,7 +109,7 @@ namespace DesignPatterns.Mediator.Forms.After
     }
 
     /*
-     "Base component" sparar instansen av en mediator
+     Fördel: Komponterna är inte beroende av varandr utan bara av "mediator"
     */
     class BaseComponent
     {
@@ -140,19 +134,13 @@ namespace DesignPatterns.Mediator.Forms.After
     }
 
     /*
-    "Konkreta komponenter"
-
-    Alla komponenter avslutar med att anropa "mediatorn" (medlare) och skicka med sig själv och info vad som hänt 
-
-    Komponenten behöver inte vara beroende av en konkret mediator.
-
-    Komponenten är inte beroende av andra komponenter
-        */
+    Fördel: Dessa klasser blir enkla och kan lätt återanvändas 
+    */
     class SubmitButton : BaseComponent
     {
         public void Click()
         {
-            _mediator.Notify(this, "Click");
+            _mediator.Notify("SubmitButtonClicked");
         }
     }
 
@@ -160,7 +148,7 @@ namespace DesignPatterns.Mediator.Forms.After
     {
         public void Click()
         {
-            _mediator.Notify(this, "Click");
+            _mediator.Notify("ClearButtonClicked");
         }
     }
 

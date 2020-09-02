@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
-using static DesignPatterns.TestUtilities;
 
 namespace DesignPatterns.Mediator.Forms
 {
@@ -9,7 +8,7 @@ namespace DesignPatterns.Mediator.Forms
     public class Tests
     {
         private IEnumerable<IClient> AllClients() => new IClient[] { 
-            //new Before.Client(), 
+            new Before.Client(), 
             new After.Client(), 
         };
 
