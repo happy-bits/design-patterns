@@ -5,7 +5,12 @@ namespace DesignPatterns.Template.Xxx.Before
 {
     class Client : IClient
     {
-        public void DoStuff()
+        public IEnumerable<string> EnterTextAndClearForm(string v1, string v2)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<string> EnterTextAndClickSubmit(string text1Value, string text2Value)
         {
             throw new NotImplementedException();
         }
