@@ -1,4 +1,12 @@
-﻿
+﻿/*
+ Fördel: 
+ - de olika enskilda delarna i logiken kan testas
+ - lätt att ta bort eller byta ordning på handlers (eller dynamiskt skjuta in något i mitten)
+
+ Nackdel:
+ - Betydligt mer kod och fler klasser. Kan bli svårare att läsa
+ 
+ */
 namespace DesignPatterns.ChainOfResponsibility.Requests.After
 {
     class Client : IClient
@@ -27,91 +35,90 @@ namespace DesignPatterns.ChainOfResponsibility.Requests.After
 
             return response;
         }
+    }
 
-        abstract class AbstractHandler 
+    abstract class AbstractHandler
+    {
+        private AbstractHandler _nextHandler;
+
+        public AbstractHandler SetNext(AbstractHandler handler)
         {
-            private AbstractHandler _nextHandler;
-
-            public AbstractHandler SetNext(AbstractHandler handler)
-            {
-                _nextHandler = handler;
-                return handler;
-            }
-
-            public (Request, Response) Next(Request request, Response response)
-            {
-                if (_nextHandler != null)
-                {
-                    return _nextHandler.Handle(request, response);
-                }
-                else
-                {
-                    return (request, response);
-                }
-            }
-
-            public abstract (Request, Response) Handle(Request request, Response response);
+            _nextHandler = handler;
+            return handler;
         }
 
-        class AdminGetFullAccess : AbstractHandler
+        public (Request, Response) Next(Request request, Response response)
         {
-            PageRepository _pageRepository = new PageRepository();
-
-            public override (Request, Response) Handle(Request request, Response response)
+            if (_nextHandler != null)
             {
-                if (request.User.IsInRole("Administrator") || request.User.Name == "bobo")
-                {
-                    response.Authorized = true;
-                    response.Page = _pageRepository.GetPageById(request.PageId);
-                    return (request, response);
-                }
-
-                return Next(request, response);
+                return _nextHandler.Handle(request, response);
+            }
+            else
+            {
+                return (request, response);
             }
         }
 
-        class DemandEditorRole : AbstractHandler
+        public abstract (Request, Response) Handle(Request request, Response response);
+    }
+
+    class AdminGetFullAccess : AbstractHandler
+    {
+        PageRepository _pageRepository = new PageRepository();
+
+        public override (Request, Response) Handle(Request request, Response response)
         {
-            public override (Request, Response) Handle(Request request, Response response)
+            if (request.User.IsInRole("Administrator") || request.User.Name == "bobo")
             {
-
-                if (!request.User.IsInRole("Editor"))
-                {
-                    response.Authorized = false;
-                    return (request, response);
-                }
-                return Next(request, response);
-            }
-        }
-
-        class LoadPage : AbstractHandler
-        {
-            PageRepository _pageRepository = new PageRepository();
-
-            public override (Request, Response) Handle(Request request, Response response)
-            {
+                response.Authorized = true;
                 response.Page = _pageRepository.GetPageById(request.PageId);
-
-                return Next(request, response);
+                return (request, response);
             }
+
+            return Next(request, response);
         }
+    }
 
-        class CorrectRoleGivesAccess : AbstractHandler
+    class DemandEditorRole : AbstractHandler
+    {
+        public override (Request, Response) Handle(Request request, Response response)
         {
-            public override (Request, Response) Handle(Request request, Response response)
+            if (!request.User.IsInRole("Editor"))
             {
-                if (response.Page.PageType == PageType.Politics && request.User.IsInRole("PoliticsEditor"))
-                {
-                    response.Authorized = true;
-                }
-                else
-                {
-                    response.Authorized = false;
-                    return (request, response); 
-                }
-
-                return Next(request, response);
+                response.Authorized = false;
+                return (request, response);
             }
+            return Next(request, response);
+        }
+    }
+
+    class LoadPage : AbstractHandler
+    {
+        PageRepository _pageRepository = new PageRepository();
+
+        public override (Request, Response) Handle(Request request, Response response)
+        {
+            response.Page = _pageRepository.GetPageById(request.PageId);
+
+            return Next(request, response);
+        }
+    }
+
+    class CorrectRoleGivesAccess : AbstractHandler
+    {
+        public override (Request, Response) Handle(Request request, Response response)
+        {
+            if (response.Page.PageType == PageType.Politics && request.User.IsInRole("PoliticsEditor"))
+            {
+                response.Authorized = true;
+            }
+            else
+            {
+                response.Authorized = false;
+                return (request, response);
+            }
+
+            return Next(request, response);
         }
     }
 }
