@@ -9,6 +9,7 @@ namespace DesignPatterns.Mediator.Forms
     {
         private IEnumerable<IClient> AllClients() => new IClient[] { 
             new Before.Client(), 
+            new Before2.Client(), 
             new After.Client(), 
         };
 

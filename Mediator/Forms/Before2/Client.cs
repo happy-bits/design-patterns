@@ -1,10 +1,11 @@
 ﻿
+// Lite åt mediator-hållet (eftersom kommunikationen går via Dialog). Så rätt bra lösning
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace DesignPatterns.Mediator.Forms.After
+namespace DesignPatterns.Mediator.Forms.Before2
 {
     class Client : IClient
     {
@@ -43,13 +44,13 @@ namespace DesignPatterns.Mediator.Forms.After
         }
     }
 
-    public interface IMediator
+    interface IDialog
     {
-        void Notify(object ev);
+        void ClearForm();
+        void SubmitForm();
     }
 
-
-    class Dialog : IMediator
+    class Dialog : IDialog
     {
         public TextField Text1 { get; }
         public TextField Text2 { get; }
@@ -59,89 +60,67 @@ namespace DesignPatterns.Mediator.Forms.After
 
         public List<string> Events { get; } = new List<string>();
 
-        public Dialog(TextField text1, TextField text2, ClearButton clear, SubmitButton button)
+        public Dialog(TextField text1, TextField text2, ClearButton clearButton, SubmitButton submitButton)
         {
             Text1 = text1;
             Text2 = text2;
-            ClearButton = clear;
-            SubmitButton = button;
+            ClearButton = clearButton;
+            SubmitButton = submitButton;
 
-            _allComponents = new BaseComponent[] { text1, text2, clear, button };
+            _allComponents = new BaseComponent[] { text1, text2, clearButton, submitButton };
 
             // Alla komponenter vet att de hör till denna dialogen
 
-            _allComponents.ToList().ForEach(c => c.SetMediator(this));
-        }
-
-        // Nackdel: denna metod kommer växa när fler händelser läggs till (och klassen förvandlas till en "God class")
-        // Nackdel: "ev" är inte hårt typat
-
-        public void Notify(object ev)
-        {
-            switch (ev)
-            {
-                case "SubmitButtonClicked":
-                    if (AllFieldsAreValid)
-                    {
-                        Events.Add("Form submitted");
-                        Events.Add($"text1={Text1.Value} text2={Text2.Value}");
-                    }
-                    else
-                    {
-                        Events.Add("Tried submit form, but not all fields are valid");
-                    }
-                    break;
-
-                case "ClearButtonClicked":
-                    ClearForm();
-                    Events.Add("Form cleared");
-                    Events.Add($"text1={Text1.Value} text2={Text2.Value}");
-                    break;
-                default: throw new Exception();
-            }
-        }
-
-        private void ClearForm()
-        {
-            _allComponents.ToList().ForEach(c => c.Clear());
+            _allComponents.ToList().ForEach(c => c.Dialog = this);
         }
 
         private bool AllFieldsAreValid => _allComponents.All(c => c.IsValid);
+
+        public void ClearForm()
+        {
+            _allComponents.ToList().ForEach(c => c.Clear());
+            Events.Add("Form cleared");
+            Events.Add($"text1={Text1.Value} text2={Text2.Value}");
+        }
+
+
+        public void SubmitForm()
+        {
+            if (AllFieldsAreValid)
+            {
+                Events.Add("Form submitted");
+                Events.Add($"text1={Text1.Value} text2={Text2.Value}");
+            }
+            else
+            {
+                Events.Add("Tried submit form, but not all fields are valid");
+            }
+        }
     }
 
-    /*
-     Fördel: Komponterna är inte beroende av varandr utan bara av "mediator"
-    */
+
     class BaseComponent
     {
-        protected IMediator _mediator;
-
-        public BaseComponent(IMediator mediator = null)
+        public BaseComponent()
         {
-            _mediator = mediator;
         }
-
-        public void SetMediator(IMediator mediator)
+        public BaseComponent(IDialog dialog)
         {
-            _mediator = mediator;
+            Dialog = dialog;
         }
-
         public virtual bool IsValid { get; } = true;
 
-        public virtual void Clear()
-        {
-        }
+        public virtual void Clear() { }
+
+        public IDialog Dialog { get; set; }
 
     }
 
-    /*
-    Fördel: Dessa klasser blir enkla och kan lätt återanvändas 
-    */
     class SubmitButton : BaseComponent
     {
         public void Click()
         {
-            _mediator.Notify("SubmitButtonClicked");
+            Dialog.SubmitForm();
         }
     }
 
@@ -149,7 +128,7 @@ namespace DesignPatterns.Mediator.Forms.After
     {
         public void Click()
         {
-            _mediator.Notify("ClearButtonClicked");
+            Dialog.ClearForm();
         }
     }
 

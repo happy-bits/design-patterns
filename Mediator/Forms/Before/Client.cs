@@ -1,4 +1,5 @@
 ﻿
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,126 +9,99 @@ namespace DesignPatterns.Mediator.Forms.Before
 {
     class Client : IClient
     {
-        private Dialog SetupDialog()
+        private (TextField, TextField, ClearButton, SubmitButton) SetupDialog()
         {
             var text1 = new TextField("^\\d{3}$");
             var text2 = new TextField("^[a-z]{3}$");
-            var clear = new ClearButton();
-            var button = new SubmitButton();
-            var dialog = new Dialog(text1, text2, clear, button);
-            return dialog;
+            var clearButton = new ClearButton();
+            clearButton.AddFields(text1, text2);
+
+            var submitButton = new SubmitButton();
+            submitButton.AddFields(text1, text2);
+            return (text1, text2, clearButton, submitButton);
         }
 
         public IEnumerable<string> EnterTextAndClickSubmit(string text1Value, string text2Value)
         {
-            Dialog dialog = SetupDialog();
+            var (text1, text2, _, submit) = SetupDialog();
 
-            dialog.Text1.Value = text1Value;
-            dialog.Text2.Value = text2Value;
+            text1.Value = text1Value;
+            text2.Value = text2Value;
 
-            dialog.SubmitButton.Click();
+            submit.Click();
 
-            return dialog.Events;
+            return submit.Events;
         }
 
         public IEnumerable<string> EnterTextAndClearForm(string text1Value, string text2Value)
         {
-            Dialog dialog = SetupDialog();
+            var (text1, text2, clearbutton, _) = SetupDialog();
 
-            dialog.Text1.Value = text1Value;
-            dialog.Text2.Value = text2Value;
+            text1.Value = text1Value;
+            text2.Value = text2Value;
 
-            dialog.ClearButton.Click();
+            clearbutton.Click();
 
-            return dialog.Events;
+            return clearbutton.Events;
         }
     }
 
-    interface IDialog
+    class BaseComponent
     {
-        void ClearForm();
-        void SubmitForm();
+        public virtual bool IsValid { get; } = true;
+
+        public virtual void Clear() { }
+
+        public List<string> Events { get; set; } = new List<string>(); // just for debugging
     }
 
-    class Dialog : IDialog
+    // Nackdel: komponenten är beroende av andra komponenter. Om ett till textfält läggs till så måste denna uppdateras
+    // Nackdel: svårt/omöjligt att återanvända komponenterna
+    // Fördel: lite kortare kod, du behöver ingen Dialogklassm koden är nära händelserna (ex Click)
+    class SubmitButton : BaseComponent
     {
-        public TextField Text1 { get; }
-        public TextField Text2 { get; }
-        public ClearButton ClearButton { get; }
-        public SubmitButton SubmitButton { get; }
-        private IEnumerable<BaseComponent> _allComponents;
+        private TextField _text1;
+        private TextField _text2;
 
-        public List<string> Events { get; } = new List<string>();
+        private bool AllFieldsAreValid => _text1.IsValid && _text2.IsValid;
 
-        public Dialog(TextField text1, TextField text2, ClearButton clearButton, SubmitButton submitButton)
-        {
-            Text1 = text1;
-            Text2 = text2;
-            ClearButton = clearButton;
-            SubmitButton = submitButton;
-
-            _allComponents = new BaseComponent[] { text1, text2, clearButton, submitButton };
-
-            // Alla komponenter vet att de hör till denna dialogen
-
-            _allComponents.ToList().ForEach(c => c.Dialog = this);
-        }
-
-        private bool AllFieldsAreValid => _allComponents.All(c => c.IsValid);
-
-        public void ClearForm()
-        {
-            _allComponents.ToList().ForEach(c => c.Clear());
-            Events.Add("Form cleared");
-            Events.Add($"text1={Text1.Value} text2={Text2.Value}");
-        }
-
-
-        public void SubmitForm()
+        public void Click()
         {
             if (AllFieldsAreValid)
             {
                 Events.Add("Form submitted");
-                Events.Add($"text1={Text1.Value} text2={Text2.Value}");
+                Events.Add($"text1={_text1.Value} text2={_text2.Value}");
             }
             else
             {
                 Events.Add("Tried submit form, but not all fields are valid");
             }
         }
-    }
 
-
-    class BaseComponent
-    {
-        public BaseComponent()
+        public void AddFields(TextField text1, TextField text2)
         {
-        }
-        public BaseComponent(IDialog dialog)
-        {
-            Dialog = dialog;
-        }
-        public virtual bool IsValid { get; } = true;
-
-        public virtual void Clear() { }
-
-        public IDialog Dialog { get; set; }
-
-    }
-
-    class SubmitButton : BaseComponent
-    {
-        public void Click()
-        {
-            Dialog.SubmitForm();
+            _text1 = text1;
+            _text2 = text2;
         }
     }
 
     class ClearButton : BaseComponent
     {
+        private TextField _text1;
+        private TextField _text2;
+
         public void Click()
         {
-            Dialog.ClearForm();
+            _text1.Clear();
+            _text2.Clear();
+            Events.Add("Form cleared");
+            Events.Add($"text1={_text1.Value} text2={_text2.Value}");
+        }
+
+        public void AddFields(TextField text1, TextField text2)
+        {
+            _text1 = text1;
+            _text2 = text2;
         }
     }
 

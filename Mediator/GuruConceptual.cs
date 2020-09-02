@@ -1,6 +1,9 @@
 ﻿/*
  https://refactoring.guru/design-patterns/mediator/csharp/example
 
+
+ Ett "behavioral" pattern som låter dig minska kaotiska beroenden mellan objekt. Direktkommunikation mellan objekt sker inte utan de går via ett "mediator" objekt
+
  Ingen direkt kommunikation mellan komponenter (för du vill att de ska vara oberoende av varandra, så du kan återanvända dem). 
 
  Komponenterna samarbeter indirekt genom att anropa ett mediator-objekt. Så komponenterna är bara beroende på detta objekt.
@@ -46,6 +49,12 @@ namespace DesignPatterns.Mediator
         Component 1 does B.
         Component 2 does C. 
         */
+
+        /*
+
+            Detta interface har normalt bara en rad. Kan skicka med "context" 
+
+         */
 
         public interface IMediator
         {
