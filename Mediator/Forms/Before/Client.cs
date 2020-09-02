@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DesignPatterns.Template.Xxx.Before
+namespace DesignPatterns.Mediator.Forms.Before
 {
     class Client : IClient
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using static DesignPatterns.TestUtilities;
 
-namespace DesignPatterns.Template.Xxx
+namespace DesignPatterns.Mediator.Forms
 {
     [TestClass]
     public class Tests

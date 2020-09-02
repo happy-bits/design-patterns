@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DesignPatterns.Template.Xxx
+namespace DesignPatterns.Mediator.Forms
 {
     interface IClient
     {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace DesignPatterns.Template.Xxx.After
+namespace DesignPatterns.Mediator.Forms.After
 {
     class Client : IClient
     {
