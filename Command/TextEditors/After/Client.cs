@@ -11,33 +11,23 @@ namespace DesignPatterns.Command.TextEditors.After
         {
 
             var editor = new Editor("What does the fox says?");
+            var commands = new Commands();
 
-            var copyFirstWord = new CopyCommand(editor, 0, 4);
-            var paste = new PasteCommand(editor, 4);
+            commands.Add(new CopyCommand(editor, 0, 4));
+            commands.Add(new PasteCommand(editor, 4));
+            commands.Add(new UndoCommand(editor));
 
-            // Nothing changed
             Assert.AreEqual("What does the fox says?", editor.Content);
 
-            copyFirstWord.Execute();
-
-            // Nothing changed
+            commands.ExecuteOne();
             Assert.AreEqual("What does the fox says?", editor.Content);
 
-            paste.Execute();
-
-            // Text is changed
+            commands.ExecuteOne();
             Assert.AreEqual("WhatWhat does the fox says?", editor.Content);
 
+            commands.ExecuteOne();
+            Assert.AreEqual("What does the fox says?", editor.Content);
 
-
-            //Invoker invoker = new Invoker();
-            //invoker.SetOnStart(new CopyCommand("Say Hi!"));
-            //Receiver receiver = new Receiver();
-            //invoker.SetOnFinish(new ComplexCommand(receiver, "Send email", "Save report"));
-
-            //// Det är först här något händer:
-
-            //invoker.DoSomethingImportant();
         }
 
 
@@ -85,10 +75,23 @@ namespace DesignPatterns.Command.TextEditors.After
         }
 
 
-        /*
-        Vilken klass som helst kan agera receiver
+        class UndoCommand : ICommand
+        {
+            private readonly Editor _editor;
 
-        Recevern utför någon viktig affärslogik
+            public UndoCommand(Editor editor)
+            {
+                _editor = editor;
+            }
+
+            public void Execute()
+            {
+                _editor.Undo();
+            }
+        }
+
+        /*
+        "Receiver"
          */
 
         class Editor
@@ -96,10 +99,12 @@ namespace DesignPatterns.Command.TextEditors.After
             public string Content { get; private set; } = "";
 
             private string _copyMemory = "";
+            private string _lastContent;
 
             public Editor(string content)
             {
                 Content = content;
+                _lastContent = Content;
             }
 
             internal void Copy(int _startIndex, int length)
@@ -109,45 +114,34 @@ namespace DesignPatterns.Command.TextEditors.After
 
             internal void Paste(int startIndex)
             {
+                _lastContent = Content;
                 Content = Content.Insert(startIndex, _copyMemory);
             }
+
+            internal void Undo()
+            {
+                Content = _lastContent;
+            }
         }
 
-
-        // Invokern är associerad med en eller flera kommandon. Den skickar en request till kommandot
-        class Invoker
+        class Commands
         {
-            private ICommand _onStart;
+            private List<ICommand> _commands = new List<ICommand>();
 
-            private ICommand _onFinish;
+            private int _nextCommandIndex = 0;
 
-            // Skjut in kommandon, som används i DoSomethingImportant
-            public void SetOnStart(ICommand command)
+            public void Add(ICommand command)
             {
-                _onStart = command;
+                _commands.Add(command);
             }
 
-            public void SetOnFinish(ICommand command)
+            public void ExecuteOne()
             {
-                _onFinish = command;
-            }
-
-            public void DoSomethingImportant()
-            {
-                Console.WriteLine("Invoker: Does anybody want something done before I begin?");
-                if (_onStart is ICommand)
-                {
-                    _onStart.Execute(); // Skickar indirekt ett request till "receivern"
-                }
-
-                Console.WriteLine("Invoker: ...doing something really important...");
-
-                Console.WriteLine("Invoker: Does anybody want something done after I finish?");
-                if (_onFinish is ICommand)
-                {
-                    _onFinish.Execute();
-                }
+                _commands[_nextCommandIndex].Execute();
+                _nextCommandIndex++;
             }
         }
+
+        
     }
 }
