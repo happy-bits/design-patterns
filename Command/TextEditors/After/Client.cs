@@ -81,12 +81,12 @@ namespace DesignPatterns.Command.TextEditors.After
                 Content = content;
             }
 
-            internal void Copy(int _startIndex, int length)
+            public void Copy(int _startIndex, int length)
             {
                 _copyMemory = Content.Substring(_startIndex, length);
             }
 
-            internal void Paste(int startIndex)
+            public void Paste(int startIndex)
             {
                 Content = Content.Insert(startIndex, _copyMemory);
             }
@@ -97,22 +97,17 @@ namespace DesignPatterns.Command.TextEditors.After
 
         class Commands
         {
-            private readonly List<Command> _commands = new List<Command>();
-
-            private int _nextCommandIndex = 0;
+            private readonly Queue<Command> _commands = new Queue<Command>();
 
             public void Add(Command command)
             {
-                _commands.Add(command);
+                _commands.Enqueue(command);
             }
 
             public void ExecuteOne()
             {
-                _commands[_nextCommandIndex].Execute();
-                _nextCommandIndex++;
+                _commands.Dequeue().Execute();
             }
         }
-
-        
     }
 }

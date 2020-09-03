@@ -39,12 +39,12 @@ namespace DesignPatterns.Command.TextEditors.Before
                 Content = content;
             }
 
-            internal void Copy(int _startIndex, int length)
+            public void Copy(int _startIndex, int length)
             {
                 _copyMemory = Content.Substring(_startIndex, length);
             }
 
-            internal void Paste(int startIndex)
+            public void Paste(int startIndex)
             {
                 Content = Content.Insert(startIndex, _copyMemory);
             }
@@ -58,7 +58,7 @@ namespace DesignPatterns.Command.TextEditors.Before
             private readonly Editor _editor;
             private int _nextCommandIndex = 0;
 
-            private List<string> _commands = new List<string>();
+            private Queue<string> _commands = new Queue<string>();
 
             // Nackdel: Vi förutsätter att det är samma editor för alla kommandon
 
@@ -69,7 +69,7 @@ namespace DesignPatterns.Command.TextEditors.Before
 
             public void ExecuteOne()
             {
-                string commandText = _commands[_nextCommandIndex];
+                string commandText = _commands.Dequeue();
 
                 var commandSplitted = commandText.Split(' ');
 
@@ -97,9 +97,9 @@ namespace DesignPatterns.Command.TextEditors.Before
 
             // Nackdel: ingen verifiering av kommandona (det kan vara vilken sträng som helst)
 
-            internal void Add(string command)
+            public void Add(string command)
             {
-                _commands.Add(command);
+                _commands.Enqueue(command);
             }
 
         }
