@@ -3,7 +3,9 @@
 
  Du kan producera flera typer av objekt genom samma "construction code"
 
-Det är bara meningsfullt att använda builder-pattern om dina produkter är rätt komplexa och kräver avancerad konfiguration.
+Det är bara meningsfullt att använda builder-pattern om dina produkter är rätt komplexa och kräver avancerad konfiguration. Många fält och många nästade objekt. (codesmell: konstruktorer med en massa parameterar och många är null i många fall)
+
+Fördel med builder pattern: du anropar bara de builder's som du behöver
 
 Olika konkreta builders kan skapa orelaterade produkter (detta skiljer mönstret fårn andra creational-mönster)
 
@@ -134,6 +136,7 @@ namespace DesignPatterns.Builder
 
 
         // Är bara ansvarig för att köra byggstegen i en viss ordning
+        // Den kan användas för att tillverka populära produkter
         // Du måste inte ha en director
         class Director
         {
