@@ -1,6 +1,5 @@
 ﻿
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 
 namespace DesignPatterns.Command.TextEditors.After
@@ -15,8 +14,8 @@ namespace DesignPatterns.Command.TextEditors.After
 
             commands.Add(new CopyCommand(editor, 0, 4));
             commands.Add(new PasteCommand(editor, 4));
-            commands.Add(new UndoCommand(editor));
 
+            // Nothing has happened
             Assert.AreEqual("What does the fox says?", editor.Content);
 
             commands.ExecuteOne();
@@ -25,42 +24,37 @@ namespace DesignPatterns.Command.TextEditors.After
             commands.ExecuteOne();
             Assert.AreEqual("WhatWhat does the fox says?", editor.Content);
 
-            commands.ExecuteOne();
-            Assert.AreEqual("What does the fox says?", editor.Content);
-
         }
 
-
-        // Deklarerar en metod för att utföra en kommando (normalt som här, en metod utan parameterar)
-        public interface ICommand
+        abstract class Command
         {
-            void Execute();
+            public abstract void Execute();
+
+            protected Editor _editor;
         }
 
-        class CopyCommand : ICommand
+        class CopyCommand : Command
         {
-            private readonly Editor _editor;
-            private readonly int _fromIndex;
+            private readonly int _startIndex;
             private readonly int _length;
 
             public CopyCommand(Editor editor, int startIndex, int length)
             {
                 _editor = editor;
-                _fromIndex = startIndex;
+                _startIndex = startIndex;
                 _length = length;
             }
 
-            public void Execute()
+            public override void Execute()
             {
-                _editor.Copy(_fromIndex, _length);
+                _editor.Copy(_startIndex, _length);
             }
         }
 
-        class PasteCommand : ICommand
+        class PasteCommand : Command
         {
 
             private readonly int _startIndex;
-            private readonly Editor _editor;
 
             public PasteCommand(Editor editor, int startIndex)
             {
@@ -68,43 +62,23 @@ namespace DesignPatterns.Command.TextEditors.After
                 _editor = editor;
             }
 
-            public void Execute()
+            public override void Execute()
             {
                 _editor.Paste(_startIndex);
             }
         }
 
-
-        class UndoCommand : ICommand
-        {
-            private readonly Editor _editor;
-
-            public UndoCommand(Editor editor)
-            {
-                _editor = editor;
-            }
-
-            public void Execute()
-            {
-                _editor.Undo();
-            }
-        }
-
-        /*
-        "Receiver"
-         */
+        // "Receiver"
 
         class Editor
         {
             public string Content { get; private set; } = "";
 
             private string _copyMemory = "";
-            private string _lastContent;
 
             public Editor(string content)
             {
                 Content = content;
-                _lastContent = Content;
             }
 
             internal void Copy(int _startIndex, int length)
@@ -114,23 +88,20 @@ namespace DesignPatterns.Command.TextEditors.After
 
             internal void Paste(int startIndex)
             {
-                _lastContent = Content;
                 Content = Content.Insert(startIndex, _copyMemory);
             }
 
-            internal void Undo()
-            {
-                Content = _lastContent;
-            }
         }
+
+        // "Invoker"
 
         class Commands
         {
-            private List<ICommand> _commands = new List<ICommand>();
+            private readonly List<Command> _commands = new List<Command>();
 
             private int _nextCommandIndex = 0;
 
-            public void Add(ICommand command)
+            public void Add(Command command)
             {
                 _commands.Add(command);
             }
