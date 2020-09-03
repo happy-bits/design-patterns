@@ -1,5 +1,14 @@
 ﻿/*
-Command is a behavioral design pattern that turns a request into a stand-alone object that contains all information about the request. This transformation lets you parameterize methods with different requests, delay or queue a request’s execution, and support undoable operations. 
+
+Requestet förvandlas till ett eget objekt som innehåller all info om requestet. Det gör att du kan parametrisera metoder med olika request, avvakta eller kö'a utförande av requests och tillåta undo-operationer.
+
+
+Istället för att GUI anropar businesslagret direkt: ett kommando skapas med info
+- objektet som ska anropas
+- namn på metod
+- parameterar
+
+Du har en Button klass och en Copy-knapp. Det ska gå att kopiera text även från contextmenyn eller Ctrl-C. Koden för kopierande kan inte ligga i CopyButton-klassen
  
  */
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -13,11 +22,12 @@ namespace DesignPatterns.Command
         [TestMethod]
         public void Ex1()
         {
-            // The client code can parameterize an invoker with any commands.
             Invoker invoker = new Invoker();
             invoker.SetOnStart(new SimpleCommand("Say Hi!"));
             Receiver receiver = new Receiver();
             invoker.SetOnFinish(new ComplexCommand(receiver, "Send email", "Save report"));
+
+            // Det är först här något händer:
 
             invoker.DoSomethingImportant();
         }
@@ -32,17 +42,16 @@ namespace DesignPatterns.Command
         ComplexCommand: Complex stuff should be done by a receiver object.
         Receiver: Working on (Send email.)
         Receiver: Also working on (Save report.)
-
          
     */
 
-    // The Command interface declares a method for executing a command.
+    // Deklarerar en metod för att utföra en kommando (normalt som här, en metod utan parameterar)
     public interface ICommand
     {
         void Execute();
     }
 
-    // Some commands can implement simple operations on their own.
+    // Ett enkelt command, som inte är bereonde av någon receiver
     class SimpleCommand : ICommand
     {
         private string _payload = string.Empty;
@@ -58,19 +67,18 @@ namespace DesignPatterns.Command
         }
     }
 
-    // However, some commands can delegate more complex operations to other
-    // objects, called "receivers."
+    // Detta kommando delegerar operationer till en "receiver"
+
     class ComplexCommand : ICommand
     {
-        private Receiver _receiver;
+        private readonly Receiver _receiver;
 
         // Context data, required for launching the receiver's methods.
-        private string _a;
+        private readonly string _a;
 
-        private string _b;
+        private readonly string _b;
 
-        // Complex commands can accept one or several receiver objects along
-        // with any context data via the constructor.
+        // Accepeterar en eller flera receivers + context data
         public ComplexCommand(Receiver receiver, string a, string b)
         {
             _receiver = receiver;
@@ -78,7 +86,7 @@ namespace DesignPatterns.Command
             _b = b;
         }
 
-        // Commands can delegate to any methods of a receiver.
+        // Kommandona kan delegera till andra metoder på receivern
         public void Execute()
         {
             Console.WriteLine("ComplexCommand: Complex stuff should be done by a receiver object.");
@@ -87,9 +95,11 @@ namespace DesignPatterns.Command
         }
     }
 
-    // The Receiver classes contain some important business logic. They know how
-    // to perform all kinds of operations, associated with carrying out a
-    // request. In fact, any class may serve as a Receiver.
+    /*
+    Vilken klass som helst kan agera receiver
+
+    Recevern utför någon viktig affärslogik
+     */
     class Receiver
     {
         public void DoSomething(string a)
@@ -103,15 +113,14 @@ namespace DesignPatterns.Command
         }
     }
 
-    // The Invoker is associated with one or several commands. It sends a
-    // request to the command.
+    // Invokern är associerad med en eller flera kommandon. Den skickar en request till kommandot
     class Invoker
     {
         private ICommand _onStart;
 
         private ICommand _onFinish;
 
-        // Initialize commands.
+        // Skjut in kommandon, som används i DoSomethingImportant
         public void SetOnStart(ICommand command)
         {
             _onStart = command;
@@ -122,15 +131,12 @@ namespace DesignPatterns.Command
             _onFinish = command;
         }
 
-        // The Invoker does not depend on concrete command or receiver classes.
-        // The Invoker passes a request to a receiver indirectly, by executing a
-        // command.
         public void DoSomethingImportant()
         {
             Console.WriteLine("Invoker: Does anybody want something done before I begin?");
             if (_onStart is ICommand)
             {
-                _onStart.Execute();
+                _onStart.Execute(); // Skickar indirekt ett request till "receivern"
             }
 
             Console.WriteLine("Invoker: ...doing something really important...");
