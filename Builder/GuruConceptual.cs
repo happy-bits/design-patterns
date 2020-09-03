@@ -17,23 +17,27 @@ namespace DesignPatterns.Builder
         [TestMethod]
         public void Ex1()
         {
-            // The client code creates a builder object, passes it to the
-            // director and then initiates the construction process. The end
-            // result is retrieved from the builder object.
+            // Buildern skickas till "directorn"
             var director = new Director();
             var builder = new ConcreteBuilder();
-            director.Builder = builder;
+            director.Builder = builder; 
 
+            // Initiera konstruktionsprocessen
             Console.WriteLine("Standard basic product:");
-            director.buildMinimalViableProduct();
-            Console.WriteLine(builder.GetProduct().ListParts());
+            director.BuildMinimalViableProduct();
+
+            // Slutresultatet kommer från byggobjektet
+            Console.WriteLine(builder.GetProduct().ListParts()); 
+
+            // Skapa något mer avancerat
 
             Console.WriteLine("Standard full featured product:");
-            director.buildFullFeaturedProduct();
+            director.BuildFullFeaturedProduct();
+
+            // Samma kod som innan för att generera resultat
             Console.WriteLine(builder.GetProduct().ListParts());
 
-            // Remember, the Builder pattern can be used without a Director
-            // class.
+            // Det går att använda "builder pattern" utan "director"
             Console.WriteLine("Custom product:");
             builder.BuildPartA();
             builder.BuildPartC();
@@ -55,7 +59,7 @@ namespace DesignPatterns.Builder
 
         // The Builder interface specifies methods for creating the different parts
         // of the Product objects.
-        public interface IBuilder
+        interface IBuilder
         {
             void BuildPartA();
             void BuildPartB();
@@ -65,7 +69,7 @@ namespace DesignPatterns.Builder
         // The Concrete Builder classes follow the Builder interface and provide
         // specific implementations of the building steps. Your program may have
         // several variations of Builders, implemented differently.
-        public class ConcreteBuilder : IBuilder
+        class ConcreteBuilder : IBuilder
         {
             private Product _product = new Product();
 
@@ -126,7 +130,7 @@ namespace DesignPatterns.Builder
         // Unlike in other creational patterns, different concrete builders can
         // produce unrelated products. In other words, results of various builders
         // may not always follow the same interface.
-        public class Product
+        class Product
         {
             private List<object> _parts = new List<object>();
 
@@ -154,7 +158,7 @@ namespace DesignPatterns.Builder
         // particular sequence. It is helpful when producing products according to a
         // specific order or configuration. Strictly speaking, the Director class is
         // optional, since the client can control builders directly.
-        public class Director
+        class Director
         {
             private IBuilder _builder;
 
@@ -163,14 +167,14 @@ namespace DesignPatterns.Builder
                 set { _builder = value; }
             }
 
-            // The Director can construct several product variations using the same
-            // building steps.
-            public void buildMinimalViableProduct()
+            // Kan skapa flera varianter av produkter
+
+            public void BuildMinimalViableProduct()
             {
                 _builder.BuildPartA();
             }
 
-            public void buildFullFeaturedProduct()
+            public void BuildFullFeaturedProduct()
             {
                 _builder.BuildPartA();
                 _builder.BuildPartB();
