@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DesignPatterns.Template.TextEditors
+namespace DesignPatterns.Command.TextEditors
 {
     interface IClient
     {

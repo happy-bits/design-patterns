@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DesignPatterns.Template.TextEditors.Before
+namespace DesignPatterns.Command.TextEditors.Before
 {
     class Client : IClient
     {

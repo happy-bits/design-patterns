@@ -1,21 +1,43 @@
 ﻿
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 
-namespace DesignPatterns.Template.TextEditors.After
+namespace DesignPatterns.Command.TextEditors.After
 {
     class Client : IClient
     {
         public void DoStuff()
         {
-            Invoker invoker = new Invoker();
-            invoker.SetOnStart(new SimpleCommand("Say Hi!"));
-            Receiver receiver = new Receiver();
-            invoker.SetOnFinish(new ComplexCommand(receiver, "Send email", "Save report"));
 
-            // Det är först här något händer:
+            var editor = new Editor("What does the fox says?");
 
-            invoker.DoSomethingImportant();
+            var copyFirstWord = new CopyCommand(editor, 0, 4);
+            var paste = new PasteCommand(editor, 4);
+
+            // Nothing changed
+            Assert.AreEqual("What does the fox says?", editor.Content);
+
+            copyFirstWord.Execute();
+
+            // Nothing changed
+            Assert.AreEqual("What does the fox says?", editor.Content);
+
+            paste.Execute();
+
+            // Text is changed
+            Assert.AreEqual("WhatWhat does the fox says?", editor.Content);
+
+
+
+            //Invoker invoker = new Invoker();
+            //invoker.SetOnStart(new CopyCommand("Say Hi!"));
+            //Receiver receiver = new Receiver();
+            //invoker.SetOnFinish(new ComplexCommand(receiver, "Send email", "Save report"));
+
+            //// Det är först här något händer:
+
+            //invoker.DoSomethingImportant();
         }
 
 
@@ -25,67 +47,72 @@ namespace DesignPatterns.Template.TextEditors.After
             void Execute();
         }
 
-        // Ett enkelt command, som inte är bereonde av någon receiver
-        class SimpleCommand : ICommand
+        class CopyCommand : ICommand
         {
-            private string _payload = string.Empty;
+            private readonly Editor _editor;
+            private readonly int _fromIndex;
+            private readonly int _length;
 
-            public SimpleCommand(string payload)
+            public CopyCommand(Editor editor, int startIndex, int length)
             {
-                _payload = payload;
+                _editor = editor;
+                _fromIndex = startIndex;
+                _length = length;
             }
 
             public void Execute()
             {
-                Console.WriteLine($"SimpleCommand: See, I can do simple things like printing ({_payload})");
+                _editor.Copy(_fromIndex, _length);
             }
         }
 
-        // Detta kommando delegerar operationer till en "receiver"
-
-        class ComplexCommand : ICommand
+        class PasteCommand : ICommand
         {
-            private readonly Receiver _receiver;
 
-            // Context data, required for launching the receiver's methods.
-            private readonly string _a;
+            private readonly int _startIndex;
+            private readonly Editor _editor;
 
-            private readonly string _b;
-
-            // Accepeterar en eller flera receivers + context data
-            public ComplexCommand(Receiver receiver, string a, string b)
+            public PasteCommand(Editor editor, int startIndex)
             {
-                _receiver = receiver;
-                _a = a;
-                _b = b;
+                _startIndex = startIndex;
+                _editor = editor;
             }
 
-            // Kommandona kan delegera till andra metoder på receivern
             public void Execute()
             {
-                Console.WriteLine("ComplexCommand: Complex stuff should be done by a receiver object.");
-                _receiver.DoSomething(_a);
-                _receiver.DoSomethingElse(_b);
+                _editor.Paste(_startIndex);
             }
         }
+
 
         /*
         Vilken klass som helst kan agera receiver
 
         Recevern utför någon viktig affärslogik
          */
-        class Receiver
+
+        class Editor
         {
-            public void DoSomething(string a)
+            public string Content { get; private set; } = "";
+
+            private string _copyMemory = "";
+
+            public Editor(string content)
             {
-                Console.WriteLine($"Receiver: Working on ({a}.)");
+                Content = content;
             }
 
-            public void DoSomethingElse(string b)
+            internal void Copy(int _startIndex, int length)
             {
-                Console.WriteLine($"Receiver: Also working on ({b}.)");
+                _copyMemory = Content.Substring(_startIndex, length);
+            }
+
+            internal void Paste(int startIndex)
+            {
+                Content = Content.Insert(startIndex, _copyMemory);
             }
         }
+
 
         // Invokern är associerad med en eller flera kommandon. Den skickar en request till kommandot
         class Invoker

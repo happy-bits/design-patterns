@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using static DesignPatterns.TestUtilities;
 
-namespace DesignPatterns.Template.TextEditors
+namespace DesignPatterns.Command.TextEditors
 {
     [TestClass]
     public class Tests
