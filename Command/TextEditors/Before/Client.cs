@@ -1,6 +1,5 @@
 ﻿
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 
 namespace DesignPatterns.Command.TextEditors.Before
@@ -56,7 +55,6 @@ namespace DesignPatterns.Command.TextEditors.Before
         class Commands
         {
             private readonly Editor _editor;
-            private int _nextCommandIndex = 0;
 
             private Queue<string> _commands = new Queue<string>();
 
@@ -91,8 +89,6 @@ namespace DesignPatterns.Command.TextEditors.Before
                     default:
                         break;
                 }
-
-                _nextCommandIndex++;
             }
 
             // Nackdel: ingen verifiering av kommandona (det kan vara vilken sträng som helst)
