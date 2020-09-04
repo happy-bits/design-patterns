@@ -10,11 +10,14 @@
     <Compile Remove="AbstractFactory\Old\**" />
     <Compile Remove="ChainOfResponsibility\Old\**" />
     <Compile Remove="FactoryMethod\Old\**" />
+    <Compile Remove="Observer\Xxx\**" />
     <Compile Remove="Template\**" />
     <EmbeddedResource Remove="AbstractFactory\Old\**" />
     <EmbeddedResource Remove="ChainOfResponsibility\Old\**" />
+    <EmbeddedResource Remove="Observer\Xxx\**" />
     <None Remove="AbstractFactory\Old\**" />
     <None Remove="ChainOfResponsibility\Old\**" />
+    <None Remove="Observer\Xxx\**" />
   </ItemGroup>
 
   <ItemGroup>
