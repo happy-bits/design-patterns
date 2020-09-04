@@ -40,6 +40,15 @@ namespace DesignPatterns.Observer.TextEditors.After
             editor.Text = "whatt does the foxxxxx says";
 
             Assert.AreEqual("Update gui: Number of incorrect words=2", _events.Dequeue());
+
+            editor.EventManager.UnSubscribe(wordCounter);
+            editor.EventManager.UnSubscribe(spellChecker);
+
+            editor.Text = "yyyyyyyyyyy";
+
+            Assert.IsTrue(_events.Count == 0); // Nothing happened
+
+
         }
 
         class TextEditor
@@ -85,6 +94,11 @@ namespace DesignPatterns.Observer.TextEditors.After
                 {
                     l.HandleTextChanged(text);
                 }
+            }
+
+            internal void UnSubscribe(IListener listener)
+            {
+                _listeners.Remove(listener);
             }
         }
 

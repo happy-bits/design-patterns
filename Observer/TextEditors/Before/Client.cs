@@ -40,8 +40,17 @@ namespace DesignPatterns.Observer.TextEditors.Before
             editor.Text = "whatt does the foxxxxx says";
 
             Assert.AreEqual("Update gui: Number of incorrect words=2", _events.Dequeue());
+
+            editor.WordCounterIsActive = false;
+            editor.SpellCheckerIsActive = false;
+
+            editor.Text = "yyyyyyyyyyy";
+
+            Assert.IsTrue(_events.Count == 0); // Nothing happened
         }
 
+        // Nackdel: denna kod är redan stor och ganska komplex. Måste hålla reda på många variabler
+        // Nackdel: denna klass kommer växa när nya lyssnare behövs
         class TextEditor
         {
             private readonly WordCounter _wordCounter;
@@ -77,7 +86,6 @@ namespace DesignPatterns.Observer.TextEditors.Before
             }
 
         }
-
 
         class WordCounter 
         {
