@@ -11,6 +11,9 @@ namespace DesignPatterns.Observer.TextEditors.After
 
         public void DoStuff()
         {
+            var wordCounter = new WordCounter();
+            var spellChecker = new SpellChecker();
+
             var editor = new TextEditor();
 
             Assert.IsTrue(_events.Count == 0); // Nothing happened
@@ -18,9 +21,6 @@ namespace DesignPatterns.Observer.TextEditors.After
             editor.Text = "what";
 
             Assert.IsTrue(_events.Count == 0); // Nothing happened
-
-            var wordCounter = new WordCounter();
-            var spellChecker = new SpellChecker();
 
             editor.EventManager.Subscribe(wordCounter);
             editor.EventManager.Subscribe(spellChecker);
