@@ -34,6 +34,7 @@ namespace DesignPatterns.Builder.Cars.Before
 
         internal static Car CreateSportsCar()
         {
+            // Nackdel: denna kod upprepas i Manual-klassen
             return new Car
             {
                 Seats = 2,
@@ -65,10 +66,8 @@ namespace DesignPatterns.Builder.Cars.Before
     }
     class Engine
     {
-
     }
     class SportEngine : Engine
     {
-
     }
 }

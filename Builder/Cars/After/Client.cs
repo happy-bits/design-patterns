@@ -1,7 +1,7 @@
-﻿
+﻿// Nackdel: betydligt mer kod än ej-pattern-lösningen
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 
 namespace DesignPatterns.Builder.Cars.After
 {
@@ -47,78 +47,24 @@ namespace DesignPatterns.Builder.Cars.After
     {
         private Car _car;
 
-        public void Reset()
-        {
-            _car = new Car();
-        }
-
-        public Car GetCar()
-        {
-            Car result = _car;
-            
-            Reset();
-
-            return result;
-        }
-
-        public void SetSeats(int nrOfSeats)
-        {
-            _car.Seats = nrOfSeats;
-        }
-
-        public void SetEngine(Engine engine)
-        {
-            _car.Engine = engine;
-        }
-
-        public void SetTripComputer()
-        {
-            _car.TripComputer = true;
-        }
-
-        public void SetGPS()
-        {
-            _car.GPS = true;
-        }
+        public void Reset() =>_car = new Car();
+        public Car GetCar() => _car;
+        public void SetSeats(int nrOfSeats) => _car.Seats = nrOfSeats;
+        public void SetEngine(Engine engine) => _car.Engine = engine;
+        public void SetTripComputer() => _car.TripComputer = true;
+        public void SetGPS() => _car.GPS = true;
     }
 
     class ManualBuilder : IBuilder
     {
         private Manual _manual;
 
-        public void Reset()
-        {
-            _manual = new Manual();
-        }
-
-        public Manual GetManual()
-        {
-            Manual result = _manual;
-
-            Reset();
-
-            return result;
-        }
-
-        public void SetSeats(int nrOfSeats)
-        {
-            _manual.Seats = nrOfSeats;
-        }
-
-        public void SetEngine(Engine engine)
-        {
-            _manual.Engine = engine;
-        }
-
-        public void SetTripComputer()
-        {
-            _manual.TripComputer = true;
-        }
-
-        public void SetGPS()
-        {
-            _manual.GPS = true;
-        }
+        public void Reset() => _manual = new Manual();
+        public Manual GetManual() => _manual;
+        public void SetSeats(int nrOfSeats) => _manual.Seats = nrOfSeats;
+        public void SetEngine(Engine engine) => _manual.Engine = engine;
+        public void SetTripComputer() => _manual.TripComputer = true;
+        public void SetGPS() => _manual.GPS = true;
     }
     
     class Car
@@ -137,23 +83,17 @@ namespace DesignPatterns.Builder.Cars.After
         public bool GPS { get; set; }
     }
 
-
     class Director
     {
-        private IBuilder _builder;
+        private readonly IBuilder _builder;
 
-        public Director(IBuilder builder)
-        {
-            _builder = builder;
-        }
+        public Director(IBuilder builder) => _builder = builder;
 
         // Kan skapa flera varianter av produkter
 
-        public void MakeSUV()
-        {
-            throw new NotImplementedException();
-        }
+        public void MakeSUV() => throw new NotImplementedException();
 
+        // Fördel: konstruerandet av en bil eller manual sker här (ingen upprepning av kod)
         public void MakeSportsCar()
         {
             _builder.Reset();
@@ -166,10 +106,8 @@ namespace DesignPatterns.Builder.Cars.After
 
     class Engine
     {
-
     }
     class SportEngine: Engine
     {
-
     }
 }
