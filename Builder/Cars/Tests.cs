@@ -8,7 +8,7 @@ namespace DesignPatterns.Builder.Cars
     public class Tests
     {
         private IEnumerable<IClient> AllClients() => new IClient[] { 
-            //new Before.Client(), 
+            new Before.Client(), 
             new After.Client(), 
         };
 
@@ -17,7 +17,8 @@ namespace DesignPatterns.Builder.Cars
         {
             foreach (var client in AllClients())
             {
-                client.DoStuff();
+                client.ManualBuildTest();
+                client.CarBuilderTest();
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 
@@ -6,130 +7,169 @@ namespace DesignPatterns.Builder.Cars.After
 {
     class Client : IClient
     {
-        public void DoStuff()
+        public void ManualBuildTest()
         {
-            // Buildern skickas till "directorn"
-            var director = new Director();
-            var builder = new ConcreteBuilder();
-            director.Builder = builder;
+            var builder = new ManualBuilder();
+            var director = new Director(builder);
+            director.MakeSportsCar();
 
-            // Initiera konstruktionsprocessen
-            Console.WriteLine("Standard basic product:");
-            director.BuildMinimalViableProduct();
+            Manual manual = builder.GetManual();
+            Assert.AreEqual(2, manual.Seats);
+            Assert.IsTrue(manual.Engine is SportEngine);
+            Assert.IsTrue(manual.TripComputer);
+            Assert.IsTrue(manual.GPS);
+        }
 
-            // Slutresultatet kommer från byggobjektet
-            Console.WriteLine(builder.GetProduct().ListParts());
+        public void CarBuilderTest()
+        {
+            var builder = new CarBuilder();
+            var director = new Director(builder);
+            director.MakeSportsCar();
 
-            // Skapa något mer avancerat
-
-            Console.WriteLine("Standard full featured product:");
-            director.BuildFullFeaturedProduct();
-
-            // Samma kod som innan för att generera resultat
-            Console.WriteLine(builder.GetProduct().ListParts());
-
-            // Det går att använda "builder pattern" utan "director"
-            Console.WriteLine("Custom product:");
-            builder.BuildPartA();
-            builder.BuildPartC();
-            Console.Write(builder.GetProduct().ListParts());
+            Car car = builder.GetCar();
+            Assert.AreEqual(2, car.Seats);
+            Assert.IsTrue(car.Engine is SportEngine);
+            Assert.IsTrue(car.TripComputer);
+            Assert.IsTrue(car.GPS);
         }
     }
 
     interface IBuilder
     {
-        void BuildPartA();
-        void BuildPartB();
-        void BuildPartC();
+        void Reset();
+        void SetSeats(int nrOfSeats);
+        void SetEngine(Engine engine);
+        void SetTripComputer();
+        void SetGPS();
     }
 
-    class ConcreteBuilder : IBuilder
+    class CarBuilder : IBuilder
     {
-        private Product _product = new Product();
-
-        // En ny builderinstans ska innehålla ett tomt produktobjekt
-        public ConcreteBuilder()
-        {
-            Reset(); // Behövs detta?
-        }
+        private Car _car;
 
         public void Reset()
         {
-            _product = new Product();
+            _car = new Car();
         }
 
-        // Alla produktsteg jobba med samma produkt
-        public void BuildPartA()
+        public Car GetCar()
         {
-            _product.Add("PartA1");
-        }
-
-        public void BuildPartB()
-        {
-            _product.Add("PartB1");
-        }
-
-        public void BuildPartC()
-        {
-            _product.Add("PartC1");
-        }
-
-        /*
-         Konkreta builders ska ha sin eget metod för att hämta resultatet. Detta deklareras inte i bas-builder-interfacet
-         */
-        public Product GetProduct()
-        {
-            Product result = _product;
-
-
-            // Inget krav att anropa "reset", men det är normalt
+            Car result = _car;
+            
             Reset();
 
             return result;
         }
+
+        public void SetSeats(int nrOfSeats)
+        {
+            _car.Seats = nrOfSeats;
+        }
+
+        public void SetEngine(Engine engine)
+        {
+            _car.Engine = engine;
+        }
+
+        public void SetTripComputer()
+        {
+            _car.TripComputer = true;
+        }
+
+        public void SetGPS()
+        {
+            _car.GPS = true;
+        }
     }
 
-    // Produkten är ovetande om de övriga klasserna
-    class Product
+    class ManualBuilder : IBuilder
     {
-        private List<object> _parts = new List<object>();
+        private Manual _manual;
 
-        public void Add(string part)
+        public void Reset()
         {
-            _parts.Add(part);
+            _manual = new Manual();
         }
 
-        public string ListParts()
+        public Manual GetManual()
         {
-            return $"Product parts: {string.Join(",", _parts)}\n";
+            Manual result = _manual;
+
+            Reset();
+
+            return result;
         }
+
+        public void SetSeats(int nrOfSeats)
+        {
+            _manual.Seats = nrOfSeats;
+        }
+
+        public void SetEngine(Engine engine)
+        {
+            _manual.Engine = engine;
+        }
+
+        public void SetTripComputer()
+        {
+            _manual.TripComputer = true;
+        }
+
+        public void SetGPS()
+        {
+            _manual.GPS = true;
+        }
+    }
+    
+    class Car
+    {
+        public int Seats { get; set; }
+        public Engine Engine { get; set; }
+        public bool TripComputer { get; set; }
+        public bool GPS { get; set; }
+    }
+
+    class Manual
+    {
+        public int Seats { get; set; }
+        public Engine Engine { get; set; }
+        public bool TripComputer { get; set; }
+        public bool GPS { get; set; }
     }
 
 
-    // Är bara ansvarig för att köra byggstegen i en viss ordning
-    // Den kan användas för att tillverka populära produkter
-    // Du måste inte ha en director
     class Director
     {
         private IBuilder _builder;
 
-        public IBuilder Builder
+        public Director(IBuilder builder)
         {
-            set { _builder = value; }
+            _builder = builder;
         }
 
         // Kan skapa flera varianter av produkter
 
-        public void BuildMinimalViableProduct()
+        public void MakeSUV()
         {
-            _builder.BuildPartA();
+            throw new NotImplementedException();
         }
 
-        public void BuildFullFeaturedProduct()
+        public void MakeSportsCar()
         {
-            _builder.BuildPartA();
-            _builder.BuildPartB();
-            _builder.BuildPartC();
+            _builder.Reset();
+            _builder.SetSeats(2);
+            _builder.SetEngine(new SportEngine());
+            _builder.SetTripComputer();
+            _builder.SetGPS();
         }
+    }
+
+    class Engine
+    {
+
+    }
+    class SportEngine: Engine
+    {
+
     }
 }

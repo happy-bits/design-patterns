@@ -4,6 +4,7 @@ namespace DesignPatterns.Builder.Cars
 {
     interface IClient
     {
-        void DoStuff();
+        void CarBuilderTest();
+        void ManualBuildTest();
     }
 }
