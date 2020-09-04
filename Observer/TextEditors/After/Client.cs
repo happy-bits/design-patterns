@@ -1,6 +1,5 @@
 ﻿
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,17 +7,17 @@ namespace DesignPatterns.Observer.TextEditors.After
 {
     class Client : IClient
     {
-        public static List<string> _events = new List<string>();
+        public static Queue<string> _events = new Queue<string>();
 
         public void DoStuff()
         {
             var editor = new TextEditor();
 
-            CollectionAssert.AreEqual(Array.Empty<string>(), _events); // Nothing happened
+            Assert.IsTrue(_events.Count == 0); // Nothing happened
 
             editor.Text = "what";
 
-            CollectionAssert.AreEqual(Array.Empty<string>(), _events); // Nothing happened
+            Assert.IsTrue(_events.Count == 0); // Nothing happened
 
             var wordCounter = new WordCounter();
             var spellChecker = new SpellChecker();
@@ -28,34 +27,20 @@ namespace DesignPatterns.Observer.TextEditors.After
 
             editor.Text = "what";
 
-            CollectionAssert.AreEqual(Array.Empty<string>(), _events); // Nothing happened
+            Assert.IsTrue(_events.Count == 0); // Nothing happened
 
             editor.Text = "what does";
 
-            CollectionAssert.AreEqual(new string[] {
-                "Update gui: Wordcount=2"
-            }, _events);
-
+            Assert.AreEqual("Update gui: Wordcount=2", _events.Dequeue());
 
             editor.Text = "what does the fox says";
 
-            CollectionAssert.AreEqual(new string[] {
-                "Update gui: Wordcount=2",
-                "Update gui: Wordcount=5",
-            }, _events);
+            Assert.AreEqual("Update gui: Wordcount=5", _events.Dequeue());
 
             editor.Text = "whatt does the foxxxxx says";
 
-            CollectionAssert.AreEqual(new string[] {
-                "Update gui: Wordcount=2",
-                "Update gui: Wordcount=5",
-                "Update gui: Number of incorrect words=2"
-            }, _events);
-
-
+            Assert.AreEqual("Update gui: Number of incorrect words=2", _events.Dequeue());
         }
-
-
 
         class TextEditor
         {
@@ -113,7 +98,7 @@ namespace DesignPatterns.Observer.TextEditors.After
 
                 if (nrOfWords != _lastCount)
                 {
-                    _events.Add($"Update gui: Wordcount={nrOfWords}");
+                    _events.Enqueue($"Update gui: Wordcount={nrOfWords}");
                     _lastCount = nrOfWords;
                 }
             }
@@ -129,7 +114,7 @@ namespace DesignPatterns.Observer.TextEditors.After
                 int nrOfIncorrectWords = text.Split(" ").Count(word => !_allWords.Contains(word));
 
                 if (nrOfIncorrectWords>0)
-                    _events.Add($"Update gui: Number of incorrect words={nrOfIncorrectWords}");
+                    _events.Enqueue($"Update gui: Number of incorrect words={nrOfIncorrectWords}");
 
             }
         }
