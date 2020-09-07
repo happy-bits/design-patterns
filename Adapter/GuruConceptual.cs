@@ -5,6 +5,10 @@ Tillåter objekt med inkompatibla interface att samarbeta
 Adapterns fångar anrop från ett objekt och transformerar den till ett format som andra objektet känner till
 
 Används ofta i system som är baserad på gammal kod.
+
+
+ Adaptern är en mellanliggande klass som översätter mellan din kod och tredjepartskod (eller nån gammal kod du inte vill röra)
+
  */
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;

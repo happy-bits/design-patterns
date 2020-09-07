@@ -1,4 +1,4 @@
-﻿// Adapter med interface
+﻿// Adapter med arv
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
@@ -43,7 +43,20 @@ namespace DesignPatterns.Adapter.Pegs.After
         }
     }
 
-    // Oförändrad... 
+    // Får ej ändra (Oförändrad)
+    class RoundHole
+    {
+        public RoundHole(double radius)
+        {
+            Radius = radius;
+        }
+
+        public double Radius { get; }
+
+        public bool Fits(RoundPeg peg) => peg.Radius <= Radius;
+    }
+
+    // (Oförändrad)
     class SquarePeg
     {
 
@@ -55,47 +68,27 @@ namespace DesignPatterns.Adapter.Pegs.After
         public double Width { get; }
     }
 
-    // Ändrat att "Fits" tar emot "IHaveRadius"
-    class RoundHole
-    {
-        public RoundHole(double radius)
-        {
-            Radius = radius;
-        }
-
-        public double Radius { get; }
-
-        public bool Fits(IHaveRadius peg) => peg.Radius <= Radius;
-    }
-
-    // Ändrat
-    class RoundPeg : IHaveRadius
+    // Behöver ändra Radius till "virtual"
+    class RoundPeg 
     {
         public RoundPeg(double radius)
         {
             Radius = radius;
         }
 
-        public double Radius { get; }
+        public virtual double Radius { get; } 
     }
 
-    // Ny
-    interface IHaveRadius
-    {
-        double Radius { get; }
-    }
-
-
-    // Ny
-    class SquarePegAdapter : IHaveRadius
+    // Ny klass som gör att squarepeg beter sig som roundpeg
+    class SquarePegAdapter : RoundPeg
     {
         private readonly SquarePeg _squarePeg;
 
-        public SquarePegAdapter(SquarePeg squarePeg)
+        public SquarePegAdapter(SquarePeg squarePeg):base(0)
         {
             _squarePeg = squarePeg;
         }
 
-        public double Radius => _squarePeg.Width * Math.Sqrt(2) / 2;
+        public override double Radius => _squarePeg.Width * Math.Sqrt(2) / 2;
     }
 }

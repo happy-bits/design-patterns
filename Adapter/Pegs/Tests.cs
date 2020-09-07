@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
 namespace DesignPatterns.Adapter.Pegs
@@ -7,9 +8,8 @@ namespace DesignPatterns.Adapter.Pegs
     public class Tests
     {
         private IEnumerable<IClient> AllClients() => new IClient[] { 
-            //new Before.Client(), 
+            new Before.Client(), 
             new After.Client(), 
-            new After2.Client(), 
         };
 
         [TestMethod]
