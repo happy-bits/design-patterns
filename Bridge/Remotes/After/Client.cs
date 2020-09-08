@@ -18,7 +18,7 @@ namespace DesignPatterns.Bridge.Remotes.After
                 remote.VolumeUp();
                 remote.VolumeUp();
 
-                Assert.AreEqual(30, remote.GetVolume());
+                Assert.AreEqual(3, remote.GetVolume());
                 Assert.AreEqual("TV", remote.DeviceName);
             }
 
@@ -39,7 +39,7 @@ namespace DesignPatterns.Bridge.Remotes.After
                 remote.VolumeUp();
                 remote.VolumeUp();
 
-                Assert.AreEqual(20, remote.GetVolume());
+                Assert.AreEqual(2, remote.GetVolume());
                 Assert.AreEqual("Radio", remote.DeviceName);
             }
             {
@@ -47,7 +47,7 @@ namespace DesignPatterns.Bridge.Remotes.After
                 remote.VolumeUp();
                 remote.VolumeUp();
 
-                Assert.AreEqual(20, remote.GetVolume());
+                Assert.AreEqual(2, remote.GetVolume());
                 Assert.AreEqual("Radio", remote.DeviceName);
             }
 
@@ -72,7 +72,7 @@ namespace DesignPatterns.Bridge.Remotes.After
 
         public int GetVolume() => _volume;
 
-        public void SetVolume(int percentage) => _volume = percentage;
+        public void SetVolume(int volume) => _volume = volume;
 
         public void TogglePower()
         {
@@ -85,12 +85,12 @@ namespace DesignPatterns.Bridge.Remotes.After
         public void VolumeUp()
         {
             var old = GetVolume();
-            SetVolume(old + 10);
+            SetVolume(old + 1);
         }
         public void VolumeDown()
         {
             var old = GetVolume();
-            SetVolume(old - 10);
+            SetVolume(old - 1);
         }
 
         public List<double> Batteries { get; protected set; } = new List<double> { 30 };
@@ -98,6 +98,8 @@ namespace DesignPatterns.Bridge.Remotes.After
         public double RemainingBattery => Batteries.Sum();
 
         public string DeviceName => _device.Name;
+
+
     }
 
     class AdvancedRemote : BasicRemote
@@ -113,16 +115,20 @@ namespace DesignPatterns.Bridge.Remotes.After
     abstract class Device
     {
         public abstract string Name { get; }
+        public abstract int MaxVolume { get; }
     }
 
     class Radio : Device
     {
         public override string Name => "Radio";
+
+        public override int MaxVolume => 3;
     }
 
     class TV : Device
     {
         public override string Name => "TV";
+        public override int MaxVolume => 10;
     }
 }
 

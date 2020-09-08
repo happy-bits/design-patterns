@@ -17,8 +17,10 @@ namespace DesignPatterns.Bridge.Remotes.Before
                 remote.VolumeUp();
                 remote.VolumeUp();
 
-                Assert.AreEqual(30, remote.GetVolume());
+                Assert.AreEqual(3, remote.GetVolume());
                 Assert.AreEqual("TV", remote.DeviceName);
+                Assert.AreEqual(10, remote.MaxVolume);
+
             }
 
             {
@@ -31,20 +33,27 @@ namespace DesignPatterns.Bridge.Remotes.Before
 
                 Assert.AreEqual(0, remote.GetVolume());
                 Assert.AreEqual("TV", remote.DeviceName);
+                Assert.AreEqual(10, remote.MaxVolume);
             }
             {
                 var remote = new BasicRadioRemote();
                 remote.VolumeUp();
                 remote.VolumeUp();
-                Assert.AreEqual(20, remote.GetVolume());
+                remote.VolumeUp();
+                remote.VolumeUp();
+                remote.VolumeUp();
+                remote.VolumeUp();
+                Assert.AreEqual(3, remote.GetVolume());
                 Assert.AreEqual("Radio", remote.DeviceName);
+                Assert.AreEqual(3, remote.MaxVolume);
             }
             {
                 var remote = new AdvancedRadioRemote();
                 remote.VolumeUp();
                 remote.VolumeUp();
-                Assert.AreEqual(20, remote.GetVolume());
+                Assert.AreEqual(2, remote.GetVolume());
                 Assert.AreEqual("Radio", remote.DeviceName);
+                Assert.AreEqual(3, remote.MaxVolume);
             }
 
         }
@@ -62,7 +71,12 @@ namespace DesignPatterns.Bridge.Remotes.Before
 
         public int GetVolume() => _volume;
 
-        public void SetVolume(int percentage) => _volume = percentage;
+        public void SetVolume(int volume)
+        {
+            _volume = volume;
+            _volume = Math.Max(0, _volume);
+            _volume = Math.Min(MaxVolume, _volume);
+        }
 
         public void TogglePower()
         {
@@ -75,12 +89,12 @@ namespace DesignPatterns.Bridge.Remotes.Before
         public void VolumeUp()
         {
             var old = GetVolume();
-            SetVolume(old + 10);
+            SetVolume(old + 1);
         }
         public void VolumeDown()
         {
             var old = GetVolume();
-            SetVolume(old - 10);
+            SetVolume(old - 1);
         }
 
         public List<double> Batteries { get; protected set; } = new List<double> { 30 };
@@ -89,33 +103,37 @@ namespace DesignPatterns.Bridge.Remotes.Before
 
         public abstract string DeviceName { get; }
 
+        public abstract int MaxVolume { get;  }
+
     }
 
     class BasicTvRemote : BasicRemote
     {
         public override string DeviceName => "TV";
+        public override int MaxVolume => 10;
     }
 
 
     class BasicRadioRemote : BasicRemote
     {
         public override string DeviceName => "Radio";
+        public override int MaxVolume => 3;
     }
 
     class AdvancedTvRemote : BasicRemote
     {
         public override string DeviceName => "TV";
         public void Mute() => SetVolume(0);
+        public override int MaxVolume => 10;
+
     }
 
     class AdvancedRadioRemote : BasicRemote
     {
         public override string DeviceName => "Radio";
         public void Mute() => SetVolume(0);
+        public override int MaxVolume => 3;
     }
-
-
-
 
     //class ExtraBatteriesRemote : Remote
     //{
@@ -126,7 +144,5 @@ namespace DesignPatterns.Bridge.Remotes.Before
 
     //    public void Mute() => SetVolume(0);
     //}
-
-
 
 }
