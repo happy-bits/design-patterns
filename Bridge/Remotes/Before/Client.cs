@@ -1,5 +1,8 @@
-﻿using System;
+﻿
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DesignPatterns.Bridge.Remotes.Before
 {
@@ -7,7 +10,108 @@ namespace DesignPatterns.Bridge.Remotes.Before
     {
         public void DoStuff()
         {
-            throw new NotImplementedException();
+            {
+                var remote = new TvRemote();
+                remote.TogglePower();
+                remote.VolumeUp();
+                remote.VolumeUp();
+                remote.VolumeUp();
+
+                Assert.AreEqual(30, remote.GetVolume());
+            }
+
+            {
+                var remote = new AdvancedTvRemote();
+                remote.TogglePower();
+                remote.VolumeUp();
+                remote.VolumeUp();
+                remote.VolumeUp();
+                remote.Mute();
+
+                Assert.AreEqual(0, remote.GetVolume());
+            }
+            {
+                var remote = new RadioRemote();
+                remote.VolumeUp();
+                remote.VolumeUp();
+
+                Assert.AreEqual(20, remote.GetVolume());
+
+            }
+
         }
     }
+
+    abstract class Remote
+    {
+        private int _volume;
+
+        public bool IsEnabled { get; private set; }
+
+        public void Disable() => IsEnabled = false;
+
+        public void Enable() => IsEnabled = true;
+
+        public int GetVolume() => _volume;
+
+        public void SetVolume(int percentage) => _volume = percentage;
+
+        public void TogglePower()
+        {
+            if (IsEnabled)
+                Disable();
+
+            Enable();
+        }
+
+        public void VolumeUp()
+        {
+            var old = GetVolume();
+            SetVolume(old + 10);
+        }
+        public void VolumeDown()
+        {
+            var old = GetVolume();
+            SetVolume(old - 10);
+        }
+
+        public List<double> Batteries { get; protected set; } = new List<double> { 30 };
+
+        public double RemainingBattery => Batteries.Sum();
+
+    }
+
+    class TvRemote : Remote
+    {
+    }
+
+    class RadioRemote : Remote
+    {
+    }
+
+    class AdvancedTvRemote : Remote
+    {
+        public void Mute() => SetVolume(0);
+    }
+
+    class AdvancedRadioRemote : Remote
+    {
+        public void Mute() => SetVolume(0);
+    }
+
+
+
+
+    //class ExtraBatteriesRemote : Remote
+    //{
+    //    public ExtraBatteriesRemote()
+    //    {
+    //        Batteries.Add(30);
+    //    }
+
+    //    public void Mute() => SetVolume(0);
+    //}
+
+
+
 }

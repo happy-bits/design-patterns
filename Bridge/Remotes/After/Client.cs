@@ -12,7 +12,7 @@ namespace DesignPatterns.Bridge.Remotes.After
         {
             {
                 var tv = new TV();
-                var remote = new Remote(tv);
+                var remote = new Remote(tv); // en kombination av abstraction-implementation
                 remote.TogglePower();
                 remote.VolumeUp();
                 remote.VolumeUp();
@@ -53,6 +53,7 @@ namespace DesignPatterns.Bridge.Remotes.After
         }
     }
 
+    // Abstraction delegerar jobb till "_device"
     class Remote
     {
         protected readonly IDevice _device;
@@ -81,16 +82,8 @@ namespace DesignPatterns.Bridge.Remotes.After
         public List<double> Batteries { get; protected set; } = new List<double> { 30 };
 
         public double RemainingBattery => Batteries.Sum();
-
-        //public void ChannelUp()
-        //{
-        //    var old = _device.GetChannel();
-        //    _device.SetChannel(old + 1);
-        //}
-
-        //public void ChannelDown() => Math.Max(0, _channel--);
-
     }
+
     class AdvancedRemote : Remote
     {
         public AdvancedRemote(IDevice device) : base(device)
@@ -110,6 +103,7 @@ namespace DesignPatterns.Bridge.Remotes.After
         public void Mute() => _device.SetVolume(0);
     }
 
+    // Primitiva operationer
     interface IDevice
     {
         bool IsEnabled { get; }
