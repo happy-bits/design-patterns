@@ -58,11 +58,11 @@ namespace DesignPatterns.Bridge.Remotes.After
     // Abstraction delegerar jobb till "_device"
     class BasicRemote
     {
-        protected readonly Device _device;
+        protected readonly IDevice _device;
 
         private int _volume;
 
-        public BasicRemote(Device device) => _device = device;
+        public BasicRemote(IDevice device) => _device = device;
 
         public bool IsEnabled { get; private set; }
 
@@ -104,7 +104,7 @@ namespace DesignPatterns.Bridge.Remotes.After
 
     class AdvancedRemote : BasicRemote
     {
-        public AdvancedRemote(Device device) : base(device)
+        public AdvancedRemote(IDevice device) : base(device)
         {
         }
 
@@ -112,23 +112,23 @@ namespace DesignPatterns.Bridge.Remotes.After
     }
 
     // Primitiva operationer
-    abstract class Device
+    interface IDevice
     {
-        public abstract string Name { get; }
-        public abstract int MaxVolume { get; }
+        string Name { get; }
+        int MaxVolume { get; }
     }
 
-    class Radio : Device
+    class Radio : IDevice
     {
-        public override string Name => "Radio";
+        public string Name => "Radio";
 
-        public override int MaxVolume => 3;
+        public int MaxVolume => 3;
     }
 
-    class TV : Device
+    class TV : IDevice
     {
-        public override string Name => "TV";
-        public override int MaxVolume => 10;
+        public string Name => "TV";
+        public int MaxVolume => 10;
     }
 }
 

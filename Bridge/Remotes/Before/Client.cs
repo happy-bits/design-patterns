@@ -107,6 +107,8 @@ namespace DesignPatterns.Bridge.Remotes.Before
 
     }
 
+    // Nackdel: upprepning av kod (devicename + maxvolume)
+
     class BasicTvRemote : BasicRemote
     {
         public override string DeviceName => "TV";
@@ -134,15 +136,5 @@ namespace DesignPatterns.Bridge.Remotes.Before
         public void Mute() => SetVolume(0);
         public override int MaxVolume => 3;
     }
-
-    //class ExtraBatteriesRemote : Remote
-    //{
-    //    public ExtraBatteriesRemote()
-    //    {
-    //        Batteries.Add(30);
-    //    }
-
-    //    public void Mute() => SetVolume(0);
-    //}
 
 }
