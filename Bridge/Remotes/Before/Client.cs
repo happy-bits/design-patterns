@@ -50,7 +50,7 @@ namespace DesignPatterns.Bridge.Remotes.Before
         }
     }
 
-    abstract class Remote
+    abstract class BasicRemote
     {
         private int _volume;
 
@@ -91,24 +91,24 @@ namespace DesignPatterns.Bridge.Remotes.Before
 
     }
 
-    class BasicTvRemote : Remote
+    class BasicTvRemote : BasicRemote
     {
         public override string DeviceName => "TV";
     }
 
 
-    class BasicRadioRemote : Remote
+    class BasicRadioRemote : BasicRemote
     {
         public override string DeviceName => "Radio";
     }
 
-    class AdvancedTvRemote : Remote
+    class AdvancedTvRemote : BasicRemote
     {
         public override string DeviceName => "TV";
         public void Mute() => SetVolume(0);
     }
 
-    class AdvancedRadioRemote : Remote
+    class AdvancedRadioRemote : BasicRemote
     {
         public override string DeviceName => "Radio";
         public void Mute() => SetVolume(0);

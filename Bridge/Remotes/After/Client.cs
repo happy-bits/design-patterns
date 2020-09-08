@@ -60,28 +60,38 @@ namespace DesignPatterns.Bridge.Remotes.After
     {
         protected readonly Device _device;
 
+        private int _volume;
+
         public BasicRemote(Device device) => _device = device;
+
+        public bool IsEnabled { get; private set; }
+
+        public void Disable() => IsEnabled = false;
+
+        public void Enable() => IsEnabled = true;
+
+        public int GetVolume() => _volume;
+
+        public void SetVolume(int percentage) => _volume = percentage;
 
         public void TogglePower()
         {
-            if (_device.IsEnabled)
-                _device.Disable();
+            if (IsEnabled)
+                Disable();
 
-            _device.Enable();
+            Enable();
         }
 
-        public void VolumeUp() 
+        public void VolumeUp()
         {
-            var old = _device.GetVolume();
-            _device.SetVolume(old + 10);
+            var old = GetVolume();
+            SetVolume(old + 10);
         }
         public void VolumeDown()
         {
-            var old = _device.GetVolume();
-            _device.SetVolume(old - 10);
+            var old = GetVolume();
+            SetVolume(old - 10);
         }
-
-        public int GetVolume() => _device.GetVolume();
 
         public List<double> Batteries { get; protected set; } = new List<double> { 30 };
 
@@ -96,21 +106,12 @@ namespace DesignPatterns.Bridge.Remotes.After
         {
         }
 
-        public void Mute() => _device.SetVolume(0);
+        public void Mute() => SetVolume(0);
     }
-
-
 
     // Primitiva operationer
     abstract class Device
     {
-        private int _volume;
-        public bool IsEnabled { get; private set; }
-        public void Disable() => IsEnabled = false;
-        public void Enable() => IsEnabled = true;
-        public int GetVolume() => _volume;
-        public void SetVolume(int percentage) => _volume = percentage;
-
         public abstract string Name { get; }
     }
 
