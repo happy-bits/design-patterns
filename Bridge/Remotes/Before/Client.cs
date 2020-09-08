@@ -122,6 +122,8 @@ namespace DesignPatterns.Bridge.Remotes.Before
         public override int MaxVolume => 3;
     }
 
+    // Kan låta dessa två klasser ärva från "AdvancedBase" men de kan samtidigt inte ärva från "TvBase" eller "RadioBase"
+
     class AdvancedTvRemote : BasicRemote
     {
         public override string DeviceName => "TV";
