@@ -11,13 +11,14 @@ namespace DesignPatterns.Bridge.Remotes.Before
         public void DoStuff()
         {
             {
-                var remote = new TvRemote();
+                var remote = new BasicTvRemote();
                 remote.TogglePower();
                 remote.VolumeUp();
                 remote.VolumeUp();
                 remote.VolumeUp();
 
                 Assert.AreEqual(30, remote.GetVolume());
+                Assert.AreEqual("TV", remote.DeviceName);
             }
 
             {
@@ -29,14 +30,21 @@ namespace DesignPatterns.Bridge.Remotes.Before
                 remote.Mute();
 
                 Assert.AreEqual(0, remote.GetVolume());
+                Assert.AreEqual("TV", remote.DeviceName);
             }
             {
-                var remote = new RadioRemote();
+                var remote = new BasicRadioRemote();
                 remote.VolumeUp();
                 remote.VolumeUp();
-
                 Assert.AreEqual(20, remote.GetVolume());
-
+                Assert.AreEqual("Radio", remote.DeviceName);
+            }
+            {
+                var remote = new AdvancedRadioRemote();
+                remote.VolumeUp();
+                remote.VolumeUp();
+                Assert.AreEqual(20, remote.GetVolume());
+                Assert.AreEqual("Radio", remote.DeviceName);
             }
 
         }
@@ -79,23 +87,30 @@ namespace DesignPatterns.Bridge.Remotes.Before
 
         public double RemainingBattery => Batteries.Sum();
 
+        public abstract string DeviceName { get; }
+
     }
 
-    class TvRemote : Remote
+    class BasicTvRemote : Remote
     {
+        public override string DeviceName => "TV";
     }
 
-    class RadioRemote : Remote
+
+    class BasicRadioRemote : Remote
     {
+        public override string DeviceName => "Radio";
     }
 
     class AdvancedTvRemote : Remote
     {
+        public override string DeviceName => "TV";
         public void Mute() => SetVolume(0);
     }
 
     class AdvancedRadioRemote : Remote
     {
+        public override string DeviceName => "Radio";
         public void Mute() => SetVolume(0);
     }
 

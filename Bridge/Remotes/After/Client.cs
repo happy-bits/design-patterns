@@ -12,53 +12,55 @@ namespace DesignPatterns.Bridge.Remotes.After
         {
             {
                 var tv = new TV();
-                var remote = new Remote(tv); // en kombination av abstraction-implementation
+                var remote = new BasicRemote(tv); // en kombination av abstraction-implementation
                 remote.TogglePower();
                 remote.VolumeUp();
                 remote.VolumeUp();
                 remote.VolumeUp();
-                
-                Assert.AreEqual(30, tv.GetVolume());
+
+                Assert.AreEqual(30, remote.GetVolume());
+                Assert.AreEqual("TV", remote.DeviceName);
             }
 
             {
-                var tv = new TV();
-                var remote = new AdvancedRemote(tv);
+                var remote = new AdvancedRemote(new TV());
                 remote.TogglePower();
                 remote.VolumeUp();
                 remote.VolumeUp();
                 remote.VolumeUp();
                 remote.Mute();
 
-                Assert.AreEqual(0, tv.GetVolume());
+                Assert.AreEqual(0, remote.GetVolume());
+                Assert.AreEqual("TV", remote.DeviceName);
             }
-            {
-                
-                var remote = new Remote(new TV());
-                var extra = new ExtraBatteriesRemote(new TV());
 
-                Assert.AreEqual(30, remote.RemainingBattery);
-                Assert.AreEqual(60, extra.RemainingBattery);
-            }
             {
-                var radio = new Radio();
-                var remote = new Remote(radio);
+                var remote = new BasicRemote(new Radio());
                 remote.VolumeUp();
                 remote.VolumeUp();
 
-                Assert.AreEqual(20, radio.GetVolume());
-
+                Assert.AreEqual(20, remote.GetVolume());
+                Assert.AreEqual("Radio", remote.DeviceName);
             }
+            {
+                var remote = new AdvancedRemote(new Radio());
+                remote.VolumeUp();
+                remote.VolumeUp();
+
+                Assert.AreEqual(20, remote.GetVolume());
+                Assert.AreEqual("Radio", remote.DeviceName);
+            }
+
 
         }
     }
 
     // Abstraction delegerar jobb till "_device"
-    class Remote
+    class BasicRemote
     {
-        protected readonly IDevice _device;
+        protected readonly Device _device;
 
-        public Remote(IDevice device) => _device = device;
+        public BasicRemote(Device device) => _device = device;
 
         public void TogglePower()
         {
@@ -79,67 +81,73 @@ namespace DesignPatterns.Bridge.Remotes.After
             _device.SetVolume(old - 10);
         }
 
+        public int GetVolume() => _device.GetVolume();
+
         public List<double> Batteries { get; protected set; } = new List<double> { 30 };
 
         public double RemainingBattery => Batteries.Sum();
+
+        public string DeviceName => _device.Name;
     }
 
-    class AdvancedRemote : Remote
+    class AdvancedRemote : BasicRemote
     {
-        public AdvancedRemote(IDevice device) : base(device)
+        public AdvancedRemote(Device device) : base(device)
         {
         }
 
         public void Mute() => _device.SetVolume(0);
     }
 
-    class ExtraBatteriesRemote : Remote
-    {
-        public ExtraBatteriesRemote(IDevice device) : base(device)
-        {
-            Batteries.Add(30);
-        }
 
-        public void Mute() => _device.SetVolume(0);
-    }
 
     // Primitiva operationer
-    interface IDevice
-    {
-        bool IsEnabled { get; }
-        void Enable();
-        void Disable();
-        int GetVolume();
-        void SetVolume(int percentage);
-    }
-
-    class TV : IDevice
+    abstract class Device
     {
         private int _volume;
-
         public bool IsEnabled { get; private set; }
-
         public void Disable() => IsEnabled = false;
-
         public void Enable() => IsEnabled = true;
-
         public int GetVolume() => _volume;
-
         public void SetVolume(int percentage) => _volume = percentage;
+
+        public abstract string Name { get; }
     }
 
-    class Radio : IDevice
+    class Radio : Device
     {
-        private int _volume;
+        public override string Name => "Radio";
+    }
 
-        public bool IsEnabled { get; private set; }
-
-        public void Disable() => IsEnabled = false;
-
-        public void Enable() => IsEnabled = true;
-
-        public int GetVolume() => _volume;
-
-        public void SetVolume(int percentage) => _volume = percentage;
+    class TV : Device
+    {
+        public override string Name => "TV";
     }
 }
+
+
+//class ExtraBatteriesRemote : BasicRemote
+//{
+//    public ExtraBatteriesRemote(Device device) : base(device)
+//    {
+//        Batteries.Add(30);
+//    }
+
+//    public void Mute() => _device.SetVolume(0);
+//}
+//{
+
+//    var remote = new BasicRemote(new TV());
+//    var extra = new ExtraBatteriesRemote(new TV());
+
+//    Assert.AreEqual(30, remote.RemainingBattery);
+//    Assert.AreEqual(60, extra.RemainingBattery);
+//}
+//{
+
+//    var remote = new BasicRemote(new Radio());
+//    var extra = new ExtraBatteriesRemote(new Radio());
+
+//    Assert.AreEqual(30, remote.RemainingBattery);
+//    Assert.AreEqual(60, extra.RemainingBattery);
+//}
