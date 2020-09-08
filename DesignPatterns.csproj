@@ -9,16 +9,19 @@
   <ItemGroup>
     <Compile Remove="AbstractFactory\Old\**" />
     <Compile Remove="Adapter\Xxx\**" />
+    <Compile Remove="Bridge\Xxx\**" />
     <Compile Remove="ChainOfResponsibility\Old\**" />
     <Compile Remove="FactoryMethod\Old\**" />
     <Compile Remove="Observer\Xxx\**" />
     <Compile Remove="Template\**" />
     <EmbeddedResource Remove="AbstractFactory\Old\**" />
     <EmbeddedResource Remove="Adapter\Xxx\**" />
+    <EmbeddedResource Remove="Bridge\Xxx\**" />
     <EmbeddedResource Remove="ChainOfResponsibility\Old\**" />
     <EmbeddedResource Remove="Observer\Xxx\**" />
     <None Remove="AbstractFactory\Old\**" />
     <None Remove="Adapter\Xxx\**" />
+    <None Remove="Bridge\Xxx\**" />
     <None Remove="ChainOfResponsibility\Old\**" />
     <None Remove="Observer\Xxx\**" />
   </ItemGroup>
