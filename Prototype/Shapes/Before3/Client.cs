@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DesignPatterns.Prototype.Shapes.Before2
+namespace DesignPatterns.Prototype.Shapes.Before3
 {
     class Client : IClient
     {
@@ -53,6 +53,13 @@ namespace DesignPatterns.Prototype.Shapes.Before2
         public double X { get; set; }
         public double Y { get; set; }
         public abstract Shape Clone();
+
+        protected void CopyShapeProperties(Shape s)
+        {
+            s.X = X;
+            s.Y = Y;
+            s.Color = Color;
+        }
     }
 
     class Rectangle : Shape
@@ -60,18 +67,20 @@ namespace DesignPatterns.Prototype.Shapes.Before2
         public double Width { get; set; }
         public double Height { get; set; }
 
+        // Bättre än förra (Before), för det är ingen duplicering av kod
+        // Men klon-koden är ganska klumpig ändå
+
         public override Shape Clone()
         {
-            return new Rectangle
+            var rectangle = new Rectangle
             {
                 Width = Width,
-                Height = Height,
-
-                // Nackdel: kod upprepar sig (i Circle)
-                X=X,
-                Y=Y,
-                Color=Color
+                Height = Height
             };
+
+            CopyShapeProperties(rectangle);
+
+            return rectangle;
         }
     }
 
@@ -81,13 +90,14 @@ namespace DesignPatterns.Prototype.Shapes.Before2
 
         public override Shape Clone()
         {
-            return new Circle
+            var circle =  new Circle
             {
                 Radius = Radius,
-                X = X,
-                Y = Y,
-                Color = Color
             };
+
+            CopyShapeProperties(circle);
+
+            return circle;
         }
     }
 }

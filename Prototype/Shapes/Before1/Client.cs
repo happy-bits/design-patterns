@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DesignPatterns.Prototype.Shapes.Before
+namespace DesignPatterns.Prototype.Shapes.Before1
 {
     class Client : IClient
     {
@@ -16,7 +16,7 @@ namespace DesignPatterns.Prototype.Shapes.Before
                 Y = 8
             };
 
-            Shape r2 = r.Clone();
+            Rectangle r2 = r.Clone();
 
             r.Width += 1000;
             r.Height += 1000;
@@ -26,24 +26,26 @@ namespace DesignPatterns.Prototype.Shapes.Before
 
             // Verifiera att "r" har ändrats men inte "r2"
 
-            Assert.AreEqual(r.Width, ((Rectangle)r2).Width + 1000);
-            Assert.AreEqual(r.Height, ((Rectangle)r2).Height + 1000);
-            Assert.AreEqual(r.Color, ((Rectangle)r2).Color + 1000);
-            Assert.AreEqual(r.X, ((Rectangle)r2).X + 1000);
-            Assert.AreEqual(r.Y, ((Rectangle)r2).Y + 1000);
+            Assert.AreEqual(r.Width, r2.Width + 1000);
+            Assert.AreEqual(r.Height, r2.Height + 1000);
+            Assert.AreEqual(r.Color, r2.Color + 1000);
+            Assert.AreEqual(r.X, r2.X + 1000);
+            Assert.AreEqual(r.Y, r2.Y + 1000);
 
             Circle c = new Circle
             {
                 Radius = 5
             };
 
-            Shape c2 = c.Clone();
+            Circle c2 = c.Clone();
 
             c.Radius += 1000;
 
             // Verifiera att "c" har ändrats men inte "c2"
 
-            Assert.AreEqual(c.Radius, ((Circle)c2).Radius + 1000);
+            Assert.AreEqual(c.Radius, c2.Radius + 1000);
+
+            // Nackdel: om vi har en lista av "Shapes" så vet vi inte att Clone-metoden finns
         }
     }
 
@@ -52,7 +54,6 @@ namespace DesignPatterns.Prototype.Shapes.Before
         public string Color { get; set; }
         public double X { get; set; }
         public double Y { get; set; }
-        public abstract Shape Clone();
     }
 
     class Rectangle : Shape
@@ -60,7 +61,8 @@ namespace DesignPatterns.Prototype.Shapes.Before
         public double Width { get; set; }
         public double Height { get; set; }
 
-        public override Shape Clone()
+        // Fördel: vi får ut rätt typ direkt (och behöver inte casta däruppe)
+        public Rectangle Clone()
         {
             return new Rectangle
             {
@@ -79,7 +81,7 @@ namespace DesignPatterns.Prototype.Shapes.Before
     {
         public double Radius { get; set; }
 
-        public override Shape Clone()
+        public Circle Clone()
         {
             return new Circle
             {
