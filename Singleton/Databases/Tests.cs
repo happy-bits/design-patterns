@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using static DesignPatterns.TestUtilities;
 
 namespace DesignPatterns.Singleton.Databases
 {
@@ -8,7 +7,7 @@ namespace DesignPatterns.Singleton.Databases
     public class Tests
     {
         private IEnumerable<IClient> AllClients() => new IClient[] { 
-            //new Before.Client(), 
+            new Before.Client(), 
             new After.Client(), 
         };
 
