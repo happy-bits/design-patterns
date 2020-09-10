@@ -17,7 +17,21 @@ namespace DesignPatterns.Iterator.Grids
         {
             foreach (var client in AllClients())
             {
-                client.DoStuff();
+                {
+                    var result = client.ForEachFromLeftToRight();
+
+                    CollectionAssert.AreEqual(new[] {
+                        "a", "b", "c", "d", "e", "f", "g", "h"
+                    }, result);
+                }
+                {
+                    var result = client.ForEachFromUpToDown();
+
+                    CollectionAssert.AreEqual(new[] {
+                        "a", "e", "b", "f", "c", "g", "d", "h"
+                    }, result);
+                }
+
             }
         }
     }

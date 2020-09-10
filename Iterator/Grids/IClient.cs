@@ -4,6 +4,7 @@ namespace DesignPatterns.Iterator.Grids
 {
     interface IClient
     {
-        void DoStuff();
+        List<string> ForEachFromLeftToRight();
+        List<string> ForEachFromUpToDown();
     }
 }
