@@ -1,6 +1,8 @@
 ﻿/*
 
 Låter dej packa ihop flera objekt i RAM-minnet genom att dela gemensamma delar
+
+Har ett enda syfte: att minska RAM-minnes användning
  */
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
