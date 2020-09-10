@@ -21,16 +21,16 @@ namespace DesignPatterns.Iterator.Grids.After
             Assert.AreEqual(8, grid.NrOrCells);
             Assert.AreEqual("d", grid.Items[0,3]);
 
-            var events = new List<string>();
+            var cells = new List<string>();
             
             grid.Direction = Direction.LeftRight;
 
-            foreach (var item in grid)
+            foreach (var cell in grid)
             {
-                events.Add(item);
+                cells.Add(cell);
             }
 
-            return events;
+            return cells;
 
 
         }
@@ -43,14 +43,14 @@ namespace DesignPatterns.Iterator.Grids.After
 
             grid.Direction = Direction.UpDown;
 
-            var events = new List<string>();
+            var cells = new List<string>();
 
-            foreach (var item in grid)
+            foreach (var cell in grid)
             {
-                events.Add(item);
+                cells.Add(cell);
             }
 
-            return events;
+            return cells;
 
         }
     }
@@ -85,7 +85,7 @@ namespace DesignPatterns.Iterator.Grids.After
 
     class GridIterator : IEnumerator<string>
     {
-        private Grid _grid;
+        private readonly Grid _grid;
         private int _positionX = -1;
         private int _positionY = -1;
 
@@ -96,15 +96,13 @@ namespace DesignPatterns.Iterator.Grids.After
             _grid = grid;
         }
 
-        public string Current => _grid.Items[_positionY, _positionX];//   _position / _grid.Width, _position % _grid.Width];
+        public string Current => _grid.Items[_positionY, _positionX];
 
         object IEnumerator.Current => Current;
 
         public void Dispose()
         {
         }
-
-        // public object Current => ;
 
         public bool MoveNext()
         {
