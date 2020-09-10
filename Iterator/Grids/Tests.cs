@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using static DesignPatterns.TestUtilities;
 
 namespace DesignPatterns.Iterator.Grids
 {
@@ -10,6 +9,7 @@ namespace DesignPatterns.Iterator.Grids
         private IEnumerable<IClient> AllClients() => new IClient[] { 
             new Before.Client(), 
             new After.Client(), 
+            new After2.Client(), 
         };
 
         [TestMethod]
