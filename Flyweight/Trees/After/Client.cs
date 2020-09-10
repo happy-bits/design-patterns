@@ -38,7 +38,7 @@ namespace DesignPatterns.Flyweight.Trees.After
         }
 
         // Ett träd har en position och info (som ligger i TreeType)
-
+        // Om du skapar en miljon träd så blir det en miljon instanser av denna klass. Men det gör inte så mycket. Den innehåller bara två värden och en referens
         class Tree
         {
             public Tree(double x, double y, TreeType type)
@@ -64,7 +64,7 @@ namespace DesignPatterns.Flyweight.Trees.After
 
             public string Name { get; }
             public string Color { get; }
-            public string Texture { get; }
+            public string Texture { get; } // Detta fält kan innehålla massa data (hur trädet ska ritas upp)
 
             public override string ToString() => $"{Name} {Color} {Texture}";
 
