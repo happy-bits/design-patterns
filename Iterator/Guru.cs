@@ -1,5 +1,6 @@
 ﻿/*
-Iterator is a behavioral design pattern that lets you traverse elements of a collection without exposing its underlying representation (list, stack, tree, etc.). 
+
+Du kan gå igenom en kollektion utan att avslöja den underliggande representationen (lista, stack, tree etc)
  */
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -15,9 +16,6 @@ namespace DesignPatterns.Iterator
         [TestMethod]
         public void Ex1()
         {
-            // The client code may or may not know about the Concrete Iterator
-            // or Collection classes, depending on the level of indirection you
-            // want to keep in your program.
             var collection = new WordsCollection();
             collection.AddItem("First");
             collection.AddItem("Second");
@@ -25,6 +23,7 @@ namespace DesignPatterns.Iterator
 
             Console.WriteLine("Straight traversal:");
 
+            // WordsCollection måste ha metoden "IEnumerator GetEnumerator()" för att kunna göra foreach
             foreach (var element in collection)
             {
                 Console.WriteLine(element);
@@ -32,6 +31,7 @@ namespace DesignPatterns.Iterator
 
             Console.WriteLine("\nReverse traversal:");
 
+            // Inget sker här förutom att kollektionen vet att vi ändrar riktning
             collection.ReverseDirection();
 
             foreach (var element in collection)
@@ -40,97 +40,76 @@ namespace DesignPatterns.Iterator
             }
         }
 
-        abstract class Iterator : IEnumerator<string>
+        /*
+           "Konkret iterator"
+           Anger på vilket sätt man ska gå igenom kollektionen
+
+            IEnumerator kräver:
+            - Current
+            - MoveNext()
+            - Reset()
+        */
+        class AlphabeticalOrderIterator : IEnumerator
         {
-            string IEnumerator<string>.Current => throw new NotImplementedException();
+            private readonly WordsCollection _collection;
 
-            object IEnumerator.Current => Current();
-
-            // Returns the key of the current element
-            public abstract int Key();
-
-            // Returns the current element
-            public abstract object Current();
-
-            // Move forward to next element
-            public abstract bool MoveNext();
-
-            // Rewinds the Iterator to the first element
-            public abstract void Reset();
-
-            public void Dispose()
-            {
-                //throw new NotImplementedException();
-            }
-        }
-
-        abstract class IteratorAggregate : IEnumerable
-        {
-            // Returns an Iterator or another IteratorAggregate for the implementing
-            // object.
-            public abstract IEnumerator GetEnumerator();
-        }
-
-        // Concrete Iterators implement various traversal algorithms. These classes
-        // store the current traversal position at all times.
-        class AlphabeticalOrderIterator : Iterator
-        {
-            private WordsCollection _collection;
-
-            // Stores the current traversal position. An iterator may have a lot of
-            // other fields for storing iteration state, especially when it is
-            // supposed to work with a particular kind of collection.
+            // Sparar nuvarande position
             private int _position = -1;
 
-            private bool _reverse = false;
+            private readonly bool _reverse = false;
+
+            object IEnumerator.Current => Current(); // throw new NotImplementedException();
 
             public AlphabeticalOrderIterator(WordsCollection collection, bool reverse = false)
             {
                 _collection = collection;
                 _reverse = reverse;
 
+                // "_position" kommer antingen vara -1 eller antalet-element
                 if (reverse)
                 {
-                    _position = collection.getItems().Count;
+                    _position = collection.GetItems().Count;
                 }
             }
 
-            public override object Current()
+            public object Current()
             {
-                return _collection.getItems()[_position];
+                return _collection.GetItems()[_position];
             }
 
-            public override int Key()
+            public int Key()
             {
                 return _position;
             }
 
-            public override bool MoveNext()
+            public bool MoveNext()
             {
                 int updatedPosition = _position + (_reverse ? -1 : 1);
 
-                if (updatedPosition >= 0 && updatedPosition < _collection.getItems().Count)
+                if (updatedPosition >= 0 && updatedPosition < _collection.GetItems().Count)
                 {
+                    // Vi har flyttat oss ett steg framåt
                     _position = updatedPosition;
                     return true;
                 }
                 else
                 {
+                    // Det går inte att stega vidare
                     return false;
                 }
             }
 
-            public override void Reset()
+            public void Reset()
             {
-                _position = _reverse ? _collection.getItems().Count - 1 : 0;
+                _position = _reverse ? _collection.GetItems().Count - 1 : 0;
             }
         }
 
-        // Concrete Collections provide one or several methods for retrieving fresh
-        // iterator instances, compatible with the collection class.
-        class WordsCollection : IteratorAggregate
+        // "Konkret kollektion"
+        // IEnumerable kräver bara en metod: "GetEnumerator"
+        class WordsCollection : IEnumerable
         {
-            List<string> _collection = new List<string>();
+            readonly List<string> _collection = new List<string>();
 
             bool _direction = false;
 
@@ -139,7 +118,7 @@ namespace DesignPatterns.Iterator
                 _direction = !_direction;
             }
 
-            public List<string> getItems()
+            public List<string> GetItems()
             {
                 return _collection;
             }
@@ -149,7 +128,7 @@ namespace DesignPatterns.Iterator
                 _collection.Add(item);
             }
 
-            public override IEnumerator GetEnumerator()
+            public IEnumerator GetEnumerator()
             {
                 return new AlphabeticalOrderIterator(this, _direction);
             }
