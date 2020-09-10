@@ -4,15 +4,11 @@ Låter dej packa ihop flera objekt i RAM-minnet genom att dela gemensamma delar
 
 Har ett enda syfte: att minska RAM-minnes användning
 
+Ett objekt kan bestå av en del som alltid/ofta är unik och en del som sällan ändras.
 
-What’s worse is that these two fields store almost identical data across all particles. For example, all bullets have the same color and sprite.
+"Extrinsic" state sparas inte längre i objektet (ex trädets textur)
+"Intrinsic" state är t.ex trädets koordinat
 
-
-This constant data of an object is usually called the intrinsic state. It lives within the object; other objects can only read it, not change it. The rest of the object’s state, often altered “from the outside” by other objects, is called the extrinsic state.
-
-The Flyweight pattern suggests that you stop storing the extrinsic state inside the object. Instead, you should pass this state to specific methods which rely on it.
-
-Since the same flyweight object can be used in different contexts, you have to make sure that its state can’t be modified. A flyweight should initialize its state just once, via constructor parameters. It shouldn’t expose any setters or public fields to other objects.
  */
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
