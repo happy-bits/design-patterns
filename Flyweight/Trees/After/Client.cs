@@ -1,6 +1,5 @@
 ﻿
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -38,7 +37,6 @@ namespace DesignPatterns.Flyweight.Trees.After
             Assert.AreEqual(0, _events.Count);
         }
 
-
         // Ett träd har en position och info (som ligger i TreeType)
 
         class Tree
@@ -69,26 +67,28 @@ namespace DesignPatterns.Flyweight.Trees.After
             public string Texture { get; }
 
             public override string ToString() => $"{Name} {Color} {Texture}";
+
+            public static string Hash(string name, string color, string texture) => $"{name}_{color}_{texture}";
         }
 
         // Skapa trädtyper (ej beroende av position)
         class TreeTypeFactory
         {
-            private readonly List<TreeType> _treeTypes = new List<TreeType>();
+            private readonly Dictionary<string, TreeType> _treeTypes = new Dictionary<string, TreeType>();
 
             public TreeType GetTreeType(string name, string color, string texture)
             {
-                var treeType = _treeTypes.FirstOrDefault(t => t.Name == name && t.Color == color && t.Texture == texture);
+                string hash = TreeType.Hash(name, color, texture);
+                bool foundInFactory = _treeTypes.TryGetValue(hash, out TreeType treeType);
 
-                if (treeType != null)
+                if (foundInFactory)
                 {
                     _events.Enqueue($"Reused TreeType: {treeType}");
                     return treeType;
                 }
 
                 var newTreeType = new TreeType(name, color, texture);
-                _treeTypes.Add(newTreeType);
-
+                _treeTypes.Add(hash, newTreeType);
                 _events.Enqueue($"Created new TreeType: {newTreeType}");
 
                 return newTreeType;
