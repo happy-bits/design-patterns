@@ -11,6 +11,7 @@
     <Compile Remove="Adapter\Xxx\**" />
     <Compile Remove="Bridge\Xxx\**" />
     <Compile Remove="ChainOfResponsibility\Old\**" />
+    <Compile Remove="Decorator\Xxx\**" />
     <Compile Remove="FactoryMethod\Old\**" />
     <Compile Remove="Flyweight\Xxx\**" />
     <Compile Remove="Observer\Xxx\**" />
@@ -23,6 +24,7 @@
     <EmbeddedResource Remove="Adapter\Xxx\**" />
     <EmbeddedResource Remove="Bridge\Xxx\**" />
     <EmbeddedResource Remove="ChainOfResponsibility\Old\**" />
+    <EmbeddedResource Remove="Decorator\Xxx\**" />
     <EmbeddedResource Remove="Flyweight\Xxx\**" />
     <EmbeddedResource Remove="Observer\Xxx\**" />
     <EmbeddedResource Remove="Prototype\Xxx\**" />
@@ -33,6 +35,7 @@
     <None Remove="Adapter\Xxx\**" />
     <None Remove="Bridge\Xxx\**" />
     <None Remove="ChainOfResponsibility\Old\**" />
+    <None Remove="Decorator\Xxx\**" />
     <None Remove="Flyweight\Xxx\**" />
     <None Remove="Observer\Xxx\**" />
     <None Remove="Prototype\Xxx\**" />

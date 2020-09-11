@@ -13,7 +13,7 @@ using System.Collections.Generic;
 namespace DesignPatterns.Decorator
 {
     [TestClass]
-    public class GuruConceptual
+    public class Guru
     {
         static readonly Queue<string> _log = new Queue<string>();
 
