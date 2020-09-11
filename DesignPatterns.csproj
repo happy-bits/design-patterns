@@ -23,6 +23,7 @@
     <Compile Remove="Singleton\Xxx\**" />
     <Compile Remove="StateDesignPattern\Old\**" />
     <Compile Remove="StateDesignPattern\Xxx\**" />
+    <Compile Remove="Strategy\Old\**" />
     <Compile Remove="Template\**" />
     <Compile Remove="Visitor\Xxx\**" />
     <EmbeddedResource Remove="AbstractFactory\Old\**" />
@@ -40,6 +41,7 @@
     <EmbeddedResource Remove="Singleton\Xxx\**" />
     <EmbeddedResource Remove="StateDesignPattern\Old\**" />
     <EmbeddedResource Remove="StateDesignPattern\Xxx\**" />
+    <EmbeddedResource Remove="Strategy\Old\**" />
     <EmbeddedResource Remove="Visitor\Xxx\**" />
     <None Remove="AbstractFactory\Old\**" />
     <None Remove="Adapter\Xxx\**" />
@@ -56,6 +58,7 @@
     <None Remove="Singleton\Xxx\**" />
     <None Remove="StateDesignPattern\Old\**" />
     <None Remove="StateDesignPattern\Xxx\**" />
+    <None Remove="Strategy\Old\**" />
     <None Remove="Visitor\Xxx\**" />
   </ItemGroup>
 

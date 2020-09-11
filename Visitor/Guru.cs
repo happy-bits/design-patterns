@@ -1,9 +1,12 @@
 ﻿/*
- Låter dej separera algoritmer från objekten som den jobbar med
 
- Inte så vanligt mönster pga sin komplexitet och snäva tillämpning
+"En exportfunktion av Shapes..."
 
- Du kan dra största nytta av mönstret när du använder det med en komplex objekt struktur som Composite tree
+Låter dej separera algoritmer från objekten som den jobbar med
+
+Inte så vanligt mönster pga sin komplexitet och snäva tillämpning
+
+Du kan dra största nytta av mönstret när du använder det med en komplex objekt struktur som Composite tree
 
 Mönstret låter dina klasser vara mer fokucerad på deras huvudsakliga jobb. Annat beteende skickas till "visitor"-klasser.
 
