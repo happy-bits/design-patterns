@@ -18,6 +18,34 @@ using System.Threading.Tasks;
 
 namespace DesignPatterns.Decorator.After
 {
+    class Client : IClient
+    {
+        private readonly List<string> _events = new List<string>();
+
+        public IEnumerable<string> Events => _events;
+        public int ValueFromCache { get; private set; }
+
+        public IWeatherService GetWeatherService()
+        {
+            var service = new WeatherService();
+            var cache = new CachingDecorator(service);
+            var ws = new LoggingDecorator(cache);
+
+            ws.Log += HandleLog;
+            cache.GotValueFromCache += HandleGotValueFromCache;
+            return ws;
+        }
+
+        private void HandleGotValueFromCache(object sender, EventArgs e)
+        {
+            ValueFromCache++;
+        }
+
+        private void HandleLog(object sender, string message)
+        {
+            _events.Add(message);
+        }
+    }
 
     class CachingDecorator : IWeatherService
     {
@@ -43,7 +71,6 @@ namespace DesignPatterns.Decorator.After
             else
             {
                 GotValueFromCache?.Invoke(this, null);
-                //GotValueFromCache++;
             }
 
             return _cache.Get<Temperature>(cachekey);
@@ -62,7 +89,6 @@ namespace DesignPatterns.Decorator.After
             else
             {
                 GotValueFromCache?.Invoke(this, null);
-                //GotValueFromCache++;
             }
             return _cache.Get<Forecast>(cachekey);
         }
@@ -83,14 +109,14 @@ namespace DesignPatterns.Decorator.After
 
         public Task<Temperature> GetCurrentTemperature(string location)
         {
-            //_weatherLogger.Add("GetCurrentTemperatur called");
+            
             Log?.Invoke(this, "GetCurrentTemperatur called");
             var sw = Stopwatch.StartNew();
 
             var result = _inner.GetCurrentTemperature(location);
 
             sw.Stop();
-            //_weatherLogger.Add($"GetCurrentTemperatur ended");
+            
             Log?.Invoke(this, "GetCurrentTemperatur ended");
             _weatherLogger.Add($"Time: {sw.ElapsedMilliseconds}ms");
             return result;
@@ -98,14 +124,13 @@ namespace DesignPatterns.Decorator.After
 
         public Task<Forecast> GetForcecase(string location)
         {
-            //_weatherLogger.Add("GetForcecase called");
             Log?.Invoke(this, "GetForcecase called");
             var sw = Stopwatch.StartNew();
 
             var result = _inner.GetForcecase(location);
 
             sw.Stop();
-            //_weatherLogger.Add($"GetForcecase ended");
+            
             Log?.Invoke(this, "GetForcecase ended");
             _weatherLogger.Add($"Time: {sw.ElapsedMilliseconds}ms");
             return result;
@@ -129,32 +154,5 @@ namespace DesignPatterns.Decorator.After
         }
     }
 
-    class Client : IClient
-    {
-        private readonly List<string> _events = new List<string>();
 
-        public IEnumerable<string> Events => _events;
-        public int ValueFromCache { get; private set; }
-
-        public IWeatherService GetWeatherService()
-        {
-            var service = new WeatherService();
-            var cache = new CachingDecorator(service);
-            var ws = new LoggingDecorator(cache);
-
-            ws.Log += HandleLog;
-            cache.GotValueFromCache += HandleGotValueFromCache;     
-            return ws;
-        }
-
-        private void HandleGotValueFromCache(object sender, EventArgs e)
-        {
-            ValueFromCache++;
-        }
-
-        private void HandleLog(object sender, string message)
-        {
-            _events.Add(message);
-        }
-    }
 }

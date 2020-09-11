@@ -10,7 +10,7 @@ namespace DesignPatterns.Decorator.Weathers
     public class Tests
     {
         private IEnumerable<IClient> AllClients() => new IClient[] {
-//            new Before.Cli(),
+            new Before.Client(),
             new After.Client(),
         };
 
