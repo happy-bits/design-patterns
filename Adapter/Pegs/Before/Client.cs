@@ -27,7 +27,6 @@ namespace DesignPatterns.Adapter.Pegs.Before
                 Assert.IsFalse(roundHole.Fits(roundPeg));
             }
 
-
             {
                 var roundHole = new RoundHole(1);
                 Assert.IsFalse(roundHole.Fits(squarePeg));
@@ -45,10 +44,11 @@ namespace DesignPatterns.Adapter.Pegs.Before
     }
 
     /*
-     Scenario: klasserna RoundHole och RoundPeg finns och fungerar
+     Uppgift:
 
-        Vi skapar klassen SquarePeg och vill att RoundHole.Fits ska funka för fyrkantiga peggar, utan att behöva ändra "RoundHole"
-         */
+        RoundHole ska även kunna acceptera "SquarePeg" i "Fits"-metoden. Men du får inte ändra denna (eller någon annan) klass
+        Detta pga någon annan har skrivit koden (ex tredjepart)
+    */
 
     // Får ej ändra (någon annan skrivit klassen)
     class RoundHole
@@ -65,27 +65,4 @@ namespace DesignPatterns.Adapter.Pegs.Before
         // Nackdel: vi måste skapa denna metod (och vi kanske inte kan modifiera RoundHole)
         public bool Fits(SquarePeg peg) => peg.Width * Math.Sqrt(2) / 2 <= Radius;
     }
-
-    class RoundPeg
-    {
-        public RoundPeg(double radius)
-        {
-            Radius = radius;
-        }
-
-        public double Radius { get; }
-    }
-
-    class SquarePeg
-    {
-
-        public SquarePeg(double width)
-        {
-            Width = width;
-        }
-
-        public double Width { get; }
-    }
-
-
 }

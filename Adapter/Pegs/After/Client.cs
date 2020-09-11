@@ -14,11 +14,15 @@ namespace DesignPatterns.Adapter.Pegs.After
             var squarePeg = new SquarePeg(2);
             var adapter = new SquarePegAdapter(squarePeg);
 
+            // Triviala test
+
             {
                 var roundHole = new RoundHole(1);
                 var roundPeg = new RoundPeg(1);
                 Assert.IsTrue(roundHole.Fits(roundPeg));
             }
+
+            // Triviala test
 
             {
                 var roundHole = new RoundHole(1);
@@ -43,7 +47,7 @@ namespace DesignPatterns.Adapter.Pegs.After
         }
     }
 
-    // Får ej ändra (Oförändrad)
+    // Är oförändrad (bra)
     class RoundHole
     {
         public RoundHole(double radius)
@@ -56,28 +60,7 @@ namespace DesignPatterns.Adapter.Pegs.After
         public bool Fits(RoundPeg peg) => peg.Radius <= Radius;
     }
 
-    // (Oförändrad)
-    class SquarePeg
-    {
 
-        public SquarePeg(double width)
-        {
-            Width = width;
-        }
-
-        public double Width { get; }
-    }
-
-    // Behöver ändra Radius till "virtual"
-    class RoundPeg 
-    {
-        public RoundPeg(double radius)
-        {
-            Radius = radius;
-        }
-
-        public virtual double Radius { get; } 
-    }
 
     // Ny klass som gör att squarepeg beter sig som roundpeg
     class SquarePegAdapter : RoundPeg

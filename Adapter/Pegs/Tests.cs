@@ -22,4 +22,25 @@ namespace DesignPatterns.Adapter.Pegs
         }
 
     }
+
+    class SquarePeg
+    {
+
+        public SquarePeg(double width)
+        {
+            Width = width;
+        }
+
+        public double Width { get; }
+    }
+
+    class RoundPeg
+    {
+        public RoundPeg(double radius)
+        {
+            Radius = radius;
+        }
+
+        public virtual double Radius { get; } // behöver vara "virtual"
+    }
 }
