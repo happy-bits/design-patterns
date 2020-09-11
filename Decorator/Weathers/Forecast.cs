@@ -1,5 +1,5 @@
 ﻿
-namespace DesignPatterns.Decorator
+namespace DesignPatterns.Decorator.Weathers
 {
     class Forecast
     {

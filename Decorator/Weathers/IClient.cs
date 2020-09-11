@@ -9,6 +9,5 @@ namespace DesignPatterns.Decorator
         IEnumerable<string> Events { get; }
         IWeatherService GetWeatherService();
         public int ValueFromCache { get; }
-        
     }
 }

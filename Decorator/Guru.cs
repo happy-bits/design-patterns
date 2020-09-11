@@ -1,4 +1,7 @@
 ﻿/*
+ 
+"Se den ryska dockans alla dockor"
+
 From https://refactoring.guru/design-patterns/decorator/csharp/example
 
 Client jobbar med en Component. I detta fall har komponenten bara en metod (Operation)

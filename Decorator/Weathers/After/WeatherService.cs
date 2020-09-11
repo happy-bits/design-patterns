@@ -4,7 +4,7 @@ DECORATOR PATTERN
 
 Good:
 
-- Logging, Caching and Weather are separated
+- Logging, Caching and Weather are separated. Easier to test the separate parts
 - It's easy possible to combine them in other orders if you like
 (own example)
  */
@@ -13,7 +13,6 @@ using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DesignPatterns.Decorator.After
@@ -98,7 +97,6 @@ namespace DesignPatterns.Decorator.After
     {
         private readonly IWeatherService _inner;
         private readonly List<string> _weatherLogger = new List<string>();
-        public IEnumerable<string> WeatherLoggerWithoutTime => _weatherLogger.Where(w => !w.StartsWith("Time"));
 
         public EventHandler<string> Log;
 

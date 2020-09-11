@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Memory;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DesignPatterns.Decorator.Weathers.Before
