@@ -1,4 +1,8 @@
-﻿
+﻿/*
+ Dot, Circle är löven på träden
+
+ Compounds skapar trädstrukturen
+ */
 using System;
 using System.Collections.Generic;
 
@@ -22,14 +26,14 @@ namespace DesignPatterns.Composite.Graphics.Before
              |                   |     
              compound1__         compound2_____
              |          |        |             |
-             dot        circle   compound3     dot2
+             dot1       circle   compound3     dot2
                                  |
                                  circle2
              */
 
             // Setup
 
-            var dot = new Dot(3, 4);
+            var dot1 = new Dot(3, 4);
             var dot2 = new Dot(0, 0);
             var circle = new Circle(5, 6, 100);
             var circle2 = new Circle(55, 66, 77);
@@ -39,19 +43,19 @@ namespace DesignPatterns.Composite.Graphics.Before
             var compound2 = new CompoundGraphic();
             var compound3 = new CompoundGraphic();
 
-            compound1.Add(dot, circle);
+            compound1.Add(dot1, circle);
             compound2.Add(compound3, dot2);
             compound3.Add(circle2);
             compound0.Add(compound1, compound2);
 
-            dot.OnDraw += AddToEventLog;
+            dot1.OnDraw += AddToEventLog;
             dot2.OnDraw += AddToEventLog;
             circle.OnDraw += AddToEventLog;
             circle2.OnDraw += AddToEventLog;
 
             // Action
 
-            dot.Draw();
+            dot1.Draw();
             circle.Move(20, 30);
             circle.Draw();
 

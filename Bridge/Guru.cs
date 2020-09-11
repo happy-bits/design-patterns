@@ -1,5 +1,8 @@
-﻿// https://refactoring.guru/design-patterns/bridge
-/*
+﻿/*
+
+"Splitta en klass i två andra klasser"
+
+https://refactoring.guru/design-patterns/bridge
  Dela en stor klass (eller flera nära relaterade klasser) till två separata hierarkier - abstraktion och implementation - som kan utvecklas oberoende av varandra
 
 Den ena hierarkin (som ofta kallas Abstraction) får en referent till ett objekt i den andra hierarkin (Implementation)

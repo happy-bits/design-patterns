@@ -1,4 +1,6 @@
 ﻿/*
+"Skapa inkompatibla objekt på samma sätt"
+
 Du kan konstruera komplexa objekt steg för steg.
 
 Du kan producera flera typer av objekt genom samma "construction code"

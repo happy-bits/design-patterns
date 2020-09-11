@@ -1,5 +1,7 @@
 ﻿/*
- * From: https://refactoring.guru/design-patterns/chain-of-responsibility/csharp/example
+"Dela upp ett anrop i en kedja av händelser"   
+
+   From: https://refactoring.guru/design-patterns/chain-of-responsibility/csharp/example
  */
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;

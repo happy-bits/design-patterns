@@ -1,4 +1,5 @@
 ﻿/*
+"Behandla kommandon som en egen grej"
 
 Requestet förvandlas till ett eget objekt som innehåller all info om requestet. Det gör att du kan parametrisera metoder med olika request, avvakta eller kö'a utförande av requests och tillåta undo-operationer.
 

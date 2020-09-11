@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿// "Välj först fabrik. Skapa sedan en viss sorts produkter"
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace DesignPatterns.AbstractFactory

@@ -68,7 +68,6 @@ namespace DesignPatterns.Composite.Graphics
     {
         public EventHandler<string> OnDraw { get; set; }
 
-
         public Circle(double x, double y, double radius)
         {
             X = x;
@@ -83,9 +82,4 @@ namespace DesignPatterns.Composite.Graphics
             OnDraw?.Invoke(this, $"Drawing circle with radius {Radius} on position ({X},{Y})");
         }
     }
-
-
-
-
-
 }

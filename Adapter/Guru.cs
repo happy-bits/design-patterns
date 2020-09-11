@@ -1,5 +1,7 @@
 ﻿/*
 
+"Tillåt ett objekt som inte passar att användas med extern kod"
+
 Tillåter objekt med inkompatibla interface att samarbeta
 
 Adapterns fångar anrop från ett objekt och transformerar den till ett format som andra objektet känner till

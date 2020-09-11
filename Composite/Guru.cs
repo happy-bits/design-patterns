@@ -1,11 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿// "En gren är samma som ett löv"
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 
 namespace DesignPatterns.Composite
 {
     [TestClass]
-    public class GuruConceptual
+    public class Guru
     {
         [TestMethod]
         public void Ex1()
