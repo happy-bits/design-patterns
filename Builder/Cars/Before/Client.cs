@@ -5,18 +5,20 @@ namespace DesignPatterns.Builder.Cars.Before
 {
     class Client : IClient
     {
-        public void ManualBuildTest()
+        public void CreateManual()
         {
             Manual manual = Manual.CreateSportsCar();
+
             Assert.AreEqual(2, manual.Seats);
             Assert.IsTrue(manual.Engine is SportEngine);
             Assert.IsTrue(manual.TripComputer);
             Assert.IsTrue(manual.GPS);
         }
 
-        public void CarBuilderTest()
+        public void CreateCar()
         {
             Car car = Car.CreateSportsCar();
+
             Assert.AreEqual(2, car.Seats);
             Assert.IsTrue(car.Engine is SportEngine);
             Assert.IsTrue(car.TripComputer);

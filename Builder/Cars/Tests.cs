@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using static DesignPatterns.TestUtilities;
 
 namespace DesignPatterns.Builder.Cars
 {
@@ -17,8 +16,8 @@ namespace DesignPatterns.Builder.Cars
         {
             foreach (var client in AllClients())
             {
-                client.ManualBuildTest();
-                client.CarBuilderTest();
+                client.CreateManual();
+                client.CreateCar();
             }
         }
     }

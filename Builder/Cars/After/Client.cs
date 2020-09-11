@@ -7,26 +7,26 @@ namespace DesignPatterns.Builder.Cars.After
 {
     class Client : IClient
     {
-        public void ManualBuildTest()
+        public void CreateManual()
         {
             var builder = new ManualBuilder();
             var director = new Director(builder);
             director.MakeSportsCar();
-
             Manual manual = builder.GetManual();
+
             Assert.AreEqual(2, manual.Seats);
             Assert.IsTrue(manual.Engine is SportEngine);
             Assert.IsTrue(manual.TripComputer);
             Assert.IsTrue(manual.GPS);
         }
 
-        public void CarBuilderTest()
+        public void CreateCar()
         {
             var builder = new CarBuilder();
             var director = new Director(builder);
             director.MakeSportsCar();
-
             Car car = builder.GetCar();
+
             Assert.AreEqual(2, car.Seats);
             Assert.IsTrue(car.Engine is SportEngine);
             Assert.IsTrue(car.TripComputer);

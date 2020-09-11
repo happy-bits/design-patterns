@@ -1,7 +1,7 @@
 ﻿/*
- Du kan konstruera komplexa objekt steg för steg.
+Du kan konstruera komplexa objekt steg för steg.
 
- Du kan producera flera typer av objekt genom samma "construction code"
+Du kan producera flera typer av objekt genom samma "construction code"
 
 Det är bara meningsfullt att använda builder-pattern om dina produkter är rätt komplexa och kräver avancerad konfiguration. Många fält och många nästade objekt. (codesmell: konstruktorer med en massa parameterar och många är null i många fall)
 
@@ -9,7 +9,7 @@ Fördel med builder pattern: du anropar bara de builder's som du behöver
 
 Olika konkreta builders kan skapa orelaterade produkter (detta skiljer mönstret fårn andra creational-mönster)
 
-  */
+*/
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ using System.Collections.Generic;
 namespace DesignPatterns.Builder
 {
     [TestClass]
-    public class GuruConceptual
+    public class Guru
     {
 
         [TestMethod]
