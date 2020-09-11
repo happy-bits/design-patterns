@@ -1,44 +1,22 @@
-﻿/*
- Good:
- - Client code is easier to understand
- - Since BigBallOfMudCalculator is not used the client code don't by accident call crazy methods
- */
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DesignPatterns.Fascade
+namespace DesignPatterns.Fascade.Calc.Before
 {
-    [TestClass]
-    public class Calculators
+    class Client : IClient
     {
-        [TestMethod]
-        public void give_result_2_after_increasing_three_times_and_decreasing_once()
+        public void AddThreeAndSubtractOne()
         {
-            // "Client code"
-            var calculator = new CalculatorFascade();
-            calculator.Increase();
-            calculator.Increase();
-            calculator.Increase();
-            calculator.Decrease();
+            // Exercise: create the following lines. Add 3 and remove 1.
+            var calculator = new BigBallOfMudCalculator(0, 0, "", null);
+            calculator.PushMyNumberUp();
+            calculator.PushMyNumberUp();
+            calculator.PushMyNumberUp();
+            calculator.RemoveFromXx();
+            double result = calculator.DoStuff5();
 
-            double result = calculator.Value; 
-            
             Assert.AreEqual(2, result);
         }
 
-        // Exercise: create "CalculatorFascade"
-
-        class CalculatorFascade
-        {
-            private readonly BigBallOfMudCalculator _mud;
-
-            public CalculatorFascade() => _mud = new BigBallOfMudCalculator(0, 0, "", null);
-
-            public double Value => _mud.DoStuff5();
-
-            public void Decrease() => _mud.RemoveFromXx();
-
-            public void Increase() => _mud.PushMyNumberUp();
-        }
 
         // The following two classes is written by somebody else. 
         // You're not allowed to change these (this might break other parts of you system)
