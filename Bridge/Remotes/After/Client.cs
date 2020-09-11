@@ -10,6 +10,7 @@ namespace DesignPatterns.Bridge.Remotes.After
     {
         public void DoStuff()
         {
+            // Fördel: det krävs faktiskt färre klasser här + om fler devices dyker upp så behöver vi inte ändra i andra klasser
             {
                 var tv = new TV();
                 var remote = new BasicRemote(tv); // en kombination av abstraction-implementation
@@ -20,10 +21,12 @@ namespace DesignPatterns.Bridge.Remotes.After
 
                 Assert.AreEqual(3, remote.GetVolume());
                 Assert.AreEqual("TV", remote.DeviceName);
+                Assert.AreEqual(10, tv.MaxVolume);
             }
 
             {
-                var remote = new AdvancedRemote(new TV());
+                var tv = new TV();
+                var remote = new AdvancedRemote(tv);
                 remote.TogglePower();
                 remote.VolumeUp();
                 remote.VolumeUp();
@@ -32,23 +35,31 @@ namespace DesignPatterns.Bridge.Remotes.After
 
                 Assert.AreEqual(0, remote.GetVolume());
                 Assert.AreEqual("TV", remote.DeviceName);
+                Assert.AreEqual(10, tv.MaxVolume);
             }
 
             {
-                var remote = new BasicRemote(new Radio());
+                var radio = new Radio();
+                var remote = new BasicRemote(radio);
+                remote.VolumeUp();
+                remote.VolumeUp();
+                remote.VolumeUp();
+                remote.VolumeUp();
+                remote.VolumeUp();
+                remote.VolumeUp();
+                Assert.AreEqual(3, remote.GetVolume());
+                Assert.AreEqual("Radio", remote.DeviceName);
+                Assert.AreEqual(3, radio.MaxVolume);
+            }
+            {
+                var radio = new Radio();
+                var remote = new AdvancedRemote(radio);
                 remote.VolumeUp();
                 remote.VolumeUp();
 
                 Assert.AreEqual(2, remote.GetVolume());
                 Assert.AreEqual("Radio", remote.DeviceName);
-            }
-            {
-                var remote = new AdvancedRemote(new Radio());
-                remote.VolumeUp();
-                remote.VolumeUp();
-
-                Assert.AreEqual(2, remote.GetVolume());
-                Assert.AreEqual("Radio", remote.DeviceName);
+                Assert.AreEqual(3, radio.MaxVolume);
             }
 
 
@@ -58,22 +69,14 @@ namespace DesignPatterns.Bridge.Remotes.After
     // Abstraction delegerar jobb till "_device"
     class BasicRemote
     {
-        protected readonly IDevice _device;
+        // Samma
 
         private int _volume;
-
-        public BasicRemote(IDevice device) => _device = device;
-
         public bool IsEnabled { get; private set; }
-
         public void Disable() => IsEnabled = false;
-
         public void Enable() => IsEnabled = true;
-
         public int GetVolume() => _volume;
-
-        public void SetVolume(int volume) => _volume = volume;
-
+        
         public void TogglePower()
         {
             if (IsEnabled)
@@ -97,9 +100,19 @@ namespace DesignPatterns.Bridge.Remotes.After
 
         public double RemainingBattery => Batteries.Sum();
 
+        // Olika:
+
+        protected readonly IDevice _device;
+        public BasicRemote(IDevice device) => _device = device;  // Konstruktorn kräver att en "device" skickas in
+
         public string DeviceName => _device.Name;
 
-
+        public void SetVolume(int volume)
+        {
+            _volume = volume;
+            _volume = Math.Max(0, _volume);
+            _volume = Math.Min(_device.MaxVolume, _volume); // skillnad
+        }
     }
 
     class AdvancedRemote : BasicRemote
@@ -121,7 +134,6 @@ namespace DesignPatterns.Bridge.Remotes.After
     class Radio : IDevice
     {
         public string Name => "Radio";
-
         public int MaxVolume => 3;
     }
 

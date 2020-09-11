@@ -20,7 +20,6 @@ namespace DesignPatterns.Bridge.Remotes.Before
                 Assert.AreEqual(3, remote.GetVolume());
                 Assert.AreEqual("TV", remote.DeviceName);
                 Assert.AreEqual(10, remote.MaxVolume);
-
             }
 
             {
@@ -61,22 +60,13 @@ namespace DesignPatterns.Bridge.Remotes.Before
 
     abstract class BasicRemote
     {
+        // Samma
+
         private int _volume;
-
         public bool IsEnabled { get; private set; }
-
         public void Disable() => IsEnabled = false;
-
         public void Enable() => IsEnabled = true;
-
         public int GetVolume() => _volume;
-
-        public void SetVolume(int volume)
-        {
-            _volume = volume;
-            _volume = Math.Max(0, _volume);
-            _volume = Math.Min(MaxVolume, _volume);
-        }
 
         public void TogglePower()
         {
@@ -101,8 +91,16 @@ namespace DesignPatterns.Bridge.Remotes.Before
 
         public double RemainingBattery => Batteries.Sum();
 
-        public abstract string DeviceName { get; }
+        // Olika
 
+        public void SetVolume(int volume)
+        {
+            _volume = volume;
+            _volume = Math.Max(0, _volume);
+            _volume = Math.Min(MaxVolume, _volume);
+        }
+
+        public abstract string DeviceName { get; }
         public abstract int MaxVolume { get;  }
 
     }

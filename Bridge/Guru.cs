@@ -2,8 +2,6 @@
 /*
  Dela en stor klass (eller flera nära relaterade klasser) till två separata hierarkier - abstraktion och implementation - som kan utvecklas oberoende av varandra
 
-Dela affärslogik eller gigantiska klasser till hierarker som kan utvecklas oberoende av varandra.
-
 Den ena hierarkin (som ofta kallas Abstraction) får en referent till ett objekt i den andra hierarkin (Implementation)
 
  */
