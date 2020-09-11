@@ -7,7 +7,7 @@ namespace DesignPatterns.Iterator.Grids
     public class Tests
     {
         private IEnumerable<IClient> AllClients() => new IClient[] { 
-            new Before.Client(), 
+            //new Before.Client(), 
             new After.Client(), 
             new After2.Client(), 
         };
