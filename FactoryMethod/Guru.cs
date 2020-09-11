@@ -1,4 +1,7 @@
 ﻿/*
+ 
+"Låt barnen bestämma vilken produkt som ska skapas"
+  
  FACTORY METHOD - https://refactoring.guru/design-patterns/factory-method/csharp/example
  (Written as a test)
  
@@ -9,7 +12,7 @@ using System.Collections.Generic;
 namespace DesignPatterns.FactoryMethod
 {
     [TestClass]
-    public class GuruConceptual
+    public class Guru
     {
         static List<string> _log = new List<string>();
 

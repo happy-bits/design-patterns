@@ -22,7 +22,8 @@ namespace DesignPatterns.Template.Pages.Before3
         abstract class Page
         {
             // Nackdel: okej lösning men känns lite onaturlig
-            protected static string[] Render(Box headerBox, Box bodyBox)
+            protected static string[] Render(Box
+                headerBox, Box bodyBox)
             {
                 var result = new List<string>();
                 result.AddRange(headerBox.Render());

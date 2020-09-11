@@ -26,7 +26,7 @@ namespace DesignPatterns.Template.Pages.After
         {
             public string[] Render(string header, string body)
             {
-                Box headerBox = CreateBox(header);
+                Box headerBox = CreateBox(header); // Vilken typ av box som ska skapas är redan bestämt av underklassen
 
                 Box bodyBox = CreateBox(body);
 
