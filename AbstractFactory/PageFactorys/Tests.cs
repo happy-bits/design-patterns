@@ -1,4 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿/* 
+ 
+Vi vill kunna rendera en sida på olika sätt (med ascii-grafik eller som HTML)
+ 
+En sida består av en Header och en Intro
+ 
+
+ */ 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
 namespace DesignPatterns.AbstractFactory.PageFactorys
@@ -39,8 +47,6 @@ namespace DesignPatterns.AbstractFactory.PageFactorys
                     , result);
                 }
 
-                client.SetFactory("Html");
-                var result2 = client.RenderPage("Header", "Lorem ipsum dolor");
             }
         }
 

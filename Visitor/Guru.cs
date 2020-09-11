@@ -5,6 +5,8 @@
 
  Du kan dra största nytta av mönstret när du använder det med en komplex objekt struktur som Composite tree
 
+Mönstret låter dina klasser vara mer fokucerad på deras huvudsakliga jobb. Annat beteende skickas till "visitor"-klasser.
+
 */
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;

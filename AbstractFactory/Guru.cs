@@ -1,32 +1,50 @@
-﻿/*
-Academic examples...
-
-Idea from refactoring guru
-
- */
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace DesignPatterns.AbstractFactory
 {
     [TestClass]
-    public class Furnitures
+    public class Guru
     {
         [TestMethod]
-        public void Ex2()
+        public void Ex1()
         {
-            new Client().Main();
+            // The client code can work with any concrete factory class.
+            Console.WriteLine("Client: Testing client code with the first factory type...");
+            ClientMethod(new ConcreteFactory1());
+            Console.WriteLine();
+
+            Console.WriteLine("Client: Testing the same client code with the second factory type...");
+            ClientMethod(new ConcreteFactory2());
+        }
+
+        /*
+         Klienten kan enbart jobba med factories och produkter genom abstrakta typer:
+         - AbstractFactory
+         - AbstractProduct
+
+        Fördel: du kan skicka in vilken factory o product (underklass) som du vill utan att behöva ändra klientkoden
+
+        Du kan t.ex vid uppstart bestämma vilken factory att använda
+        */
+
+        void ClientMethod(IAbstractFactory factory)
+        {
+            var productA = factory.CreateProductA();
+            var productB = factory.CreateProductB();
+
+            Console.WriteLine(productB.UsefulFunctionB());
+            Console.WriteLine(productB.AnotherUsefulFunctionB(productA));
         }
 
 
-        public interface IAbstractFactory
+        interface IAbstractFactory
         {
             IAbstractProductA CreateProductA();
             IAbstractProductB CreateProductB();
         }
 
         /*
-
            Konkreta factories producerar en familj av produkter. En familj kan ha flera varianter, 
            men produkterna av en familj är inte kompatibla med produkter i andra familjer
 
@@ -69,7 +87,7 @@ namespace DesignPatterns.AbstractFactory
         }
 
         // En förmåga som alla stolar har
-        public interface IAbstractProductA
+        interface IAbstractProductA
         {
             string UsefulFunctionA();
         }
@@ -91,7 +109,7 @@ namespace DesignPatterns.AbstractFactory
         }
 
         // En förmåga som alla bord har (de kan också samarbeta med stolarna)
-        public interface IAbstractProductB
+        interface IAbstractProductB
         {
             // Product B kan gör sin egen grej
             string UsefulFunctionB();
@@ -130,37 +148,6 @@ namespace DesignPatterns.AbstractFactory
                 return $"The result of the B2 collaborating with the ({result})";
             }
         }
-
-        /*
-         Klienten kan enbart jobba med factories och produkter genom abstrakta typer:
-         - AbstractFactory
-         - AbstractProduct
-
-        Fördel: du kan skicka in vilken factory o product (underklass) som du vill utan att behöva ändra klientkoden
-
-        Du kan t.ex vid uppstart bestämma vilken factory att använda
-             */
-        class Client
-        {
-            public void Main()
-            {
-                // The client code can work with any concrete factory class.
-                Console.WriteLine("Client: Testing client code with the first factory type...");
-                ClientMethod(new ConcreteFactory1());
-                Console.WriteLine();
-
-                Console.WriteLine("Client: Testing the same client code with the second factory type...");
-                ClientMethod(new ConcreteFactory2());
-            }
-
-            public void ClientMethod(IAbstractFactory factory)
-            {
-                var productA = factory.CreateProductA();
-                var productB = factory.CreateProductB();
-
-                Console.WriteLine(productB.UsefulFunctionB());
-                Console.WriteLine(productB.AnotherUsefulFunctionB(productA));
-            }
-        }
+        
     }
 }
