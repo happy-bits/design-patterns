@@ -105,7 +105,6 @@ namespace DesignPatterns.Observer.TextEditors.Before
 
         class SpellChecker 
         {
-
             HashSet<string> _allWords = new HashSet<string> { "what", "does", "the", "fox", "says" };
 
             public void HandleTextChanged(string text)

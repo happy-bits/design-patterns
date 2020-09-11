@@ -1,9 +1,10 @@
 ﻿/*
+ "För kontroll av dina globala variabler"
+
  Använd när det bara ska finnas en instans, t.ex ett databasobjekt som delas
 
- Om du vill ha strikare kontroll över globala variabler. Garanterar att det bara finns en instans av klassen
-
-
+ Om du vill ha striktare kontroll över globala variabler. Garanterar att det bara finns en instans av klassen
+ 
  Nackdel:
 
 - Kan maskera dålig design (komponenter vet för mycket om varandra)

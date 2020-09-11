@@ -1,4 +1,6 @@
 ﻿/*
+"Omslut ditt objekt för att t.ex cachea anrop"
+
 Låter dig ge en ersättning för ett annat objekt.
 
 Proxyn kontrollerar tillgången till original-objektet. Du kan göra något innan eller efter anropet till objektet.

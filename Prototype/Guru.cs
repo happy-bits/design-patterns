@@ -1,10 +1,11 @@
 ﻿/*
- 
+"Centralisera kloning-koden till basklassen" 
+
 Du kan kopiera existerande objekt utan att din kod blir beroende av dess klass
 
 Kloningen görs av det objekt som ska klonas (metoden sitter i samma klass). Fördel: du kommer åt allt ink privata fält.
 
-Ett objekt som stödjer kloning kallas "prototype". Om ditt objekt har ett tiotal fält och 100-tal olika konfigurationer så är kloning ett alternativ till arb
+Ett objekt som stödjer kloning kallas "prototype". Om ditt objekt har ett tiotal fält och 100-tal olika konfigurationer så är kloning ett alternativ till arv
  */
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;

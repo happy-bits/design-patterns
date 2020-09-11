@@ -81,7 +81,7 @@ namespace DesignPatterns.Observer.TextEditors.After
 
         class EventManager
         {
-            private List<IListener> _listeners = new List<IListener>();
+            private readonly List<IListener> _listeners = new List<IListener>();
 
             public void Subscribe(IListener listener)
             {
@@ -102,7 +102,7 @@ namespace DesignPatterns.Observer.TextEditors.After
             }
         }
 
-        class WordCounter : IListener
+        class WordCounter : IListener // obs: interfacet
         {
             private int _lastCount = -1;
 
@@ -118,7 +118,7 @@ namespace DesignPatterns.Observer.TextEditors.After
             }
         }
 
-        class SpellChecker : IListener
+        class SpellChecker : IListener  // obs: interfacet
         {
 
             HashSet<string> _allWords = new HashSet<string> { "what", "does", "the", "fox", "says" };

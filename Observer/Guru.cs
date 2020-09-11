@@ -1,4 +1,6 @@
-﻿// https://refactoring.guru/design-patterns/observer/csharp/example
+﻿// "När någon händer notifiera en central EventManager som andra kan prenumera på"
+
+// https://refactoring.guru/design-patterns/observer/csharp/example
 /*
 
 Du kan definiera en prenumerationsmekanism för att låta flera objekt få reda på att något har hänt (att state't ändrats)
@@ -17,7 +19,7 @@ using System.Threading;
 namespace DesignPatterns.Observer
 {
     [TestClass]
-    public class GuruConceptual
+    public class Guru
     {
         [TestMethod]
         public void Ex1()

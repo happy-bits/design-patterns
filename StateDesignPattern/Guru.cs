@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿// Separera ett objekt olika tillstånd till separata klasser
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
 namespace DesignPatterns.StateDesignPattern
@@ -20,7 +22,7 @@ namespace DesignPatterns.StateDesignPattern
 
     */
     [TestClass]
-    public class GuruConceptual
+    public class Guru
     {
         static List<string> _log = new List<string>();
 
