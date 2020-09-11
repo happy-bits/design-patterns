@@ -1,5 +1,6 @@
 ﻿/*
-
+"Separera sättet du går igenom en kollektion från kollektionen själv"  
+  
 Du kan gå igenom en kollektion utan att avslöja den underliggande representationen (lista, stack, tree etc)
  */
 using Microsoft.VisualStudio.TestTools.UnitTesting;

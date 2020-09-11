@@ -1,4 +1,5 @@
 ﻿/*
+"Spara RAM-minne genom att inte duplicera feta objekt"
 
 Låter dej packa ihop flera objekt i RAM-minnet genom att dela gemensamma delar
 
@@ -58,35 +59,9 @@ namespace DesignPatterns.Flyweight
             factory.ListFlyweights();
         }
 
-        /*
-        FlyweightFactory: I have 5 flyweights:
-        Camaro2018_Chevrolet_pink
-        black_C300_Mercedes Benz
-        C500_Mercedes Benz_red
-        BMW_M5_red
-        BMW_white_X6
-
-        Client: Adding a car to database.
-        FlyweightFactory: Reusing existing flyweight.
-        Flyweight: Displaying shared {"Owner":null,"Number":null,"Company":"BMW","Model":"M5","Color":"red"} and unique {"Owner":"James Doe","Number":"CL234IR","Company":"BMW","Model":"M5","Color":"red"} state.
-
-        Client: Adding a car to database.
-        FlyweightFactory: Can't find a flyweight, creating new one.
-        Flyweight: Displaying shared {"Owner":null,"Number":null,"Company":"BMW","Model":"X1","Color":"red"} and unique {"Owner":"James Doe","Number":"CL234IR","Company":"BMW","Model":"X1","Color":"red"} state.
-
-        FlyweightFactory: I have 6 flyweights:
-        Camaro2018_Chevrolet_pink
-        black_C300_Mercedes Benz
-        C500_Mercedes Benz_red
-        BMW_M5_red
-        BMW_white_X6
-        BMW_red_X1
-
-
-        */
-
         // Flyweight sparar en gemensam del av statet - kallad "intrinsic state" (som tillhör flera business-entiteter) (inre state)
         // Resten av statet kallas "extrinsic state"
+
         class Flyweight
         {
             private readonly Car _sharedState;
@@ -178,13 +153,9 @@ namespace DesignPatterns.Flyweight
         class Car
         {
             public string Owner { get; set; }
-
             public string Number { get; set; }
-
             public string Company { get; set; }
-
             public string Model { get; set; }
-
             public string Color { get; set; }
         }
 
