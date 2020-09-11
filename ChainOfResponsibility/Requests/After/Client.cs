@@ -4,7 +4,7 @@
  - lätt att ta bort eller byta ordning på handlers (eller dynamiskt skjuta in något i mitten)
 
  Nackdel:
- - Betydligt mer kod och fler klasser. Kan bli svårare att läsa
+ - Betydligt mer kod (2.5ggr mer) och fler klasser. Kan bli svårare att läsa
  
  */
 namespace DesignPatterns.ChainOfResponsibility.Requests.After
@@ -40,6 +40,7 @@ namespace DesignPatterns.ChainOfResponsibility.Requests.After
     abstract class AbstractHandler
     {
         private AbstractHandler _nextHandler;
+        protected readonly PageRepository _pageRepository = new PageRepository();
 
         public AbstractHandler SetNext(AbstractHandler handler)
         {
@@ -64,8 +65,6 @@ namespace DesignPatterns.ChainOfResponsibility.Requests.After
 
     class AdminGetFullAccess : AbstractHandler
     {
-        PageRepository _pageRepository = new PageRepository();
-
         public override (Request, Response) Handle(Request request, Response response)
         {
             if (request.User.IsInRole("Administrator") || request.User.Name == "bobo")
@@ -94,8 +93,6 @@ namespace DesignPatterns.ChainOfResponsibility.Requests.After
 
     class LoadPage : AbstractHandler
     {
-        PageRepository _pageRepository = new PageRepository();
-
         public override (Request, Response) Handle(Request request, Response response)
         {
             response.Page = _pageRepository.GetPageById(request.PageId);

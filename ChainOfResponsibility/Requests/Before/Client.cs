@@ -2,7 +2,7 @@
 {
     class Client : IClient
     {
-        PageRepository _pageRepository = new PageRepository();
+        readonly PageRepository _pageRepository = new PageRepository();
 
         public void SetupChain()
         {

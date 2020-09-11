@@ -8,9 +8,8 @@ using System.Collections.Generic;
 namespace DesignPatterns.ChainOfResponsibility
 {
     [TestClass]
-    public class GuruConceptual
+    public class Guru
     {
-        static List<string> _logger = new List<string>();
 
         [TestMethod]
         public void monkey_squirrel_dog()
@@ -23,7 +22,7 @@ namespace DesignPatterns.ChainOfResponsibility
             monkey.SetNext(squirrel).SetNext(dog);
 
             // Send one food at the time through the chain
-            Client.ClientCode(monkey, new[] { "Nut", "Banana", "Cup of coffee" });
+            var result = Client.ClientCode(monkey, new[] { "Nut", "Banana", "Cup of coffee" });
 
             CollectionAssert.AreEqual(
                 new[] {
@@ -36,33 +35,31 @@ namespace DesignPatterns.ChainOfResponsibility
                     "Client: Who wants a Cup of coffee?",
                     "Cup of coffee was left untouched"
                 },
-                _logger);
+                result);
 
             // Send a meatball through the chain
-            _logger.Clear();
 
-            Client.ClientCode(monkey, new[] { "MeatBall" });
+            var result2 = Client.ClientCode(monkey, new[] { "MeatBall" });
 
             CollectionAssert.AreEqual(
                 new[] {
                     "Client: Who wants a MeatBall?",
                     "Dog: I'll eat the MeatBall",
                 },
-                _logger);
+                result2);
 
             // Client can send a request to the middle of the chain
             // Here a banana is sent to the chain, but after the monkey, so no-one will handle it
 
-            _logger.Clear();
 
-            Client.ClientCode(squirrel, new[] { "Banana" });
+            var result3 = Client.ClientCode(squirrel, new[] { "Banana" });
 
             CollectionAssert.AreEqual(
                 new[] {
                     "Client: Who wants a Banana?",
                     "Banana was left untouched",
                 },
-                _logger);
+                result3);
 
         }
 
@@ -158,23 +155,26 @@ namespace DesignPatterns.ChainOfResponsibility
         {
             // The client code is usually suited to work with a single handler. In
             // most cases, it is not even aware that the handler is part of a chain.
-            public static void ClientCode(AbstractHandler handler, IEnumerable<string> foodlist)
+            public static List<string> ClientCode(AbstractHandler handler, IEnumerable<string> foodlist)
             {
+                var events = new List<string>();
+
                 foreach (var food in foodlist)
                 {
-                    _logger.Add($"Client: Who wants a {food}?");
+                    events.Add($"Client: Who wants a {food}?");
 
                     var result = handler.Handle(food);
 
                     if (result != null)
                     {
-                        _logger.Add(result.ToString());
+                        events.Add(result.ToString());
                     }
                     else
                     {
-                        _logger.Add($"{food} was left untouched");
+                        events.Add($"{food} was left untouched");
                     }
                 }
+                return events;
             }
         }
 
