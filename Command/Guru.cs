@@ -2,7 +2,6 @@
 
 Requestet förvandlas till ett eget objekt som innehåller all info om requestet. Det gör att du kan parametrisera metoder med olika request, avvakta eller kö'a utförande av requests och tillåta undo-operationer.
 
-
 Istället för att GUI anropar businesslagret direkt: ett kommando skapas med info
 - objektet som ska anropas
 - namn på metod
@@ -17,7 +16,7 @@ using System;
 namespace DesignPatterns.Command
 {
     [TestClass]
-    public class GuruConceptual
+    public class Guru
     {
         [TestMethod]
         public void Ex1()
@@ -51,10 +50,10 @@ namespace DesignPatterns.Command
         void Execute();
     }
 
-    // Ett enkelt command, som inte är bereonde av någon receiver
+    // Ett enkelt command, som inte är beroende av någon receiver
     class SimpleCommand : ICommand
     {
-        private string _payload = string.Empty;
+        private readonly string _payload = string.Empty;
 
         public SimpleCommand(string payload)
         {
@@ -98,7 +97,7 @@ namespace DesignPatterns.Command
     /*
     Vilken klass som helst kan agera receiver
 
-    Recevern utför någon viktig affärslogik
+    Receivern utför någon viktig affärslogik
      */
     class Receiver
     {

@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using static DesignPatterns.TestUtilities;
 
 namespace DesignPatterns.Flyweight.Trees
 {

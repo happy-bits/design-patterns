@@ -5,7 +5,6 @@ STATE DESIGN PATTERN - https://www.dofactory.com/net/state-design-pattern
 
 */
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 
 namespace DesignPatterns.StateDesignPattern

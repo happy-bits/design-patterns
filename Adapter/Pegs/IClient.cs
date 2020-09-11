@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DesignPatterns.Adapter.Pegs
+﻿namespace DesignPatterns.Adapter.Pegs
 {
     interface IClient
     {

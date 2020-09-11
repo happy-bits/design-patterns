@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DesignPatterns.Bridge.Remotes
+﻿namespace DesignPatterns.Bridge.Remotes
 {
     interface IClient
     {

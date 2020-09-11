@@ -26,10 +26,11 @@ namespace DesignPatterns.Command.TextEditors.After
 
         }
 
+        // Fördel: när nya kommando dyker upp så kommer ingen kod behöva ändras. Det räcker att lägga till de nya klasserna
+
         abstract class Command
         {
             public abstract void Execute();
-
             protected Editor _editor;
         }
 

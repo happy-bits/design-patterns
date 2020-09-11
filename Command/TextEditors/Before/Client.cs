@@ -11,8 +11,8 @@ namespace DesignPatterns.Command.TextEditors.Before
             var editor = new Editor("What does the fox says?");
             var commands = new Commands(editor);
 
-            commands.Add("Copy 0 4");
-            commands.Add("Paste 4"); 
+            commands.Add("Copy 0 4"); // Copy string from position 0 to 4 ("What")
+            commands.Add("Paste 4");  // Paste at position 4
 
             // Nothing has happened
             Assert.AreEqual("What does the fox says?", editor.Content);
@@ -24,8 +24,6 @@ namespace DesignPatterns.Command.TextEditors.Before
             Assert.AreEqual("WhatWhat does the fox says?", editor.Content);
 
         }
-
-        // "Receiver"
 
         class Editor
         {
@@ -56,7 +54,7 @@ namespace DesignPatterns.Command.TextEditors.Before
         {
             private readonly Editor _editor;
 
-            private Queue<string> _commands = new Queue<string>();
+            private readonly Queue<string> _commands = new Queue<string>();
 
             // Nackdel: Vi förutsätter att det är samma editor för alla kommandon
 
@@ -71,7 +69,7 @@ namespace DesignPatterns.Command.TextEditors.Before
 
                 var commandSplitted = commandText.Split(' ');
 
-                // Nackdel: Lätt att det blir fel i splittandet
+                // Nackdel: Lätt att det blir fel i splittandet + denna switch kommer växa med tiden
 
                 switch (commandSplitted[0])
                 {

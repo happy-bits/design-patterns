@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DesignPatterns.Observer.TextEditors
+﻿namespace DesignPatterns.Observer.TextEditors
 {
     interface IClient
     {

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DesignPatterns.ChainOfResponsibility.Requests
+﻿namespace DesignPatterns.ChainOfResponsibility.Requests
 {
     interface IClient
     {

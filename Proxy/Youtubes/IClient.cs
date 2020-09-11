@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DesignPatterns.Proxy.Youtubes
+﻿namespace DesignPatterns.Proxy.Youtubes
 {
     interface IClient
     {

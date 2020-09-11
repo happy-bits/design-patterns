@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DesignPatterns.Template.Pages
+﻿namespace DesignPatterns.Template.Pages
 {
     interface IClient
     {

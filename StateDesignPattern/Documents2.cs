@@ -11,7 +11,6 @@ A document can be reopened from any state. Then it will be in state Draft
 
 */
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 
 namespace DesignPatterns.StateDesignPattern

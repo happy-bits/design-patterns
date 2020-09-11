@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DesignPatterns.Prototype.Shapes
+﻿namespace DesignPatterns.Prototype.Shapes
 {
     interface IClient
     {

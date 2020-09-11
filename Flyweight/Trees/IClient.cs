@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DesignPatterns.Flyweight.Trees
+﻿namespace DesignPatterns.Flyweight.Trees
 {
     interface IClient
     {

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DesignPatterns.Singleton.Databases
+﻿namespace DesignPatterns.Singleton.Databases
 {
     interface IClient
     {
