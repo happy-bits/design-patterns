@@ -18,6 +18,7 @@ namespace DesignPatterns.TemplateMethod.Savers.After
 
         public abstract class SaveService
         {
+            // Fördel: denna blir mycket enklare
             public Result TrySave(string name)
             {
                 name = CleanBase(name);

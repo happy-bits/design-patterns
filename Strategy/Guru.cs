@@ -1,11 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿// "Skapa separata klasser för en algoritm/beräkning"
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 
 namespace DesignPatterns.Strategy
 {
     [TestClass]
-    public class GuruConceptual
+    public class Guru
     {
         [TestMethod]
         public void client_code()

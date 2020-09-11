@@ -1,4 +1,6 @@
 ﻿/*
+"En för komplex metod kan behöva delegare vissa delar för att bli enklare" 
+
 https://refactoring.guru/design-patterns/template-method
  */
 
@@ -8,10 +10,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace DesignPatterns.TemplateMethod
 {
     [TestClass]
-    public class GuruConceptual
+    public class Guru
     {
         [TestMethod]
-        public void MyTestMethod()
+        public void Ex1()
         {
             Console.WriteLine("Same client code can work with different subclasses:");
 
