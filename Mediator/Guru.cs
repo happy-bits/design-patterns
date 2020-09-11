@@ -1,4 +1,7 @@
 ﻿/*
+
+"Låt all kommunikation gå via Kalle"
+
  https://refactoring.guru/design-patterns/mediator/csharp/example
 
 
@@ -17,7 +20,7 @@ using System;
 namespace DesignPatterns.Mediator
 {
     [TestClass]
-    public class GuruConceptual
+    public class Guru
     {
 
         [TestMethod]

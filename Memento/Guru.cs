@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿// "Bryt ut spara och undo av händelser"
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +9,7 @@ using System.Threading;
 namespace DesignPatterns.Memento
 {
     [TestClass]
-    public class GuruConceptual
+    public class Guru
     {
 
         [TestMethod]

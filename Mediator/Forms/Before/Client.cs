@@ -53,7 +53,7 @@ namespace DesignPatterns.Mediator.Forms.Before
 
     // Nackdel: komponenten är beroende av andra komponenter. Om ett till textfält läggs till så måste denna uppdateras
     // Nackdel: svårt/omöjligt att återanvända komponenterna
-    // Fördel: lite kortare kod, du behöver ingen Dialogklassm koden är nära händelserna (ex Click)
+    // Fördel: lite kortare kod, du behöver ingen Dialogklass koden är nära händelserna (ex Click)
     class SubmitButton : BaseComponent
     {
         private TextField _text1;
