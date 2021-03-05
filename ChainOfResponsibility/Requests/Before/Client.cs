@@ -1,4 +1,14 @@
-﻿namespace DesignPatterns.ChainOfResponsibility.Requests.Before
+﻿/*
+ 
+Scenario:
+
+En förfrågan att redigera en sida kommer (t.ex från en redaktör på en tidning via webben)
+
+GetPage ska kolla om användaren har rättigheter till sidan och isåfall hämta den
+
+Om redakören är Administraor eller bobo eller Editor + Politiskt redaktör => access
+ */
+namespace DesignPatterns.ChainOfResponsibility.Requests.Before
 {
     class Client : IClient
     {

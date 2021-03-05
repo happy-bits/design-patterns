@@ -5,7 +5,7 @@ DECORATOR PATTERN
 Good:
 
 - Logging, Caching and Weather are separated. Easier to test the separate parts
-- It's easy possible to combine them in other orders if you like
+- It's easy to combine them in other orders if you like
 (own example)
  */
 using DesignPatterns.Decorator.Weathers;

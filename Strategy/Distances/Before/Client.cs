@@ -1,21 +1,22 @@
 ﻿
 using System;
-using System.Collections.Generic;
 
 namespace DesignPatterns.Strategy.Distances.Before
 {
     class Client : IClient
     {
-        public IEnumerable<double> CalculateManhattanThenBird(Point p1, Point p2)
+        public string[] CalculateManhattanThenBird(Point p1, Point p2)
         {
             
-            var myservice = new MyMap(Strategy.Manhattan);
+            var myservice = new MapService(Strategy.Manhattan);
 
-            yield return myservice.CalculateDistance(p1, p2); 
+            var result1 = myservice.GetDistance(p1, p2); 
 
             myservice.ChangeStrategy(Strategy.Bird);
 
-            yield return myservice.CalculateDistance(p1, p2);
+            var result2 = myservice.GetDistance(p1, p2);
+
+            return new[] { result1, result2 };
         }
     }
 
@@ -25,7 +26,7 @@ namespace DesignPatterns.Strategy.Distances.Before
         Manhattan, Bird
     }
 
-    class MyMap
+    class MapService
     {
         Strategy _strategy;
 
@@ -41,19 +42,22 @@ namespace DesignPatterns.Strategy.Distances.Before
             return Math.Abs(p1.X - p2.X) + Math.Abs(p2.Y - p1.Y);
         }
 
-        public MyMap(Strategy strategy)
+        public MapService(Strategy strategy)
         {
             _strategy = strategy;
         }
 
-        public double CalculateDistance(Point p1, Point p2)
+        public string GetDistance(Point p1, Point p2)
         {
-            switch (_strategy)
+            var distance = _strategy switch
             {
-                case Strategy.Manhattan: return ManhattanDistance(p1, p2);
-                case Strategy.Bird: return BirdDistance(p1, p2);
-            }
-            throw new InvalidOperationException(); // Nackdel: denna behövs
+                Strategy.Manhattan => ManhattanDistance(p1, p2),
+                Strategy.Bird => BirdDistance(p1, p2),
+                _ => throw new InvalidOperationException() // Nackdel: denna behövs
+            };
+
+            return $"Distance between p1 and p2: {distance}";
+            
         }
 
         public void ChangeStrategy(Strategy strategy)

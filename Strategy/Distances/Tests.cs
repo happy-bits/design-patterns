@@ -22,9 +22,9 @@ namespace DesignPatterns.Strategy.Distances
 
                 var result = client.CalculateManhattanThenBird(p1, p2);
 
-                AssertEqualCollection(new double[]{
-                    7,  // 3+4
-                    5   // Sqrt(9+16)
+                AssertEqualCollection(new string[]{
+                    "Distance between p1 and p2: 7",  // 3+4 = 7
+                    "Distance between p1 and p2: 5"   // Sqrt(9+16) = 5
                 }, 
                 result);  
             }

@@ -2,7 +2,11 @@
 
 Problem:
 
-    The class "WeatherService" is starting to grow and have to many responsibilitys 
+    The class "WeatherService" is starting to grow and have to many responsibilitys. 
+    Now it's responsible for
+    - getting weather
+    - caching
+    - logging with stopwatch
 
     This will be solved with Decorator pattern
 

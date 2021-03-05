@@ -1,21 +1,21 @@
 ﻿
 using System;
-using System.Collections.Generic;
 
 namespace DesignPatterns.Strategy.Distances.After
 {
     class Client : IClient
     {
-        public IEnumerable<double> CalculateManhattanThenBird(Point p1, Point p2)
+        public string[] CalculateManhattanThenBird(Point p1, Point p2)
         {
-            var myservice = new MyMap(new Manhattan());
+            var myservice = new MapService(new Manhattan());
 
-            yield return myservice.CalculateDistance(p1, p2);
+            var result1 = myservice.GetDistance(p1, p2);
 
             myservice.ChangeStrategy(new Bird());
 
-            yield return myservice.CalculateDistance(p1, p2); 
-            
+            var result2 = myservice.GetDistance(p1, p2);
+
+            return new[] { result1, result2 };
         }
     }
 
@@ -45,18 +45,18 @@ namespace DesignPatterns.Strategy.Distances.After
 
     // Fördel: denna klass är oförändrad när nya stragier tillkommer
 
-    class MyMap
+    class MapService
     {
         IStrategy _strategy;
 
-        public MyMap(IStrategy strategy)
+        public MapService(IStrategy strategy)
         {
             _strategy = strategy;
         }
 
-        public double CalculateDistance(Point p1, Point p2)
+        public string GetDistance(Point p1, Point p2)
         {
-            return _strategy.Distance(p1, p2);
+            return $"Distance between p1 and p2: {_strategy.Distance(p1, p2)}";
         }
 
         public void ChangeStrategy(IStrategy strategy)
